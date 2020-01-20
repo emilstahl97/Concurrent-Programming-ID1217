@@ -22,8 +22,8 @@
 #define MAXWORKERS 10   /* maximum number of workers */
 
 pthread_mutex_t barrier;  /* mutex lock for the barrier */
-pthread_mutex_t min;      /* mutex lock for the minimum element */
-pthread_mutex_t max;      /* mutex lock for the maximum element */
+pthread_mutex_t minlock;      /* mutex lock for the minimum element */
+pthread_mutex_t maxlock;      /* mutex lock for the maximum element */
 pthread_mutex_t rowlock;      /* mutex lock for row */
 pthread_mutex_t sumlock;  /* mutex lock for sum */
 pthread_cond_t go;        /* condition variable for leaving */
@@ -80,8 +80,8 @@ int main(int argc, char *argv[]) {
 
   /* initialize mutex and condition variable */
   pthread_mutex_init(&barrier, NULL);
-  pthread_mutex_init(&min, NULL);
-  pthread_mutex_init(&max, NULL);
+  pthread_mutex_init(&minlock, NULL);
+  pthread_mutex_init(&maxlock, NULL);
   pthread_mutex_init(&rowlock, NULL);
   pthread_mutex_init(&sumlock, NULL);
   pthread_cond_init(&go, NULL);
@@ -94,6 +94,7 @@ int main(int argc, char *argv[]) {
   stripSize = size/numWorkers;
 
   /* initialize the matrix */
+  srand(time(NULL));
   for (i = 0; i < size; i++) {
 	  for (j = 0; j < size; j++) {
           matrix[i][j] = rand()%999;
@@ -163,19 +164,19 @@ void *Worker(void *arg) {
       total += matrix[i][j];
 
       if(matrix[i][j] < matrix[minIndex[0]][minIndex[1]]) {
-        pthread_mutex_lock(&min);
+        pthread_mutex_lock(&minlock);
         if(matrix[i][j] < matrix[minIndex[0]][minIndex[1]]) {
           minIndex[0] = i;
           maxIndex[1] = j;
         }
-        pthread_mutex_unlock(&min);
+        pthread_mutex_unlock(&minlock);
       } else if(matrix[i][j] > matrix[maxIndex[0]][maxIndex[1]]) {
-        pthread_mutex_lock(&max);
+        pthread_mutex_lock(&maxlock);
         if(matrix[i][j] > matrix[maxIndex[0]][maxIndex[1]]) {
           maxIndex[0] = i;
           maxIndex[1] = j;
         }
-        pthread_mutex_unlock(&min);
+        pthread_mutex_unlock(&maxlock);
       }
     }
   }
