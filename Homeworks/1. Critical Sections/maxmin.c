@@ -22,9 +22,13 @@
 #define MAXWORKERS 10   /* maximum number of workers */
 
 pthread_mutex_t barrier;  /* mutex lock for the barrier */
+pthread_mutex_t min;      /* mutex lock for the minimum element */
+pthread_mutex_t max;      /* mutex lock for the maximum element */
 pthread_cond_t go;        /* condition variable for leaving */
 int numWorkers;           /* number of workers */ 
 int numArrived = 0;       /* number who have arrived */
+int minIndex[2];
+int maxIndex[2];
 
 /* a reusable counter barrier */
 void Barrier() {
@@ -88,6 +92,11 @@ int main(int argc, char *argv[]) {
 	  }
   }
 
+  minIndex[0] = 0;
+  minIndex[1] = 0;
+  maxIndex[0] = 0;
+  maxIndex[1] = 0;
+  
   /* print the matrix */
 //#ifdef DEBUG
   for (i = 0; i < size; i++) {
@@ -103,7 +112,11 @@ int main(int argc, char *argv[]) {
   start_time = read_timer();
   for (l = 0; l < numWorkers; l++)
     pthread_create(&workerid[l], &attr, Worker, (void *) l);
+
+  printf("min:[%d,%d],  %d\n",minIndex[0],minIndex[1], matrix[minIndex[0]][minIndex[1]]);
+  printf("max:[%d,%d],  %d\n",maxIndex[0],maxIndex[1], matrix[maxIndex[0]][maxIndex[1]]);
   pthread_exit(NULL);
+
 }
 
 /* Each worker sums the values in one strip of the matrix.
@@ -121,16 +134,27 @@ void *Worker(void *arg) {
   last = (myid == numWorkers - 1) ? (size - 1) : (first + stripSize - 1);
 
   /* sum values in my strip */
-  total, max, min = 100;
+  total = 0;
   for (i = first; i <= last; i++)
     for (j = 0; j < size; j++) {
       total += matrix[i][j];
-      if(matrix[i][j] > max)
-        max = matrix[i][j];
-      if(matrix[i][j] < min)
-        min = matrix[i][j];
+
+      if(matrix[i][j] < matrix[minIndex[0]][minIndex[1]]) {
+        pthread_mutex_lock(&min);
+        if(matrix[i][j] < matrix[minIndex[0]][minIndex[1]]) {
+          minIndex[0] = i;
+          maxIndex[1] = j;
+        }
+        pthread_mutex_unlock(&min);
+      } else if(matrix[i][j] > matrix[maxIndex[0]][maxIndex[1]]) {
+        pthread_mutex_lock(&max);
+        if(matrix[i][j] > matrix[maxIndex[0]][maxIndex[1]]) {
+          maxIndex[0] = i;
+          maxIndex[1] = j;
+        }
+        pthread_mutex_unlock(&min);
+      }
     }
-    printf("MAX = %d, MIN = %d\n", max, min);
   sums[myid] = total;
   Barrier();
   if (myid == 0) {
