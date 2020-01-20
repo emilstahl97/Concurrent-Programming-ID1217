@@ -24,9 +24,13 @@
 pthread_mutex_t barrier;  /* mutex lock for the barrier */
 pthread_mutex_t min;      /* mutex lock for the minimum element */
 pthread_mutex_t max;      /* mutex lock for the maximum element */
+pthread_mutex_t rowlock;      /* mutex lock for row */
+pthread_mutex_t sumlock;  /* mutex lock for sum */
 pthread_cond_t go;        /* condition variable for leaving */
 int numWorkers;           /* number of workers */ 
 int numArrived = 0;       /* number who have arrived */
+int row = 0;
+int sum;
 int minIndex[2];
 int maxIndex[2];
 
@@ -76,6 +80,10 @@ int main(int argc, char *argv[]) {
 
   /* initialize mutex and condition variable */
   pthread_mutex_init(&barrier, NULL);
+  pthread_mutex_init(&min, NULL);
+  pthread_mutex_init(&max, NULL);
+  pthread_mutex_init(&rowlock, NULL);
+  pthread_mutex_init(&sumlock, NULL);
   pthread_cond_init(&go, NULL);
 
   /* read command line args if any */
@@ -88,7 +96,7 @@ int main(int argc, char *argv[]) {
   /* initialize the matrix */
   for (i = 0; i < size; i++) {
 	  for (j = 0; j < size; j++) {
-          matrix[i][j] = rand()%99;
+          matrix[i][j] = rand()%999;
 	  }
   }
 
@@ -113,8 +121,14 @@ int main(int argc, char *argv[]) {
   for (l = 0; l < numWorkers; l++)
     pthread_create(&workerid[l], &attr, Worker, (void *) l);
 
+  for(i = 0; i < numWorkers; i++) {
+    pthread_join(workerid[i], NULL);
+  }
+  end_time = read_timer();
+  printf("Sum = %d \n", sum);
   printf("min:[%d,%d],  %d\n",minIndex[0],minIndex[1], matrix[minIndex[0]][minIndex[1]]);
   printf("max:[%d,%d],  %d\n",maxIndex[0],maxIndex[1], matrix[maxIndex[0]][maxIndex[1]]);
+  
   pthread_exit(NULL);
 
 }
@@ -130,11 +144,20 @@ void *Worker(void *arg) {
 #endif
 
   /* determine first and last rows of my strip */
-  first = myid*stripSize;
-  last = (myid == numWorkers - 1) ? (size - 1) : (first + stripSize - 1);
+  //first = myid*stripSize;
+  //last = (myid == numWorkers - 1) ? (size - 1) : (first + stripSize - 1);
 
   /* sum values in my strip */
   total = 0;
+  while(row < size) {
+    if(row < size) {
+      pthread_mutex_lock(&rowlock);
+      first = row;
+      row++;
+      last = row;
+      pthread_mutex_unlock(&rowlock);
+    }
+
   for (i = first; i <= last; i++)
     for (j = 0; j < size; j++) {
       total += matrix[i][j];
@@ -155,6 +178,11 @@ void *Worker(void *arg) {
         pthread_mutex_unlock(&min);
       }
     }
+  }
+  pthread_mutex_lock(&sumlock);
+  sum += total;
+  pthread_mutex_unlock(&sumlock);
+
   sums[myid] = total;
   Barrier();
   if (myid == 0) {
