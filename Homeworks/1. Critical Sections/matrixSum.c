@@ -87,6 +87,10 @@ int main(int argc, char *argv[]) {
 	  }
   }
 
+  //initilize the initial min & max values
+  min[0] = matrix[0][0];
+  max[0] = matrix[0][0];  
+
   /* print the matrix */
 //#ifdef DEBUG
   for (i = 0; i < size; i++) {
@@ -107,8 +111,8 @@ int main(int argc, char *argv[]) {
     pthread_join(workerid[c], NULL);
 
   printf("The total is: %d \n", total);
-  printf("The min value is %d and has the index [%d][%d] \n", min[0], min[1], min[2]);
-  printf("The max value is %d and has the index [%d][%d] \n", max[0], max[1], max[2]);
+  printf("The minimum value is %d and has the index [%d][%d] \n", min[0], min[1], min[2]);
+  printf("The maximum value is %d and has the index [%d][%d] \n\n", max[0], max[1], max[2]);
   pthread_exit(NULL);
 }
 
