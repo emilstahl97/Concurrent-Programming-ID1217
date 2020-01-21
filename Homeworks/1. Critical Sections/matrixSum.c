@@ -30,6 +30,7 @@ int numWorkers;           /* number of workers */
 int total = 0;            //variable  to store total sum of all elements in matrix
 int numArrived = 0;       /* number who have arrived */
 int size, stripSize;  /* assume size is multiple of numWorkers */
+int nextRow = 0;
 int sums[MAXWORKERS]; /* partial sums */
 int matrix[MAXSIZE][MAXSIZE]; /* matrix */
 int max[3], min[3];         
@@ -91,7 +92,7 @@ int main(int argc, char *argv[]) {
   srand(time(NULL));
   for (i = 0; i < size; i++) {
 	  for (j = 0; j < size; j++) {
-          matrix[i][j] = 1;//rand()%range;
+          matrix[i][j] = 2;//rand()%range;
 	  }
   }
 
@@ -123,10 +124,11 @@ int main(int argc, char *argv[]) {
 
 // Each worker sums the values in one strip of the matrix.
 void *Worker() {
-      int i, row;
+    int i, row;
     int localTotal = 0;
     while(row < size) {
         pthread_mutex_lock(&rowLock);
+        row = nextRow;
         pthread_mutex_unlock(&rowLock);
         for (i = 0; i < size; i++) {
             localTotal += matrix[row][i];
@@ -145,7 +147,7 @@ void *Worker() {
                 pthread_mutex_unlock(&minLock);
             }
         }
-        row++;
+        nextRow++;
     }
     pthread_mutex_lock(&totalLock);
     total += localTotal;
