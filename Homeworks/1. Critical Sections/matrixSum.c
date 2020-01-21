@@ -85,7 +85,7 @@ int main(int argc, char *argv[]) {
   for(int b = 1; b < 3; b++) {
     min[b] = 0;
     max[b] = 0;
-  }  
+  } 
 
   /* initialize the matrix */
   // seed the generator to get different matrices in each run
@@ -129,7 +129,7 @@ void *Worker() {
     while(nextRow < size) {
         pthread_mutex_lock(&rowLock);
         row = nextRow;
-        nextRow++;
+        //nextRow++;
         pthread_mutex_unlock(&rowLock);
         for (i = 0; i < size; i++) {
             localTotal += matrix[row][i];
@@ -148,6 +148,8 @@ void *Worker() {
                 pthread_mutex_unlock(&minLock);
             }
         }
+                nextRow++;
+
     }
     pthread_mutex_lock(&totalLock);
     total += localTotal;
