@@ -91,14 +91,14 @@ int main(int argc, char *argv[]) {
   srand(time(NULL));
   for (i = 0; i < size; i++) {
 	  for (j = 0; j < size; j++) {
-          matrix[i][j] = rand()%range;
+          matrix[i][j] = 1;//rand()%range;
 	  }
   }
 
   /* print the matrix */
 //#ifdef DEBUG
   for (i = 0; i < size; i++) {
-	  printf("[ ");
+	  printf("[");
 	  for (j = 0; j < size; j++) {
 	    printf(" %d", matrix[i][j]);
 	  }
