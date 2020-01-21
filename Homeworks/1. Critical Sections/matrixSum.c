@@ -65,7 +65,7 @@ void *Worker(void *);
 
 /* read command line, initialize, and create threads */
 int main(int argc, char *argv[]) {
-  data.max = MAXSIZE;       /* min value */
+  data.max = 0;       /* min value */
   data.min = MAXSIZE;       /* max value */
   data.total = 0;           /* total value */
   int i, j;
@@ -116,7 +116,8 @@ int main(int argc, char *argv[]) {
   }
   end_time = read_timer();
   printf("The execution time is %g sec\n", end_time - start_time);
-  printf("sum: %d\n", sum); printf("The max is %d at position (%d,%d)\n", data.max, data.maxPos[1]+1,data.maxPos[0]+1);
+  printf("sum: %d\n", sum); 
+  printf("The max is %d at position (%d,%d)\n", data.max, data.maxPos[1]+1,data.maxPos[0]+1);
   printf("The min is %d at position (%d,%d)\n", data.min, data.minPos[1]+1,data.minPos[0]+1);
   pthread_exit(NULL);
 }
@@ -151,6 +152,7 @@ void *Worker(void *arg) {
         if(matrix[i][j] < data.min){
           pthread_mutex_lock(&minLock);
           if(matrix[i][j] < data.min){
+            data.min = matrix[j][i];
             data.minPos[0] = i;
             data.minPos[1] = j;
           }
@@ -158,6 +160,7 @@ void *Worker(void *arg) {
         } else if(matrix[i][j] > data.min){
           pthread_mutex_lock(&minLock);
           if(matrix[i][j] > data.min){
+            data.max = matrix[j][i];
             data.maxPos[0] = i;
             data.maxPos[1] = j;
           }
