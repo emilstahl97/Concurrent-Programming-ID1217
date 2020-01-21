@@ -31,12 +31,13 @@ int total = 0;            //variable  to store total sum of all elements in matr
 int numArrived = 0;       /* number who have arrived */
 int size, stripSize;  /* assume size is multiple of numWorkers */
 int nextRow = 0;
+int row = 0;
 int sums[MAXWORKERS]; /* partial sums */
 int matrix[MAXSIZE][MAXSIZE]; /* matrix */
 int max[3], min[3];         
 double start_time, end_time; /* start and end times */
 
-void *Worker();
+void *Worker(void *);
 
 /* timer */
 double read_timer() {
@@ -110,7 +111,7 @@ int main(int argc, char *argv[]) {
   /* do the parallel work: create the workers */
   start_time = read_timer();
   for (l = 0; l < numWorkers; l++) 
-    pthread_create(&workerid[l], &attr, Worker, NULL);
+    pthread_create(&workerid[l], &attr, Worker, (void *) l);
   
   for(int c = 0; c < numWorkers; c++)
     pthread_join(workerid[c], NULL);
@@ -123,34 +124,74 @@ int main(int argc, char *argv[]) {
 }
 
 // Each worker sums the values in one strip of the matrix.
-void *Worker() {
-    int i, row;
-    int localTotal = 0;
-    while(row < size) {
-        pthread_mutex_lock(&rowLock);
-        row = nextRow;
-        pthread_mutex_unlock(&rowLock);
-        for (i = 0; i < size; i++) {
-            localTotal += matrix[row][i];
-            if (matrix[row][i] > max[0]) {
-                pthread_mutex_lock(&maxLock);
-                max[0] = matrix[row][i];
-                max[1] = row;
-                max[2] = i;
-                pthread_mutex_unlock(&maxLock);
-            }
-            if (matrix[row][i] < min[0]) {
-                pthread_mutex_lock(&minLock);
-                min[0] = matrix[row][i];
-                min[1] = row;
-                min[2] = i;
-                pthread_mutex_unlock(&minLock);
-            }
+void *Worker(void *arg) {
+long myid = (long) arg;
+  int localTotal, i, j, first, last;
+
+#ifdef DEBUG
+  printf("worker %ld (pthread id %ld) has started\n", myid, pthread_self());
+#endif
+
+
+  /* determine first and last rows of my strip */
+  //first = myid*stripSize;
+  //last = (myid == numWorkers - 1) ? (size - 1) : (first + stripSize - 1);
+  total = 0;
+  while(row < size){
+  if(row < size){
+    pthread_mutex_lock(&rowLock);
+    first = row;
+    row++;
+    last = row;
+
+    pthread_mutex_unlock(&rowLock);
+      //printf("row %d computed by thread %ld\n", first, myid);
+    /* sum values in my strip */
+
+    for (i = first; i < last; i++)
+
+      for (j = 0; j < size; j++){
+        localTotal += matrix[i][j];
+        if(matrix[i][j] < min[0]){
+          pthread_mutex_lock(&minLock);
+          if(matrix[i][j] < min[0]){
+            min[0] = matrix[i][j];
+            min[1] = i;
+            min[2] = j;
+          }
+          pthread_mutex_unlock(&minLock);
+        } else if(matrix[i][j] > max[0]){
+          pthread_mutex_lock(&maxLock);
+          if(matrix[i][j] > max[0]){
+            max[0] = matrix[i][j];
+            max[1] = i;
+            max[2] = j;
+          }
+          pthread_mutex_unlock(&maxLock);
         }
-        nextRow++;
-    }
-    pthread_mutex_lock(&totalLock);
-    total += localTotal;
-    pthread_mutex_unlock(&totalLock);
-    return NULL;
+      }
+  }
+  //printf("total: %d, by thread: %ld\n", total, myid);
+  //printf("%d\n", total);
+
 }
+  pthread_mutex_lock(&totalLock);
+  total += localTotal;
+  printf("total = %d\n", total);
+  pthread_mutex_unlock(&totalLock);
+
+  //sums[myid] = total;
+  /*Barrier();
+  if (myid == 0) {
+    total = 0;
+    for (i = 0; i < numWorkers; i++)
+      total += sums[i];
+    /* get end time */
+
+    /* print results */
+
+
+  //}
+  //printf("total: %d\n", total);
+}
+
