@@ -27,8 +27,7 @@ pthread_mutex_t totalLock;  /* mutex lock for the total value */
 pthread_mutex_t rowLock;    /* mutex lock for the row */
 pthread_cond_t go;        /* condition variable for leaving */
 int numWorkers;           /* number of workers */ 
-int total = 0;            // 
-int nextRow = 0;
+int total = 0;            //variable  to store total sum of all elements in matrix
 int numArrived = 0;       /* number who have arrived */
 int size, stripSize;  /* assume size is multiple of numWorkers */
 int sums[MAXWORKERS]; /* partial sums */
@@ -126,10 +125,8 @@ int main(int argc, char *argv[]) {
 void *Worker() {
       int i, row;
     int localTotal = 0;
-    while(nextRow < size) {
+    while(row < size) {
         pthread_mutex_lock(&rowLock);
-        row = nextRow;
-        //nextRow++;
         pthread_mutex_unlock(&rowLock);
         for (i = 0; i < size; i++) {
             localTotal += matrix[row][i];
@@ -148,8 +145,7 @@ void *Worker() {
                 pthread_mutex_unlock(&minLock);
             }
         }
-                nextRow++;
-
+        row++;
     }
     pthread_mutex_lock(&totalLock);
     total += localTotal;
