@@ -20,18 +20,18 @@
 #include <sys/time.h>
 #define MAXSIZE 10000  /* maximum matrix size */
 #define MAXWORKERS 10   /* maximum number of workers */
-#define DEBUGS 1
+#define DEBUGS 
+#define DEBUG
 #define SECTION 1
 
 struct worker
 {
   int max;
-  int maxPos[2];
+  int maxIndex[2];
   int min;
-  int minPos[2];
+  int minIndex[2];
   int total;
-};
-
+} data;
 
 pthread_mutex_t barrier;  /* mutex lock for the barrier */
 pthread_mutex_t minlock;
@@ -40,24 +40,10 @@ pthread_mutex_t rowlock;
 pthread_mutex_t sumlock;
 pthread_cond_t go;        /* condition variable for leaving */
 int numWorkers;           /* number of workers */
-int numArrived = 0;       /* number who have arrived */
-int minindex[2];
-int maxindex[2];
+int minIndex[2];
+int maxIndex[2];
 int row = 0;
 int sum;
-struct worker data;
-
-/* a reusable counter barrier */
-void Barrier() {
-  pthread_mutex_lock(&barrier);
-  numArrived++;
-  if (numArrived == numWorkers) {
-    numArrived = 0;
-    pthread_cond_broadcast(&go);
-  } else
-    pthread_cond_wait(&go, &barrier);
-  pthread_mutex_unlock(&barrier);
-}
 
 /* timer */
 double read_timer() {
@@ -108,7 +94,6 @@ int main(int argc, char *argv[]) {
   if (size > MAXSIZE) size = MAXSIZE;
   if (numWorkers > MAXWORKERS) numWorkers = MAXWORKERS;
   stripSize = size/numWorkers;
-  //printf("size: %d, #workers: %d\n", size, numWorkers);
   /* initialize the matrix */
   srand(time(NULL));
   for (i = 0; i < size; i++) {
@@ -118,11 +103,11 @@ int main(int argc, char *argv[]) {
   }
   /* print the matrix */
   for (i = 0; i < size; i++) {
-	  printf("[ ");
+	  printf("[");
 	  for (j = 0; j < size; j++) {
-	    printf(" %d", matrix[i][j]);
+	    printf(" %d ", matrix[i][j]);
 	  }
-	  printf(" ]\n");
+	  printf("]\n");
   }
 
   /* do the parallel work: create the workers */
@@ -132,13 +117,13 @@ int main(int argc, char *argv[]) {
 
   for(int i = 0; i < numWorkers; i++){
     pthread_join(workerid[i], NULL);
-    //printf("got value %d\n", *(int *)total);
   }
+
   end_time = read_timer();
   printf("The execution time is %g sec\n", end_time - start_time);
   printf("The total is %d\n", data.total);
-  printf("The max is %d at position (%d,%d)\n", data.max, data.maxPos[1]+1,data.maxPos[0]+1);
-  printf("The min is %d at position (%d,%d)\n", data.min, data.minPos[1]+1,data.minPos[0]+1);
+  printf("The max is %d at position (%d,%d)\n", data.max, data.maxIndex[1]+1,data.maxIndex[0]+1);
+  printf("The min is %d at position (%d,%d)\n", data.min, data.minIndex[1]+1,data.minIndex[0]+1);
   
 
   pthread_exit(NULL);
@@ -151,13 +136,9 @@ void *Worker(void *arg) {
   int localTotal, i, j, first, last;
 
 #ifdef DEBUG
-  printf("worker %ld (pthread id %ld) has started\n", myid, pthread_self());
+  printf("worker %ld has started\n", myid);
 #endif
 
-
-  /* determine first and last rows of my strip */
-  //first = myid*stripSize;
-  //last = (myid == numWorkers - 1) ? (size - 1) : (first + stripSize - 1);
   localTotal = 0;
   while(row < size){
   if(row < size){
@@ -167,7 +148,9 @@ void *Worker(void *arg) {
     last = row;
 
     pthread_mutex_unlock(&rowlock);
-      //printf("row %d computed by thread %ld\n", first, myid);
+    #ifdef DEBUG
+      printf("row %d computed by thread %ld\n", first, myid);
+    #endif
     /* sum values in my strip */
 
     for (i = first; i < last; i++)
@@ -179,41 +162,25 @@ void *Worker(void *arg) {
           pthread_mutex_lock(&minlock);
           if(matrix[i][j] < data.min){
             data.min = matrix[i][j];
-            data.minPos[0] = i;
-            data.minPos[1] = j;
+            data.minIndex[0] = i;
+            data.minIndex[1] = j;
           }
           pthread_mutex_unlock(&minlock);
         } else if(matrix[i][j] > data.max){
           pthread_mutex_lock(&maxlock);
           if(matrix[i][j] > data.max){
             data.max = matrix[i][j];
-            data.maxPos[0] = i;
-            data.maxPos[1] = j;
+            data.maxIndex[0] = i;
+            data.maxIndex[1] = j;
           }
           pthread_mutex_unlock(&maxlock);
         }
       }
   }
-  //printf("total: %d, by thread: %ld\n", total, myid);
-  //printf("%d\n", total);
-
 }
   pthread_mutex_lock(&sumlock);
   data.total += localTotal;
   pthread_mutex_unlock(&sumlock);
 
-  //sums[myid] = total;
-  /*Barrier();
-  if (myid == 0) {
-
-    total = 0;
-    for (i = 0; i < numWorkers; i++)
-      total += sums[i];
-    /* get end time */
-
-    /* print results */
-
-
-  //}
-  //printf("total: %d\n", total);
+  return 0;
 }
