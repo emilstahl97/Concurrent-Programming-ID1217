@@ -104,7 +104,7 @@ int main(int argc, char *argv[]) {
   /* read command line args if any */
   size = (argc > 1)? atoi(argv[1]) : MAXSIZE;
   numWorkers = (argc > 2)? atoi(argv[2]) : MAXWORKERS;
-  range = atoi(argv[3]);
+  range = (argc > 3) ? atoi(argv[3]) : 100;
   if (size > MAXSIZE) size = MAXSIZE;
   if (numWorkers > MAXWORKERS) numWorkers = MAXWORKERS;
   stripSize = size/numWorkers;
