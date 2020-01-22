@@ -175,5 +175,5 @@ void *Worker(void *arg) {
   pthread_mutex_lock(&totalLock);
   sum += total;
   pthread_mutex_unlock(&totalLock);
-
+  return NULL;
 }
