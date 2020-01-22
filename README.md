@@ -1,5 +1,5 @@
 # Concurrent-Programming-ID1217
-The course treats the core concepts, models, paradigms and techniques for concurrent programming. This forms the basis for operating systems, distributed systems and multiprocessor systems, including multicore systems. The course studies foundations and principles of concurrent programming. It gives hands-on introductions to modern programming environments, such as pthreads, openMP, MPI, Java threads, concurrent utilities, sockets and RMI.
+The course covers the core concepts, models, paradigms and techniques for concurrent programming. This forms the basis for operating systems, distributed systems and multiprocessor systems, including multicore systems. The course studies foundations and principles of concurrent programming. It gives hands-on introductions to modern programming environments, such as pthreads, openMP, MPI, Java threads, concurrent utilities, sockets and RMI.
 
 Course Contents
 Concurrent programming concepts, models and paradigms.
