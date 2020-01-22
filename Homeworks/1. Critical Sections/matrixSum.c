@@ -152,7 +152,7 @@ int main(int argc, char *argv[]) {
    After a barrier, worker(0) computes and prints the total */
 void *Worker(void *arg) {
   long myid = (long) arg;
-  int total, i, j, first, last;
+  int localTotal, i, j, first, last;
 
 #ifdef DEBUG
   printf("worker %ld (pthread id %ld) has started\n", myid, pthread_self());
@@ -162,7 +162,7 @@ void *Worker(void *arg) {
   /* determine first and last rows of my strip */
   //first = myid*stripSize;
   //last = (myid == numWorkers - 1) ? (size - 1) : (first + stripSize - 1);
-  total = 0;
+  localTotal = 0;
   while(row < size){
   if(row < size){
     pthread_mutex_lock(&rowlock);
@@ -177,7 +177,7 @@ void *Worker(void *arg) {
     for (i = first; i < last; i++)
 
       for (j = 0; j < size; j++){
-        total += matrix[i][j];
+        localTotal += matrix[i][j];
 
         if(matrix[i][j] < data.min){
           pthread_mutex_lock(&minlock);
@@ -203,7 +203,7 @@ void *Worker(void *arg) {
 
 }
   pthread_mutex_lock(&sumlock);
-  sum += total;
+  data.total += localTotal;
   pthread_mutex_unlock(&sumlock);
 
   //sums[myid] = total;
