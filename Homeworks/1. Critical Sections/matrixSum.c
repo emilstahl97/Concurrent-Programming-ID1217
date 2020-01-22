@@ -26,42 +26,39 @@
 //#define DEBUG       // Uncomment to get debugging printouts
 
 struct worker {
-  int min;                  // Holds the minimum element
-  int max;                  // Holds the maximum element
-  int total;                // Holds the total sum of all elements
-  int minIndex[2];          // Array to hold the indexes of the minimum element
-  int maxIndex[2];          // Array to hold the indexes of the maximum element
+  int min;                    // Holds the minimum element
+  int max;                    // Holds the maximum element
+  int total;                  // Holds the total sum of all elements
+  int minIndex[2];            // Array to hold the indexes of the minimum element
+  int maxIndex[2];            // Array to hold the indexes of the maximum element
 } element;
 
-pthread_mutex_t minLock;    // mutex lock to update the minimum element
-pthread_mutex_t maxLock;    // mutex lock to update the maximum element
-pthread_mutex_t rowLock;    // mutex lock to update the current row
-pthread_mutex_t totalLock;  // mutex lock to update the total sum
-int minIndex[2];            // Array to hold the indexes of the minimum element
-int maxIndex[2];            // Array to hold the indexes of the maximum element
-int row = 0;                // Variable to specify row
-int numWorkers;             // number of workers
+pthread_mutex_t minLock;      // mutex lock to update the minimum element
+pthread_mutex_t maxLock;      // mutex lock to update the maximum element
+pthread_mutex_t rowLock;      // mutex lock to update the current row
+pthread_mutex_t totalLock;    // mutex lock to update the total sum
+int minIndex[2];              // Array to hold the indexes of the minimum element
+int maxIndex[2];              // Array to hold the indexes of the maximum element
+int size, stripSize;          // assume size is multiple of numWorkers
+int row = 0;                  // Variable to specify row
+int numWorkers;               // number of workers
+int matrix[MAXSIZE][MAXSIZE]; // Array to represent matrix
+double start_time, end_time;  // start and end times 
+
+void *Worker(void *);
 
 /* timer */
 double read_timer() {
     static bool initialized = false;
     static struct timeval start;
     struct timeval end;
-    if( !initialized )
-    {
+    if( !initialized ) {
         gettimeofday( &start, NULL );
         initialized = true;
     }
     gettimeofday( &end, NULL );
     return (end.tv_sec - start.tv_sec) + 1.0e-6 * (end.tv_usec - start.tv_usec);
 }
-
-double start_time, end_time; /* start and end times */
-int size, stripSize;  /* assume size is multiple of numWorkers */
-int sums[MAXWORKERS]; /* partial sums */
-int matrix[MAXSIZE][MAXSIZE]; /* matrix */
-
-void *Worker(void *);
 
 /* read command line, initialize, and create threads */
 int main(int argc, char *argv[]) {
@@ -90,13 +87,15 @@ int main(int argc, char *argv[]) {
   if (size > MAXSIZE) size = MAXSIZE;
   if (numWorkers > MAXWORKERS) numWorkers = MAXWORKERS;
   stripSize = size/numWorkers;
+
   /* initialize the matrix */
-  srand(time(NULL));
+  srand(time(NULL)); //seed the generator
   for (i = 0; i < size; i++) {
 	  for (j = 0; j < size; j++) {
           matrix[i][j] = rand()%range;
 	  }
   }
+
   /* print the matrix */
   for (i = 0; i < size; i++) {
 	  printf("[");
@@ -108,10 +107,11 @@ int main(int argc, char *argv[]) {
 
   /* do the parallel work: create the workers */
   start_time = read_timer();
-  for (l = 0; l < numWorkers; l++)
+  for (l = 0; l < numWorkers; l++) {
     pthread_create(&workerid[l], &attr, Worker, (void *) l);
+  }
 
-  for(int i = 0; i < numWorkers; i++){
+  for(int i = 0; i < numWorkers; i++) {
     pthread_join(workerid[i], NULL);
   }
 
@@ -129,9 +129,9 @@ void *Worker(void *arg) {
   long myid = (long) arg;
   int localTotal, i, j, first, last;
 
-#ifdef DEBUG
-  printf("worker %ld has started\n", myid);
-#endif
+  #ifdef DEBUG
+    printf("worker %ld has started\n", myid);
+  #endif
 
   localTotal = 0;
   while(row < size){
