@@ -33,7 +33,6 @@ struct worker
   int total;
 } data;
 
-pthread_mutex_t barrier;  /* mutex lock for the barrier */
 pthread_mutex_t minlock;
 pthread_mutex_t maxlock;
 pthread_mutex_t rowlock;
@@ -81,7 +80,6 @@ int main(int argc, char *argv[]) {
   pthread_attr_setscope(&attr, PTHREAD_SCOPE_SYSTEM);
 
   /* initialize mutex and condition variable */
-  pthread_mutex_init(&barrier, NULL);
   pthread_mutex_init(&minlock, NULL);
   pthread_mutex_init(&maxlock, NULL);
   pthread_mutex_init(&rowlock, NULL);
@@ -177,6 +175,9 @@ void *Worker(void *arg) {
         }
       }
   }
+  #ifdef DEBUG
+  printf("Local total by thread %ld is = %d \n", myid, localTotal);
+  #endif
 }
   pthread_mutex_lock(&sumlock);
   data.total += localTotal;
