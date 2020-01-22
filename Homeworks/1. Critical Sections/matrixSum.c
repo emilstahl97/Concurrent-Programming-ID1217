@@ -85,7 +85,7 @@ int main(int argc, char *argv[]) {
   data.min = 1000;
   data.max = 0;
   data.total = 0;
-  int i, j;
+  int i, j, range;
   long l; /* use long in case of a 64-bit system */
   pthread_attr_t attr;
   pthread_t workerid[MAXWORKERS];
@@ -104,6 +104,7 @@ int main(int argc, char *argv[]) {
   /* read command line args if any */
   size = (argc > 1)? atoi(argv[1]) : MAXSIZE;
   numWorkers = (argc > 2)? atoi(argv[2]) : MAXWORKERS;
+  range = atoi(argv[3]);
   if (size > MAXSIZE) size = MAXSIZE;
   if (numWorkers > MAXWORKERS) numWorkers = MAXWORKERS;
   stripSize = size/numWorkers;
@@ -112,14 +113,9 @@ int main(int argc, char *argv[]) {
   srand(time(NULL));
   for (i = 0; i < size; i++) {
 	  for (j = 0; j < size; j++) {
-          matrix[i][j] = rand()%99;
+          matrix[i][j] = rand()%range;
 	  }
   }
-  minindex[0] = 0;
-  minindex[1] = 0;
-  maxindex[0] = 0;
-  maxindex[1] = 0;
-
   /* print the matrix */
   for (i = 0; i < size; i++) {
 	  printf("[ ");
