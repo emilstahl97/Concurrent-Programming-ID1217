@@ -1,5 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <pthread.h>
+
+int i, arraySize, *array;
 
 struct Part {
 	int low;
@@ -8,6 +11,8 @@ struct Part {
 
 /* Prototypes */
 void swap(int[], int, int);
+void *quicksort(void *struc);
+int partitioning(int low, int high);
 
 /* Declarations */
 
@@ -20,38 +25,49 @@ void display(int array[], int length)
 	printf("\n");
 }
 
-int partition(int array[], int left, int right, int pivot_index)
-{
-	int pivot_value = array[pivot_index];
-	int store_index = left;
-	int i;
+int partitioning(int low, int high){
 
-//	printf("%d %d %d\n", left, right, pivot_index);
-	swap(array, pivot_index, right);
-	for (i = left; i < right; i++)
-		if (array[i] <= pivot_value) {
-			swap(array, i, store_index);
-			++store_index;
-		}
-	swap(array, store_index, right);
-	return store_index;
+    int pivot = array[high];
+    int wall = low - 1;
+    int current;
+
+    for(current = low; current <= high - 1; current++){
+        if(array[current] < pivot){
+            wall += 1;
+            swap(array, wall, current);
+        }
+    }
+    if(array[high] < array[wall + 1]){
+        swap(array, wall + 1, high);
+    }
+    return wall + 1;
 }
 
-void quicksort(int array[], int left, int right)
-{
-	int pivot_index = left;
-	int pivot_new_index;
+void* quicksort(void* struc){
+    struct Part * range = (struct Part *) struc;
+    int low = range->low;
+    int high = range->high;
+    pthread_t th1, th2;
 
-	loop:
-//	printf("sorting %d to %d\n", left, right);
-	if (right > left) {
-		pivot_new_index = partition(array, left, right, pivot_index);
-//		printf("L\n");
-		quicksort(array, left, pivot_new_index - 1);
-//		printf("R\n");
-		pivot_index = left = pivot_new_index + 1;
-		goto loop;
-	}
+    if(low < high){
+        if(low < 0)
+            low = 0;
+        int p = partitioning(low, high);
+        /*struct Part *left = malloc(sizeof(struct Part));
+        left->low = low;
+        left->high = p - 1;*/
+        struct Part left = {low, p - 1};
+        pthread_create(&th1, NULL, quicksort, &left);
+
+        /*struct Part *right = malloc(sizeof(struct Part));
+        right->low = p + 1;
+        right->high = high;*/
+        struct Part right = {p + 1, high};
+        pthread_create(&th2, NULL, quicksort, &right);
+    }
+    pthread_join(th1, NULL);
+    pthread_join(th2, NULL);
+    pthread_exit(NULL);
 }
 
 void swap(int array[], int left, int right)
@@ -64,40 +80,26 @@ void swap(int array[], int left, int right)
 
 int main(int argc, char *argv[])
 {
-	int *array = NULL;
-	int length = 0;
-	FILE *fh;
-	int data;
-
-	if (argc != 2) {
-		printf("usage: %s <filename>\n", argv[0]);
-		return 1;
-	}
-
-	/* Initialize data. */
-	printf("attempting to sort file: %s\n", argv[1]);
-
-	fh = fopen(argv[1], "r");
-	if (fh == NULL) {
-		printf("error opening file\n");
-		return 0;
-	}
-
-	while (fscanf(fh, "%d", &data) != EOF) {
-		++length;
-		array = (int *) realloc(array, length * sizeof(int));
-		array[length - 1] = data;
-		display(array, length);
-		
-	}
-	fclose(fh);
-	printf("%d elements read\n", length);
+	arraySize = (argc > 1) ? atoi(argv[1]) : 15;
 	
-	struct Part partition = {0, length - 1};
+	struct Part partition = {0, arraySize - 1};
 
-	display(array, length);
-	quicksort(array, 0, length - 1);
-	display(array, length);
+	array = malloc(sizeof(int) * arraySize);
+
+	srand(time(NULL));
+	for(i = 0; i < arraySize; i++) { 
+		array[i] = rand() % 10; 
+	}
+
+	//display(array, length);
+
+	pthread_t start;
+	pthread_create(&start, NULL, quicksort, &partition);
+	pthread_join(start, NULL);
+
+	display(array, arraySize);
+
+	pthread_exit(NULL);
 
 	return 0;
 }
