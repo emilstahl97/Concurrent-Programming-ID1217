@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <pthread.h>
 
-int i, arraySize, *array;
+int i, arraySize, *a;
 
 struct Part {
 	int low;
@@ -16,29 +16,29 @@ int partitioning(int low, int high);
 
 /* Declarations */
 
-void display(int array[], int length)
+void display(int a[], int length)
 {
 	int i;
 	printf(">");
 	for (i = 0; i < length; i++)
-		printf(" %d", array[i]);
+		printf(" %d", a[i]);
 	printf("\n");
 }
 
 int partitioning(int low, int high){
 
-    int pivot = array[high];
+    int pivot = a[high];
     int wall = low - 1;
     int current;
 
     for(current = low; current <= high - 1; current++){
-        if(array[current] < pivot){
+        if(a[current] < pivot){
             wall += 1;
-            swap(array, wall, current);
+            swap(a, wall, current);
         }
     }
-    if(array[high] < array[wall + 1]){
-        swap(array, wall + 1, high);
+    if(a[high] < a[wall + 1]){
+        swap(a, wall + 1, high);
     }
     return wall + 1;
 }
@@ -70,34 +70,52 @@ void* quicksort(void* struc){
     pthread_exit(NULL);
 }
 
-void swap(int array[], int left, int right)
+void swap(int a[], int left, int right)
 {
 	int temp;
-	temp = array[left];
-	array[left] = array[right];
-	array[right] = temp;
+	temp = a[left];
+	a[left] = a[right];
+	a[right] = temp;
 }
 
 int main(int argc, char *argv[])
 {
-	arraySize = (argc > 1) ? atoi(argv[1]) : 15;
-	
-	struct Part partition = {0, arraySize - 1};
+	int length = 0;
+	FILE *fh;
+	int data;
 
-	array = malloc(sizeof(int) * arraySize);
-
-	srand(time(NULL));
-	for(i = 0; i < arraySize; i++) { 
-		array[i] = rand() % 10; 
+	if (argc != 2) {
+		printf("usage: %s <filename>\n", argv[0]);
+		return 1;
 	}
 
-	//display(array, length);
+	/* Initialize data. */
+	printf("attempting to sort file: %s\n", argv[1]);
+
+	fh = fopen(argv[1], "r");
+	if (fh == NULL) {
+		printf("error opening file\n");
+		return 0;
+	}
+
+	while (fscanf(fh, "%d", &data) != EOF) {
+		++arraySize;
+		a = (int *) realloc(a, arraySize * sizeof(int));
+		a[arraySize - 1] = data;
+		display(a, arraySize);
+	}
+	fclose(fh);
+	printf("%d elements read\n", arraySize);
+
+    struct Part partition = {0, arraySize - 1};
+
+	//display(a, length);
 
 	pthread_t start;
 	pthread_create(&start, NULL, quicksort, &partition);
 	pthread_join(start, NULL);
 
-	display(array, arraySize);
+	display(a, arraySize);
 
 	pthread_exit(NULL);
 
