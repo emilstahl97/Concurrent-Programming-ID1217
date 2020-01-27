@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <pthread.h>
+#define MAXSIZE 1000
 
 int i, arraySize, *array;
 
@@ -16,13 +17,13 @@ int partitioning(int low, int high);
 
 /* Declarations */
 
-void display(int array[], int length)
+void print(int array[], int length)
 {
 	int i;
-	printf(">");
+	printf("> [");
 	for (i = 0; i < length; i++)
 		printf(" %d", array[i]);
-	printf("\n");
+	printf(" ]\n");
 }
 
 int partitioning(int low, int high){
@@ -74,51 +75,38 @@ void swap(int array[], int left, int right)
 
 int main(int argc, char *argv[])
 {
+	FILE *fh;
     clock_t c_start, c_stop;
     double exTime = 0;
 	int length = 0;
-	int data;
-    int arraySize = atoi(argv[1]);
+	int data, range;
 
-    if(arraySize == 0) {
-            printf("input is a file\n");
-
-	FILE *fh;
-
-	if (argc != 2) {
-		printf("usage: %s <filename>\n", argv[0]);
-		return 1;
-	}
-
-	printf("attempting to sort file: %s\n", argv[1]);
-
+	/* Initialize data. */
 	fh = fopen(argv[1], "r");
+
 	if (fh == NULL) {
-		printf("error opening file\n");
-		return 0;
+        arraySize = (argc > 1)? atoi(argv[1]) : MAXSIZE;
+        range = (argc > 2)? atoi(argv[2]) : 1000;
+		printf("\nInitializing array with %d elements between 0 and %d\n", arraySize, range);
+        array = malloc(sizeof(int) * arraySize);
+        
+        //Initialize matrix with arraySize and range
+        srand(time(NULL));
+        for(i = 0; i < arraySize; i++)
+            array[i] = rand() % range;   
 	}
-    printf("Reading the file:\n");
-	while (fscanf(fh, "%d", &data) != EOF) {
-		++arraySize;
-		array = (int *) realloc(array, arraySize * sizeof(int));
-		array[arraySize - 1] = data;
-		display(array, arraySize);
-	}
-	fclose(fh);
-	printf("%d elements read\n", arraySize);
-    }
     else {
-        printf("input is a digit");
-         struct Part partition = {0, arraySize - 1};
-
-    array = malloc(sizeof(int) * arraySize);
-
-    srand(time(NULL));
-    for(i = 0; i < arraySize; i++){
-        array[i] = rand() % 1000;
-        //printf("%d ", a[i]);
+        printf("Reading the file:\n");
+	    while (fscanf(fh, "%d", &data) != EOF) {
+		    arraySize++;
+		    array = (int *) realloc(array, arraySize * sizeof(int));
+		    array[arraySize - 1] = data;
+		    print(array, arraySize);
+	    }
+	    fclose(fh);
+	    printf("%d elements read\n", arraySize);
     }
-    }
+
     struct Part partition = {0, arraySize - 1};
 
     printf("Sorting array...\n");
@@ -130,12 +118,10 @@ int main(int argc, char *argv[])
     exTime = ((double)(c_stop - c_start)) / ((double)CLOCKS_PER_SEC/1000);
 
     printf("Sorted in %f ms \n", exTime);
-    
     printf("Sorted array:\n");
-	display(array, arraySize);
+	print(array, arraySize);
 
 	pthread_exit(NULL);
 
 	return 0;
-
 }
