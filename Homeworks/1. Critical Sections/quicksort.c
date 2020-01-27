@@ -74,18 +74,22 @@ void swap(int array[], int left, int right)
 
 int main(int argc, char *argv[])
 {
-	FILE *fh;
     clock_t c_start, c_stop;
     double exTime = 0;
 	int length = 0;
 	int data;
+    int arraySize = atoi(argv[1]);
+
+    if(arraySize == 0) {
+            printf("input is a file\n");
+
+	FILE *fh;
 
 	if (argc != 2) {
 		printf("usage: %s <filename>\n", argv[0]);
 		return 1;
 	}
 
-	/* Initialize data. */
 	printf("attempting to sort file: %s\n", argv[1]);
 
 	fh = fopen(argv[1], "r");
@@ -102,7 +106,19 @@ int main(int argc, char *argv[])
 	}
 	fclose(fh);
 	printf("%d elements read\n", arraySize);
+    }
+    else {
+        printf("input is a digit");
+         struct Part partition = {0, arraySize - 1};
 
+    array = malloc(sizeof(int) * arraySize);
+
+    srand(time(NULL));
+    for(i = 0; i < arraySize; i++){
+        array[i] = rand() % 1000;
+        //printf("%d ", a[i]);
+    }
+    }
     struct Part partition = {0, arraySize - 1};
 
     printf("Sorting array...\n");
@@ -121,4 +137,5 @@ int main(int argc, char *argv[])
 	pthread_exit(NULL);
 
 	return 0;
+
 }
