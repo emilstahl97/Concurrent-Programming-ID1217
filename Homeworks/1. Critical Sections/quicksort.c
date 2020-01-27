@@ -74,8 +74,10 @@ void swap(int array[], int left, int right)
 
 int main(int argc, char *argv[])
 {
-	int length = 0;
 	FILE *fh;
+    clock_t c_start, c_stop;
+    double exTime = 0;
+	int length = 0;
 	int data;
 
 	if (argc != 2) {
@@ -105,8 +107,13 @@ int main(int argc, char *argv[])
 
     printf("Sorting array...\n");
 	pthread_t start;
+    c_start =  clock();
 	pthread_create(&start, NULL, quicksort, &partition);
 	pthread_join(start, NULL);
+    c_stop = clock();
+    exTime = ((double)(c_stop - c_start)) / ((double)CLOCKS_PER_SEC/1000);
+
+    printf("Sorted in %f ms \n", exTime);
     
     printf("Sorted array:\n");
 	display(array, arraySize);
