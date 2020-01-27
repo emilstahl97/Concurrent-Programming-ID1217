@@ -97,7 +97,7 @@ int main(int argc, char *argv[])
 		printf("error opening file\n");
 		return 0;
 	}
-
+    printf("Reading the file:\n");
 	while (fscanf(fh, "%d", &data) != EOF) {
 		++arraySize;
 		a = (int *) realloc(a, arraySize * sizeof(int));
@@ -109,12 +109,12 @@ int main(int argc, char *argv[])
 
     struct Part partition = {0, arraySize - 1};
 
-	//display(a, length);
-
+    printf("Sorting array...\n");
 	pthread_t start;
 	pthread_create(&start, NULL, quicksort, &partition);
 	pthread_join(start, NULL);
-
+    
+    printf("Sorted array:\n");
 	display(a, arraySize);
 
 	pthread_exit(NULL);
