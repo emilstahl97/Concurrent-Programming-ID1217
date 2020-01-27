@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <pthread.h>
 
-int i, arraySize, *a;
+int i, arraySize, *array;
 
 struct Part {
 	int low;
@@ -16,29 +16,29 @@ int partitioning(int low, int high);
 
 /* Declarations */
 
-void display(int a[], int length)
+void display(int array[], int length)
 {
 	int i;
 	printf(">");
 	for (i = 0; i < length; i++)
-		printf(" %d", a[i]);
+		printf(" %d", array[i]);
 	printf("\n");
 }
 
 int partitioning(int low, int high){
 
-    int pivot = a[high];
+    int pivot = array[high];
     int wall = low - 1;
     int current;
 
     for(current = low; current <= high - 1; current++){
-        if(a[current] < pivot){
+        if(array[current] < pivot){
             wall += 1;
-            swap(a, wall, current);
+            swap(array, wall, current);
         }
     }
-    if(a[high] < a[wall + 1]){
-        swap(a, wall + 1, high);
+    if(array[high] < array[wall + 1]){
+        swap(array, wall + 1, high);
     }
     return wall + 1;
 }
@@ -53,15 +53,9 @@ void* quicksort(void* struc){
         if(low < 0)
             low = 0;
         int p = partitioning(low, high);
-        /*struct Part *left = malloc(sizeof(struct Part));
-        left->low = low;
-        left->high = p - 1;*/
         struct Part left = {low, p - 1};
         pthread_create(&th1, NULL, quicksort, &left);
 
-        /*struct Part *right = malloc(sizeof(struct Part));
-        right->low = p + 1;
-        right->high = high;*/
         struct Part right = {p + 1, high};
         pthread_create(&th2, NULL, quicksort, &right);
     }
@@ -70,12 +64,12 @@ void* quicksort(void* struc){
     pthread_exit(NULL);
 }
 
-void swap(int a[], int left, int right)
+void swap(int array[], int left, int right)
 {
 	int temp;
-	temp = a[left];
-	a[left] = a[right];
-	a[right] = temp;
+	temp = array[left];
+	array[left] = array[right];
+	array[right] = temp;
 }
 
 int main(int argc, char *argv[])
@@ -100,9 +94,9 @@ int main(int argc, char *argv[])
     printf("Reading the file:\n");
 	while (fscanf(fh, "%d", &data) != EOF) {
 		++arraySize;
-		a = (int *) realloc(a, arraySize * sizeof(int));
-		a[arraySize - 1] = data;
-		display(a, arraySize);
+		array = (int *) realloc(array, arraySize * sizeof(int));
+		array[arraySize - 1] = data;
+		display(array, arraySize);
 	}
 	fclose(fh);
 	printf("%d elements read\n", arraySize);
@@ -115,7 +109,7 @@ int main(int argc, char *argv[])
 	pthread_join(start, NULL);
     
     printf("Sorted array:\n");
-	display(a, arraySize);
+	display(array, arraySize);
 
 	pthread_exit(NULL);
 
