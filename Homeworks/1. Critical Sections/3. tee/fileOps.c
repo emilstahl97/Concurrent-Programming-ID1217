@@ -3,12 +3,12 @@
   
 long length;
 char* buffer = 0;
-FILE *f, *f2;
+FILE *fileRead, *fileWrite;
 
 
 void* writeToFile() {
 
-  fputs(buffer, f2);
+  fputs(buffer, fileWrite);
 
 }
 
@@ -22,17 +22,17 @@ void *printSTD() {
 
 void *readFile() {
 
-    if (f)
+    if (fileRead)
     {
-      fseek (f, 0, SEEK_END);
-      length = ftell (f);
-      fseek (f, 0, SEEK_SET);
+      fseek (fileRead, 0, SEEK_END);
+      length = ftell (fileRead);
+      fseek (fileRead, 0, SEEK_SET);
       buffer = (char*)malloc ((length+1)*sizeof(char));
       if (buffer)
       {
-        fread (buffer, sizeof(char), length, f);
+        fread (buffer, sizeof(char), length, fileRead);
       }
-      fclose (f);
+      fclose (fileRead);
     }
     buffer[length] = '\0';
 
@@ -40,8 +40,8 @@ void *readFile() {
 
 int main(int argc, char *argv[])
 {
-    f = fopen (argv[1], "rb"); //was "rb"
-    f2 = fopen(argv[2], "w");
+    fileRead = fopen (argv[1], "rb"); //was "rb"
+    fileWrite = fopen(argv[2], "w");
 
     printf("Attempting to write to file\n");
   
