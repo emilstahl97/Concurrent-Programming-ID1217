@@ -1,12 +1,20 @@
 #include <stdlib.h>
 #include <stdio.h>
+  
+char* buffer = 0;
+FILE *f, *f2;
+
+void* writeToFile() {
+
+  int results = fputs(buffer, f2);
+
+}
 
 int main(int argc, char *argv[])
 {
-    char* buffer = 0;
     long length;
-    FILE * f = fopen (argv[1], "rb"); //was "rb"
-    FILE * f2 = fopen(argv[2], "w");
+    f = fopen (argv[1], "rb"); //was "rb"
+    f2 = fopen(argv[2], "w");
 
     if (f)
     {
@@ -29,6 +37,5 @@ int main(int argc, char *argv[])
 
     printf("Attempting to write to file\n");
 
-    int results = fputs(buffer, f2);
-
+    writeToFile();
 }
