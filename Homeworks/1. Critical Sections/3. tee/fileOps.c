@@ -3,6 +3,8 @@
 #include <pthread.h>
   
 long length;
+int result;
+char* fileName;
 char* buffer = 0;
 FILE *fileToRead, *fileToWrite;
 pthread_cond_t go;
@@ -11,8 +13,9 @@ pthread_mutex_t lock;
 void* writeToFile() {
 
   pthread_cond_wait(&go, &lock);
-  fputs(buffer, fileToWrite);
+  result = fputs(buffer, fileToWrite);
 
+  return 0;
 }
 
 void *printSTD() {
@@ -22,6 +25,8 @@ void *printSTD() {
       printf("%c", buffer[i]);
     }
   printf("\n");
+
+  return 0;
 }
 
 void *readFile() {
@@ -44,12 +49,15 @@ void *readFile() {
   pthread_cond_broadcast(&go);
   pthread_mutex_unlock(&lock);
 
+  return 0;
+
 }
 
 int main(int argc, char *argv[])
 {
     fileToRead = fopen (argv[1], "rb"); //was "rb"
     fileToWrite = fopen(argv[2], "w");
+    fileName = argv[2];
     pthread_cond_init(&go, NULL);
     pthread_mutex_init(&lock, NULL);
 
@@ -65,6 +73,13 @@ int main(int argc, char *argv[])
     pthread_join(print, NULL);
     pthread_join(write, NULL);
     
-    pthread_exit(NULL);
+    if(result == EOF) {
+    printf("Write to file %s failed \n", fileName);
+  }
+  else {
+    printf("Write to file %s succeded \n", fileName);
+  }
+    
+  pthread_exit(NULL);
   
 }
