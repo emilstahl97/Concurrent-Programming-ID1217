@@ -42,7 +42,6 @@ void *readFile() {
       {
         fread (buffer, sizeof(char), length, fileToRead);
       }
-      fclose (fileToRead);
     }
     buffer[length] = '\0';
 
@@ -63,7 +62,7 @@ int main(int argc, char *argv[])
 
     pthread_t print, write, read;
 
-    printf("Attempting to write to file\n");
+    printf("Attempting to write to file...\n");
 
     pthread_create(&read, NULL, readFile, NULL);
     pthread_create(&print, NULL, printSTD, NULL);
@@ -73,6 +72,9 @@ int main(int argc, char *argv[])
     pthread_join(print, NULL);
     pthread_join(write, NULL);
     
+    fclose (fileToRead);
+    fclose(fileToWrite);
+
     if(result == EOF) {
     printf("Write to file %s failed \n", fileName);
   }
