@@ -9,6 +9,12 @@
 
 FILE *fp1, *fp2;
 int *buffer, bufferSize;
+struct file {
+
+  int *buffer; 
+  int bufferSize;
+
+} file;
 
 /*write to file tee.txt*/
 void* writeFile(int buffer){
@@ -18,23 +24,19 @@ void* writeFile(int buffer){
 }
 
 /*write from buffer to standard outputt*/
-void* printText(int buffer){
-  printf("%c", buffer);
-  return NULL;
-}
-
-void print(int buffer[], int length) {
+void print(void *struc) {
 	int i;
-	printf("> [");
-	for (i = 0; i < length; i++)
-		printf(" %d", buffer[i]);
-	printf(" ]\n");
+	for (i = 0; i < bufferSize; i++)
+		printf("%d ", buffer[i]);
+	  printf("\n");
 }
 
 int main(int argc, char *argv[]) {
 
   FILE *f1, *f2;
   int data;
+  pthread_t th1;
+  struct file file;
   f1 = fopen(argv[1], "r");
   f2 = fopen(argv[2], "w");
 
@@ -43,8 +45,12 @@ int main(int argc, char *argv[]) {
 		    buffer = (int *) realloc(buffer, bufferSize * sizeof(int));
 		    buffer[bufferSize - 1] = data;
 	    }
-      print(buffer, bufferSize);
 	    fclose(f1);
-	    printf("%d elements read\n", bufferSize); 
+
+          pthread_create(&th1, NULL, print, NULL);
+
+          pthread_join(th1, NULL);
+
+          pthread_exit(NULL);
 
 }
