@@ -4,10 +4,19 @@
 char* buffer = 0;
 FILE *f, *f2;
 
+
 void* writeToFile() {
 
   int results = fputs(buffer, f2);
 
+}
+
+void *printSTD(int length) {
+
+  for (int i = 0; i < length; i++) {
+      printf("%c", buffer[i]);
+    }
+  printf("\n");
 }
 
 int main(int argc, char *argv[])
@@ -29,13 +38,11 @@ int main(int argc, char *argv[])
       fclose (f);
     }
     buffer[length] = '\0';
-    for (int i = 0; i < length; i++) {
-       printf("%c", buffer[i]);
-    }
-    printf("\n");
+
     //printf("buffer = %s\n", buffer);
 
     printf("Attempting to write to file\n");
 
     writeToFile();
+    printSTD(length);
 }
