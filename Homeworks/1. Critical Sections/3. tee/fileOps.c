@@ -6,6 +6,7 @@ int main(int argc, char *argv[])
     char* buffer = 0;
     long length;
     FILE * f = fopen (argv[1], "rb"); //was "rb"
+    FILE * f2 = fopen(argv[2], "w");
 
     if (f)
     {
@@ -25,5 +26,9 @@ int main(int argc, char *argv[])
     }
     printf("\n");
     //printf("buffer = %s\n", buffer);
+
+    printf("Attempting to write to file\n");
+
+    int results = fputs(buffer, f2);
 
 }
