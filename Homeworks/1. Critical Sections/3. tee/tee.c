@@ -5,52 +5,41 @@
 #include <stdio.h>
 #include <string.h>
 #include <pthread.h>
+#define MAXSIZE 100000;
 
+int buffer, bufferSize;
 
 FILE *fp1, *fp2;
-int *buffer, bufferSize;
-struct file {
-
-  int *buffer; 
-  int bufferSize;
-
-} file;
-
-/*write to file tee.txt*/
-void* writeFile(int buffer){
-  /*writes a character in the file*/
+/*
+//write to file tee.txt
+void* writeFile(){
+  //writes a character in the file
   fputc(buffer, fp2);
   return NULL;
 }
 
-/*write from buffer to standard outputt*/
+//write from buffer to standard outputt
 void print(void *struc) {
 	int i;
 	for (i = 0; i < bufferSize; i++)
 		printf("%d ", buffer[i]);
 	  printf("\n");
 }
-
+*/
 int main(int argc, char *argv[]) {
 
   FILE *f1, *f2;
   int data;
   pthread_t th1;
-  struct file file;
   f1 = fopen(argv[1], "r");
   f2 = fopen(argv[2], "w");
 
-  while (fscanf(f1, "%d", &data) != EOF) {
-		    bufferSize++;
-		    buffer = (int *) realloc(buffer, bufferSize * sizeof(int));
-		    buffer[bufferSize - 1] = data;
-	    }
-	    fclose(f1);
+  while(!feof(fp1)) {
 
-          pthread_create(&th1, NULL, print, NULL);
+    /*Read from the file and save it in the buffer*/
+    buffer = fgetc(fp1);
+    bufferSize++;
+  }
 
-          pthread_join(th1, NULL);
-
-          pthread_exit(NULL);
-
+  printf("buffer = %d\n", bufferSize);
 }
