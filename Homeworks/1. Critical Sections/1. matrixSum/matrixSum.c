@@ -135,8 +135,8 @@ void *Worker(void *arg) {
 
   localTotal = 0;
   while(row < size){
-  if(row < size){
     pthread_mutex_lock(&rowLock);
+  if(row < size){
     first = row;
     row++;
     last = row;
