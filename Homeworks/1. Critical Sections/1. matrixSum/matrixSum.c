@@ -62,9 +62,7 @@ double read_timer() {
 
 /* read command line, initialize, and create threads */
 int main(int argc, char *argv[]) {
-  element.min = 1000;
-  element.max = 0;
-  element.total = 0;
+  
   int i, j, range;
   long l; /* use long in case of a 64-bit system */
   pthread_attr_t attr;
@@ -95,6 +93,10 @@ int main(int argc, char *argv[]) {
           matrix[i][j] = rand()%range;
 	  }
   }
+
+  element.min = matrix[0][0];
+  element.max = matrix[0][0];
+  element.total = 0;
 
   /* print the matrix */
   for (i = 0; i < size; i++) {
