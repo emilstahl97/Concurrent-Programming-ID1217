@@ -79,8 +79,8 @@ int main(int argc, char *argv[]) {
   pthread_mutex_init(&totalLock, NULL);
 
   /* read command line args if any */
-  size = (argc > 1)? atoi(argv[1]) : MAXSIZE;
-  numWorkers = (argc > 2)? atoi(argv[2]) : MAXWORKERS;
+  size = (argc > 1) ? atoi(argv[1]) : MAXSIZE;
+  numWorkers = (argc > 2) ? atoi(argv[2]) : MAXWORKERS;
   range = (argc > 3) ? atoi(argv[3]) : 100;
   if (size > MAXSIZE) size = MAXSIZE;
   if (numWorkers > MAXWORKERS) numWorkers = MAXWORKERS;
@@ -94,6 +94,7 @@ int main(int argc, char *argv[]) {
 	  }
   }
 
+  // initialize the structs min and max with the first element of the matrix
   element.min = matrix[0][0];
   element.max = matrix[0][0];
   element.total = 0;
