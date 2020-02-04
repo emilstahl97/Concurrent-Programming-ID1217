@@ -21,6 +21,8 @@ struct worker {
   int maxIndex[2];            // Array to hold the indexes of the maximum element
 } element;
 
+omp_lock_t minLock;            // mutex lock to update the minimum element
+omp_lock_t maxLock;            // mutex lock to update the maximum element
 int minIndex[2];              // Array to hold the indexes of the minimum element
 int maxIndex[2];              // Array to hold the indexes of the maximum element
 int size, stripSize;          // assume size is multiple of numWorkers
@@ -44,7 +46,7 @@ int main(int argc, char *argv[]) {
 
   omp_set_num_threads(numWorkers);
 
-   /* initialize the matrix */
+  /* initialize the matrix */
   srand(time(NULL)); //seed the generator
   for (i = 0; i < size; i++) {
 	  for (j = 0; j < size; j++) {
@@ -65,7 +67,8 @@ int main(int argc, char *argv[]) {
 	  printf("]\n");
   }
 
-
+omp_init_lock(&minLock);
+omp_init_lock(&minLock);
 
 
 start_time = omp_get_wtime();
