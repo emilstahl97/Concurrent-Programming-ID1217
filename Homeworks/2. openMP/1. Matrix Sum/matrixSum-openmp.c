@@ -67,19 +67,43 @@ int main(int argc, char *argv[]) {
 	  printf("]\n");
   }
 
-omp_init_lock(&minLock);
-omp_init_lock(&minLock);
+  omp_init_lock(&minLock);
+  omp_init_lock(&minLock);
 
 
 start_time = omp_get_wtime();
 #pragma omp parallel for reduction (+:total) private(j)
   for (i = 0; i < size; i++)
     for (j = 0; j < size; j++){
+
+      if(matrix[i][j] < element.min) {
+        #pragma omp critical(min)
+        {
+          if(matrix[i][j] < element.min) {
+            element.min = matrix[i][j];
+            element.minIndex[0] = i;
+            element.minIndex[1] = j; 
+          }
+        }
+      }
+      if(matrix[i][j] < element.max) {
+        #pragma omp critical(max)
+        {
+          if(matrix[i][j] < element.max) {
+            element.max = matrix[i][j];
+            element.maxIndex[0] = i;
+            element.maxIndex[1] = j; 
+          }
+        }
+      }
+    
       total += matrix[i][j];
     }
 // implicit barrier
 
   end_time = omp_get_wtime();
+
+  #pragma omp master
 
   printf("the total is %d\n", total);
   printf("it took %g seconds\n", end_time - start_time);
