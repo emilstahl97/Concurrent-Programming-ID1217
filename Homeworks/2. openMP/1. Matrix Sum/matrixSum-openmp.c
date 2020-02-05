@@ -12,6 +12,7 @@
 #define MAXWORKERS 8   /* maximum number of workers */
 
 double start_time, end_time;
+int omp_get_num_threads(void);
 
 struct worker {
   int min;                    // Holds the minimum element
@@ -45,7 +46,7 @@ int main(int argc, char *argv[]) {
   if (numWorkers > MAXWORKERS) numWorkers = MAXWORKERS;
 
   omp_set_num_threads(numWorkers);
-
+  
   /* initialize the matrix */
   srand(time(NULL)); //seed the generator
   for (i = 0; i < size; i++) {
@@ -73,9 +74,8 @@ int main(int argc, char *argv[]) {
 
 start_time = omp_get_wtime();
 #pragma omp parallel for reduction (+:total) private(j)
-  for (i = 0; i < size; i++)
+  for (i = 0; i < size; i++) {
     for (j = 0; j < size; j++){
-
       if(matrix[i][j] < element.min) {
         #pragma omp critical(min)
         {
@@ -86,10 +86,10 @@ start_time = omp_get_wtime();
           }
         }
       }
-      if(matrix[i][j] < element.max) {
+      if(matrix[i][j] > element.max) {
         #pragma omp critical(max)
         {
-          if(matrix[i][j] < element.max) {
+          if(matrix[i][j] > element.max) {
             element.max = matrix[i][j];
             element.maxIndex[0] = i;
             element.maxIndex[1] = j; 
@@ -97,16 +97,19 @@ start_time = omp_get_wtime();
         }
       }
     
-      total += matrix[i][j];
+      element.total += matrix[i][j];
     }
+}
+
 // implicit barrier
 
   end_time = omp_get_wtime();
 
   #pragma omp master
 
-  printf("the total is %d\n", total);
-  printf("it took %g seconds\n", end_time - start_time);
-
+  printf("The execution took %g ms to complete\n", (end_time - start_time)*1000);
+  printf("The total sum of all the elements is %d\n", element.total);
+  printf("The minimum element is %d at position [%d,%d]\n", element.min, element.minIndex[1]+1,element.minIndex[0]+1);
+  printf("The maximum element is %d at position [%d,%d]\n", element.max, element.maxIndex[1]+1,element.maxIndex[0]+1);
 }
 
