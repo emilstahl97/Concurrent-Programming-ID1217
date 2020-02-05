@@ -119,7 +119,6 @@ int main(int argc, char *argv[]) {
 
     struct Part partition = {0, arraySize - 1};
 
-
     int numThreads = (argc > 3) ? atoi(argv[3]) :100;
     omp_set_num_threads(numThreads);
     
