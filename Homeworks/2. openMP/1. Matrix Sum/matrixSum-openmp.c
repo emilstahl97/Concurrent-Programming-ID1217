@@ -73,7 +73,9 @@ int main(int argc, char *argv[]) {
 
 
 start_time = omp_get_wtime();
-#pragma omp parallel for reduction (+:total) private(j)
+#pragma omp parallel 
+{
+  #pragma for reduction (+:total) private(j) 
   for (i = 0; i < size; i++) {
     for (j = 0; j < size; j++){
       if(matrix[i][j] < element.min) {
@@ -99,6 +101,9 @@ start_time = omp_get_wtime();
     
       element.total += matrix[i][j];
     }
+}
+      #pragma omp single
+      printf("Number of threads executing is %d \n", omp_get_num_threads());
 }
 
 // implicit barrier
