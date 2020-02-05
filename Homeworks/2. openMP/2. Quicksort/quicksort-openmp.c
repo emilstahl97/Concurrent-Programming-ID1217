@@ -79,8 +79,7 @@ void* quicksort(void* struc){
         #pragma omp task
         {
         quicksort(&right);
-        }
-        
+        }  
     }
     return 0;
 }
