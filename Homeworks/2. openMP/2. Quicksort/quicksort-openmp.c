@@ -71,11 +71,16 @@ void* quicksort(void* struc){
         struct Part left = {low, p - 1};
         struct Part right = {p + 1, high};
 
-        #pragma omp task
+        #pragma omp task 
+        {
         quicksort(&left);
-
+        }
+        //printf("nr of threads = %d\n", omp_get_num_threads());
         #pragma omp task
+        {
         quicksort(&right);
+        }
+        
     }
     return 0;
 }
