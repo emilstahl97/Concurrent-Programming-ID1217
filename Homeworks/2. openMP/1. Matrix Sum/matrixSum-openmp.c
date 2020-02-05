@@ -2,7 +2,7 @@
 
    usage with gcc (version 4.2 or higher required):
      gcc -O -fopenmp -o matrixSum-openmp matrixSum-openmp.c 
-     ./matrixSum-openmp size numWorkers
+     ./matrixSum-openmp size numThreads range
 
 */
 
@@ -10,29 +10,18 @@
 #include <stdio.h>
 #define MAXSIZE 10000  /* maximum matrix size */
 #define MAXWORKERS 8   /* maximum number of workers */
-
-double start_time, end_time;
-int omp_get_num_threads(void);
-
 struct worker {
   int min;                    // Holds the minimum element
   int max;                    // Holds the maximum element
-  int total;                  // Holds the total sum of all elements
   int minIndex[2];            // Array to hold the indexes of the minimum element
   int maxIndex[2];            // Array to hold the indexes of the maximum element
+  long total;                  // Holds the total sum of all elements
 } element;
 
-omp_lock_t minLock;            // mutex lock to update the minimum element
-omp_lock_t maxLock;            // mutex lock to update the maximum element
-int minIndex[2];              // Array to hold the indexes of the minimum element
-int maxIndex[2];              // Array to hold the indexes of the maximum element
-int size, stripSize;          // assume size is multiple of numWorkers
-int row = 0;                  // Variable to specify row
-int numWorkers;               // number of workers
+int size;                     // assume size is multiple of numThreads
+int numThreads;               // number of workers
 int matrix[MAXSIZE][MAXSIZE]; // Array to represent matrix
 double start_time, end_time;  // start and end times
-
-void *Worker(void *);
 
 /* read command line, initialize, and create threads */
 int main(int argc, char *argv[]) {
@@ -40,12 +29,12 @@ int main(int argc, char *argv[]) {
 
   /* read command line args if any */
   size = (argc > 1)? atoi(argv[1]) : MAXSIZE;
-  numWorkers = (argc > 2)? atoi(argv[2]) : MAXWORKERS;
+  numThreads = (argc > 2)? atoi(argv[2]) : MAXWORKERS;
   range = (argc > 3) ? atoi(argv[3]) : 100;
   if (size > MAXSIZE) size = MAXSIZE;
-  if (numWorkers > MAXWORKERS) numWorkers = MAXWORKERS;
+  if (numThreads > MAXWORKERS) numThreads = MAXWORKERS;
 
-  omp_set_num_threads(numWorkers);
+  omp_set_num_threads(numThreads);
   
   /* initialize the matrix */
   srand(time(NULL)); //seed the generator
@@ -67,10 +56,6 @@ int main(int argc, char *argv[]) {
 	  }
 	  printf("]\n");
   }
-
-  omp_init_lock(&minLock);
-  omp_init_lock(&minLock);
-
 
 start_time = omp_get_wtime();
 #pragma omp parallel 
@@ -98,14 +83,13 @@ start_time = omp_get_wtime();
           }
         }
       }
-    
       element.total += matrix[i][j];
     }
 }
+      //only one thread needs to print number of threads
       #pragma omp single
       printf("Number of threads executing is %d \n", omp_get_num_threads());
 }
-
 // implicit barrier
 
   end_time = omp_get_wtime();
@@ -113,8 +97,7 @@ start_time = omp_get_wtime();
   #pragma omp master
 
   printf("The execution took %g ms to complete\n", (end_time - start_time)*1000);
-  printf("The total sum of all the elements is %d\n", element.total);
+  printf("The total sum of all the elements is %ld\n", element.total);
   printf("The minimum element is %d at position [%d,%d]\n", element.min, element.minIndex[1]+1,element.minIndex[0]+1);
   printf("The maximum element is %d at position [%d,%d]\n", element.max, element.maxIndex[1]+1,element.maxIndex[0]+1);
 }
-
