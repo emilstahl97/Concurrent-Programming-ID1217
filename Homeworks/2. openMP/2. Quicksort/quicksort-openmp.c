@@ -76,21 +76,12 @@ static void quicksort(int pivot, int high, int *list, int low_limit)
     }
 
 	int mid = partition(pivot, high, list);
+    printf("doing quicksort\n");
 
 #pragma omp task
 	quicksort(pivot, mid - 1, list, low_limit);
 #pragma omp task
 	quicksort(mid + 1, high, list, low_limit);
-    printf("doing quicksort\n");
-}
-
-
-/* Swap function for bubble sort */
-void swap(double *xp, double *yp)
-{
-	double temp = *xp;
-	*xp = *yp;
-	*yp = temp;
 }
 
 int main(int argc, char *argv[])
