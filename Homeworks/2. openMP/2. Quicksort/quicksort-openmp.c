@@ -3,6 +3,7 @@
 #include <stdbool.h>
 #include <omp.h>
 #define RUNONCE
+#define LOW_LIMIT 1000
 #define MAX_SIZE 1000
 #define MAX_RANGE 10000
 
@@ -61,12 +62,12 @@ static int partition(int pivot_index, int high, int *data)
 }
 
 /* The parallel quicksort */
-static void quicksort(int pivot, int high, int *list, int low_limit)
+static void quicksort(int pivot, int high, int *list)
 {
 	if (pivot >= high)
 		return;
 
-	if ((high - pivot) < low_limit) {
+	if ((high - pivot) < LOW_LIMIT) {
         printf("Insertion sort enabled\n");
         #pragma omp critical
         {
@@ -79,9 +80,9 @@ static void quicksort(int pivot, int high, int *list, int low_limit)
     printf("doing quicksort\n");
 
 #pragma omp task
-	quicksort(pivot, mid - 1, list, low_limit);
+	quicksort(pivot, mid - 1, list);
 #pragma omp task
-	quicksort(mid + 1, high, list, low_limit);
+	quicksort(mid + 1, high, list);
 }
 
 int main(int argc, char *argv[])
@@ -122,7 +123,7 @@ int main(int argc, char *argv[])
     #pragma omp parallel
 	{
     #pragma omp single nowait
-		quicksort(0, length - 1, &array[0], 1000);
+		quicksort(0, length - 1, &array[0]);
 	}
 	double end_time = omp_get_wtime();
 	/* Free main array and return */
