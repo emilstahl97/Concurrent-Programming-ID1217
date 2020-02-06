@@ -2,17 +2,14 @@
 
    usage with gcc (version 4.2 or higher required):
      gcc -O -fopenmp -o matrixSum-openmp matrixSum-openmp.c 
-     ./matrixSum-openmp size numThreads
+     ./matrixSum-openmp size numThreads range
 
 */
 
 #include <omp.h>
-
-double start_time, end_time;
-
 #include <stdio.h>
 #define MAXSIZE 10000  /* maximum matrix size */
-#define MAXWORKERS 100   /* maximum number of workers */
+#define MAXTHREADS 100   /* maximum number of threads */
 struct worker {
   int min;                    // Holds the minimum element
   int max;                    // Holds the maximum element
@@ -21,10 +18,10 @@ struct worker {
   long total;                 // Holds the total sum of all elements
 } element;
 
-int numThreads;
-int size; 
-int matrix[MAXSIZE][MAXSIZE];
-void *Worker(void *);
+int size;                     // assume size is multiple of numThreads
+int numThreads;               // number of workers
+int matrix[MAXSIZE][MAXSIZE]; // Array to represent matrix
+double start_time, end_time;  // start and end times
 
 /* read command line, initialize, and create threads */
 int main(int argc, char *argv[]) {
@@ -32,10 +29,10 @@ int main(int argc, char *argv[]) {
 
   /* read command line args if any */
   size = (argc > 1)? atoi(argv[1]) : MAXSIZE;
-  numThreads = (argc > 2)? atoi(argv[2]) : MAXWORKERS;
+  numThreads = (argc > 2)? atoi(argv[2]) : MAXTHREADS;
   range = (argc > 3) ? atoi(argv[3]) : 100;
   if (size > MAXSIZE) size = MAXSIZE;
-  if (numThreads > MAXWORKERS) numThreads = MAXWORKERS;
+  if (numThreads > MAXTHREADS) numThreads = MAXTHREADS;
 
   omp_set_num_threads(numThreads);
 
@@ -62,7 +59,7 @@ int main(int argc, char *argv[]) {
 
 
 
-  start_time = omp_get_wtime();
+start_time = omp_get_wtime();
 #pragma omp parallel for reduction (+:total) private(j)
  for (i = 0; i < size; i++) {
     for (j = 0; j < size; j++){
