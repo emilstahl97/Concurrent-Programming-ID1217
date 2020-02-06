@@ -1,1 +1,1 @@
-"Hej på dig"
+"This shall be written to STDOUT and the file"
