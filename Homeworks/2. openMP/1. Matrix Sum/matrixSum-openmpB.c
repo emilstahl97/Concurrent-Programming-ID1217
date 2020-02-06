@@ -8,8 +8,9 @@
 
 #include <omp.h>
 #include <stdio.h>
-#define MAXSIZE 10000  /* maximum matrix size */
+#define MAXSIZE 10000       /* maximum matrix size */
 #define MAXTHREADS 10000   /* maximum number of threads */
+//#define DEBUG            // Uncomment to get debugging printouts
 struct worker {
   int min;                    // Holds the minimum element
   int max;                    // Holds the maximum element
@@ -48,7 +49,8 @@ int main(int argc, char *argv[]) {
   element.max = matrix[0][0];
   element.total = 0;
 
- /* /* print the matrix 
+#ifdef DEBUG
+ // print the matrix 
   for (i = 0; i < size; i++) {
 	  printf("[");
 	  for (j = 0; j < size; j++) {
@@ -56,7 +58,8 @@ int main(int argc, char *argv[]) {
 	  }
 	  printf("]\n");
   }
-*/
+#endif
+
 start_time = omp_get_wtime();
 #pragma omp parallel 
 {
