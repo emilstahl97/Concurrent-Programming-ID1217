@@ -9,13 +9,13 @@
 #include <omp.h>
 #include <stdio.h>
 #define MAXSIZE 10000  /* maximum matrix size */
-#define MAXWORKERS 10000   /* maximum number of workers */
+#define MAXTHREADS 10000   /* maximum number of threads */
 struct worker {
   int min;                    // Holds the minimum element
   int max;                    // Holds the maximum element
   int minIndex[2];            // Array to hold the indexes of the minimum element
   int maxIndex[2];            // Array to hold the indexes of the maximum element
-  long total;                  // Holds the total sum of all elements
+  long total;                 // Holds the total sum of all elements
 } element;
 
 int size;                     // assume size is multiple of numThreads
@@ -29,10 +29,10 @@ int main(int argc, char *argv[]) {
 
   /* read command line args if any */
   size = (argc > 1)? atoi(argv[1]) : MAXSIZE;
-  numThreads = (argc > 2)? atoi(argv[2]) : MAXWORKERS;
+  numThreads = (argc > 2)? atoi(argv[2]) : MAXTHREADS;
   range = (argc > 3) ? atoi(argv[3]) : 100;
   if (size > MAXSIZE) size = MAXSIZE;
-  if (numThreads > MAXWORKERS) numThreads = MAXWORKERS;
+  if (numThreads > MAXTHREADS) numThreads = MAXTHREADS;
 
   omp_set_num_threads(numThreads);
   
@@ -88,7 +88,7 @@ start_time = omp_get_wtime();
 }
       //only one thread needs to print number of threads
       #pragma omp single
-      printf("Number of threads executing is %d \n", omp_get_num_threads());
+      printf("Number of threads executing is: %d \n", omp_get_num_threads());
 }
 // implicit barrier
 
