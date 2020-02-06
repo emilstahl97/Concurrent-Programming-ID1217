@@ -3,15 +3,23 @@
 #include <stdbool.h>
 #include <omp.h>
 #define RUNONCE
+#define MAX_SIZE 1000
+#define MAX_RANGE 10000
 
-/* Helper function */
-double drand(double low, double high)
-{
-	return ((double)rand() * (high - low)) / (double)RAND_MAX + low;
-}
+void print(int [], int);
+
 int c = 0;
+
+
+void print(int array[], int length) {
+	int i;
+	printf("> [");
+	for (i = 0; i < length; i++)
+		printf(" %d", array[i]);
+	printf(" ]\n");
+}
 /* When list gets small */
-static void insertionSort(float arr[], int n)
+static void insertionSort(int arr[], int n)
 {
 	int i, j;
 	float temp;
@@ -30,7 +38,7 @@ static void insertionSort(float arr[], int n)
 }
 
 /* Meat of quick sort. Partitioning */
-static int partition(int pivot_index, int high, float *data)
+static int partition(int pivot_index, int high, int *data)
 {
 	float pivot = data[pivot_index];
 	int k = pivot_index + 1;
@@ -53,7 +61,7 @@ static int partition(int pivot_index, int high, float *data)
 }
 
 /* The parallel quicksort */
-static void quicksort(int pivot, int high, float *list, int low_limit)
+static void quicksort(int pivot, int high, int *list, int low_limit)
 {
 	if (pivot >= high)
 		return;
@@ -85,54 +93,49 @@ void swap(double *xp, double *yp)
 	*yp = temp;
 }
 
-/* An optimized version of bubble sort */
-void sort(double arr[], int n)
-{
-	int i, j;
-	bool swapped;
-
-	for (i = 0; i < n - 1; i++)
-	{
-		swapped = false;
-		for (j = 0; j < n - i - 1; j++)
-		{
-			if (arr[j] > arr[j + 1])
-			{
-				swap(&arr[j], &arr[j + 1]);
-				swapped = true;
-			}
-		}
-
-		// IF no two elements were swapped by inner loop, then break
-		if (swapped == false)
-			break;
-	}
-}
-
-
 int main(int argc, char *argv[])
 {
-	int length =(argc > 1) ? atoi(argv[1]) : 100000;
-	/* Init main array */
-	float *mainArray;
-	mainArray = (float *)malloc(sizeof(float) * length);
-	if (mainArray == NULL)
-	{
-		printf("Error!\n");
-		exit(1);
+	FILE *fh;
+    double exTime = 0;
+	int data, range, length, *array;
+
+	/* Initialize data. */
+	fh = fopen(argv[1], "r");
+
+	if (fh == NULL) {
+        length = (argc > 1)? atoi(argv[1]) : MAX_SIZE;
+        range = (argc > 2)? atoi(argv[2]) : MAX_RANGE;
+		printf("\nInitializing array with %d elements between 0 and %d\n", length, range);
+        array = malloc(sizeof(int) * length);
+        
+        //Initialize matrix with arraySize and range
+        srand(time(NULL));
+        for(int i = 0; i < length; i++)
+            array[i] = rand() % range;   
+        print(array, length);
 	}
-	int i, j;
-	for (i = 0; i < length; i++)
-		mainArray[i] = drand(0.0, 100.0);
-double start_time = omp_get_wtime();
-#pragma omp parallel
+    else {
+        printf("Reading the file:\n");
+	    while (fscanf(fh, "%d", &data) != EOF) {
+		    length++;
+		    array = (int *) realloc(array, length * sizeof(int));
+		    array[length - 1] = data;
+		    print(array, length);
+	    }
+	    fclose(fh);
+	    printf("%d elements read\n", length);
+    }
+
+
+    double start_time = omp_get_wtime();
+    #pragma omp parallel
 	{
-#pragma omp single nowait
-		quicksort(0, length - 1, &mainArray[0], 1000);
+    #pragma omp single nowait
+		quicksort(0, length - 1, &array[0], 1000);
 	}
 	double end_time = omp_get_wtime();
 	/* Free main array and return */
-	free(mainArray);
+	free(array);
     printf("c = %d\n", c);
 	return 0;
 }
