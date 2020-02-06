@@ -48,7 +48,7 @@ int main(int argc, char *argv[]) {
   element.max = matrix[0][0];
   element.total = 0;
 
-  /* print the matrix */
+ /* /* print the matrix 
   for (i = 0; i < size; i++) {
 	  printf("[");
 	  for (j = 0; j < size; j++) {
@@ -56,7 +56,7 @@ int main(int argc, char *argv[]) {
 	  }
 	  printf("]\n");
   }
-
+*/
 start_time = omp_get_wtime();
 #pragma omp parallel 
 {
