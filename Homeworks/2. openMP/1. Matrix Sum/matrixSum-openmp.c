@@ -9,7 +9,7 @@
 #include <omp.h>
 #include <stdio.h>
 #define MAXSIZE 10000  /* maximum matrix size */
-#define MAXWORKERS 8   /* maximum number of workers */
+#define MAXWORKERS 10000   /* maximum number of workers */
 struct worker {
   int min;                    // Holds the minimum element
   int max;                    // Holds the maximum element
