@@ -2,7 +2,7 @@
 
    usage with gcc (version 4.2 or higher required):
      gcc -O -fopenmp -o matrixSum-openmp matrixSum-openmp.c 
-     ./matrixSum-openmp size numWorkers
+     ./matrixSum-openmp size numThreads
 
 */
 
@@ -12,47 +12,90 @@ double start_time, end_time;
 
 #include <stdio.h>
 #define MAXSIZE 10000  /* maximum matrix size */
-#define MAXWORKERS 8   /* maximum number of workers */
+#define MAXWORKERS 100   /* maximum number of workers */
+struct worker {
+  int min;                    // Holds the minimum element
+  int max;                    // Holds the maximum element
+  int minIndex[2];            // Array to hold the indexes of the minimum element
+  int maxIndex[2];            // Array to hold the indexes of the maximum element
+  long total;                 // Holds the total sum of all elements
+} element;
 
-int numWorkers;
+int numThreads;
 int size; 
 int matrix[MAXSIZE][MAXSIZE];
 void *Worker(void *);
 
 /* read command line, initialize, and create threads */
 int main(int argc, char *argv[]) {
-  int i, j, total=0;
+  int i, j, range, total=0;
 
   /* read command line args if any */
   size = (argc > 1)? atoi(argv[1]) : MAXSIZE;
-  numWorkers = (argc > 2)? atoi(argv[2]) : MAXWORKERS;
+  numThreads = (argc > 2)? atoi(argv[2]) : MAXWORKERS;
+  range = (argc > 3) ? atoi(argv[3]) : 100;
   if (size > MAXSIZE) size = MAXSIZE;
-  if (numWorkers > MAXWORKERS) numWorkers = MAXWORKERS;
+  if (numThreads > MAXWORKERS) numThreads = MAXWORKERS;
 
-  omp_set_num_threads(numWorkers);
+  omp_set_num_threads(numThreads);
 
   /* initialize the matrix */
+  srand(time(NULL)); //seed the generator
   for (i = 0; i < size; i++) {
-    //  printf("[ ");
 	  for (j = 0; j < size; j++) {
-      matrix[i][j] = rand()%99;
-      //	  printf(" %d", matrix[i][j]);
+          matrix[i][j] = rand()%range;
 	  }
-	  //	  printf(" ]\n");
   }
+
+  element.min = matrix[0][0];
+  element.max = matrix[0][0];
+  element.total = 0;
+
+  // print the matrix 
+  for (i = 0; i < size; i++) {
+	    printf("[");
+	    for (j = 0; j < size; j++) {
+	      printf(" %d ", matrix[i][j]);
+	    }
+	    printf("]\n");
+  }
+
+
 
   start_time = omp_get_wtime();
 #pragma omp parallel for reduction (+:total) private(j)
-  for (i = 0; i < size; i++)
+ for (i = 0; i < size; i++) {
     for (j = 0; j < size; j++){
-      total += matrix[i][j];
+      if(matrix[i][j] < element.min) {
+        #pragma omp critical(min)
+        {
+          if(matrix[i][j] < element.min) {
+            element.min = matrix[i][j];
+            element.minIndex[0] = i;
+            element.minIndex[1] = j; 
+          }
+        }
+      }
+      if(matrix[i][j] > element.max) {
+        #pragma omp critical(max)
+        {
+          if(matrix[i][j] > element.max) {
+            element.max = matrix[i][j];
+            element.maxIndex[0] = i;
+            element.maxIndex[1] = j; 
+          }
+        }
+      }
+      element.total += matrix[i][j];
     }
+}
 // implicit barrier
 
   end_time = omp_get_wtime();
 
-  printf("the total is %d\n", total);
-  printf("it took %g seconds\n", end_time - start_time);
-
+  printf("The execution took %g ms to complete\n", (end_time - start_time)*1000);
+  printf("The total sum of all the elements is %ld\n", element.total);
+  printf("The minimum element is %d at position [%d,%d]\n", element.min, element.minIndex[1]+1,element.minIndex[0]+1);
+  printf("The maximum element is %d at position [%d,%d]\n", element.max, element.maxIndex[1]+1,element.maxIndex[0]+1);
 }
 
