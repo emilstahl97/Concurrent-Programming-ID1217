@@ -57,7 +57,7 @@ int main(int argc, char* argv[])
     fclose(fileToRead);
 
     if(argc > 1)
-    printf("Searching for palindromes in file %s\n\n", argv[1]);
+    printf("Searching for palindromes in file %s. . . .\n\n", argv[1]);
 
     /* Record time */
     start_time = omp_get_wtime();
