@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
-
 #include <omp.h>
 
 #define MAX_WORDS 32000
