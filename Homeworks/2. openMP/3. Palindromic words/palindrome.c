@@ -35,12 +35,8 @@ int main(int argc, char* argv[])
     omp_set_num_threads(numThreads);
     
     /* No file */
-    if (!fileToRead) {
-        fprintf(stderr, "Can't open file %s. Exiting", argv[1]);
-        exit(1);
-    }
-    if (!results) {
-        fprintf(stderr, "Can't open file %s. Exiting", argv[2]);
+    if (!fileToRead || !results) {
+        fprintf(stderr, "404 File not Found\n");
         exit(1);
     }
 
