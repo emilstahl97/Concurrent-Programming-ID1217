@@ -21,7 +21,10 @@
 int sum = 0;
 int size;
 char dictionary[MAXSIZE][WORDLENGTH];
-int mark[MAXSIZE];
+int result_buffer[MAXSIZE];
+FILE* results;
+FILE* fileToRead;
+  
 
 /*
     reverse string
@@ -55,7 +58,7 @@ int binarySearch(int l, int r, char * x){
 }
 
 void Workers(int size){
-  int i;
+  int i, result;
   #pragma omp parallel for reduction (+:sum)
   for (i = 0; i < size; i++) {
     // 1. Get word
@@ -64,11 +67,11 @@ void Workers(int size){
     char flip[WORDLENGTH];
     reverse(word, flip);
     // 3. search for fliped word in dictionary
-    int result = binarySearch(i, size -1, flip);
-    // 4. mark if in dictionary
+    result = binarySearch(i, size -1, flip);
+    // 4. if in dictionary, write to result file 
     if(result != -1){
+      fprintf(results, "%s\n", dictionary[i]);
       sum++;
-      mark[i] = 1;
     }
   }
 }
@@ -77,24 +80,17 @@ int main(int argc, char *argv[]){
   double start_time, end_time;
   int k = 0, i, numThreads;
   long l;
-  FILE* fileToRead;
-  FILE *results;
-
-  if(argc < 3){
-    printf("Error! Argument missing: file to examine\n");
-    exit(0);
-  }
-
-    fileToRead = (argc > 1) ? fopen(argv[1], "r+") : fopen("./words.txt", "r+");
-    results = (argc > 2) ? fopen(argv[2], "w+") : fopen("./results.txt", "w+");
-    numThreads = (argc > 3) ? atoi(argv[3]) : MAX_THREADS;
-    
-    omp_set_num_threads(numThreads);
-
-    /* No file */
-    if (!fileToRead || !results) {
-        fprintf(stderr, "404 File not Found\n");
-        exit(1);
+  
+  fileToRead = (argc > 1) ? fopen(argv[1], "r+") : fopen("./words.txt", "r+");
+  results = (argc > 2) ? fopen(argv[2], "w+") : fopen("./results.txt", "w+");
+  numThreads = (argc > 3) ? atoi(argv[3]) : MAX_THREADS;
+  
+  omp_set_num_threads(numThreads);
+  
+  /* No file */
+  if (!fileToRead || !results) {
+      fprintf(stderr, "404 File not Found\n");
+      exit(1);
     }
 
 
@@ -103,25 +99,23 @@ int main(int argc, char *argv[]){
     for(i= 0; dictionary[k][i]; i++){
         dictionary[k][i] = tolower(dictionary[k][i]);
     }
-    mark[k] = 0;
+    result_buffer[k] = 0;
     k++;
   }
   fclose(fileToRead);
   size = k - 1;
 
+  if(argc > 1)
+  printf("\nSearching for palindromic words in %s . . . . .\n", argv[1]);
+
   start_time = omp_get_wtime();                  // Start time for benchmark
   Workers(size);
-  end_time = omp_get_wtime();                    // End time for benchmark
+  end_time = omp_get_wtime();                    // End time for benchmar
 
-  for(i = 0; i < size; i++){
-    if(mark[i]){
-      fprintf(results, "%s\n", dictionary[i]);
-    }
-  }
-  printf("Result stored in %s\n", argv[2]);
-
-  // Print execution time
-  printf("Num threads: %d. The execution time is %g sec. Num words: %d\n"
-          , numThreads, end_time - start_time, sum);
+  fclose(results);
+  
+  printf("The execution took %g ms to complete\n", (end_time - start_time)*1000);
+  printf("Number of palindromic words found: %d\n", sum);
+  printf("Result stored in results.txt\n");
 
 }
