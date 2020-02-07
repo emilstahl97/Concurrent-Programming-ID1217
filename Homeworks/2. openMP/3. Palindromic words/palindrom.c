@@ -1,5 +1,3 @@
-
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -11,10 +9,10 @@
 #define MAX_WORD_LENGTH 128
 #define MAX_THREADS 12
 
-double start_time, end_time;
 
 int num_words = 0;
 int num_palindroms = 0;
+double start_time, end_time;
 
 char word_buff[MAX_WORD_LENGTH];
 char* dictionary[MAX_WORDS];
@@ -58,6 +56,9 @@ int main(int argc, char* argv[])
             break;
     }
     fclose(fileToRead);
+
+    if(argc > 1)
+    printf("Searching for palindromes in file %s\n\n", argv[1]);
 
     /* Record time */
     start_time = omp_get_wtime();
