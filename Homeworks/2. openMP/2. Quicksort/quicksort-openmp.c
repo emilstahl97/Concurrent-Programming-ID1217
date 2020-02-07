@@ -6,6 +6,7 @@
 #define LOW_LIMIT 1000
 #define MAX_SIZE 1000
 #define MAX_RANGE 10000
+//#define PRINT
 
 void print(int [], int);
 
@@ -79,10 +80,14 @@ static void quicksort(int pivot, int high, int *list)
 	int mid = partition(pivot, high, list);
     printf("doing quicksort\n");
 
-#pragma omp task
-	quicksort(pivot, mid - 1, list);
-#pragma omp task
-	quicksort(mid + 1, high, list);
+    #pragma omp task
+    {
+	    quicksort(pivot, mid - 1, list);
+    }
+    #pragma omp task
+    {
+	    quicksort(mid + 1, high, list);
+    }
 }
 
 int main(int argc, char *argv[])
@@ -103,8 +108,10 @@ int main(int argc, char *argv[])
         //Initialize matrix with arraySize and range
         srand(time(NULL));
         for(int i = 0; i < length; i++)
-            array[i] = rand() % range;   
+            array[i] = rand() % range; 
+        #ifdef PRINT  
         print(array, length);
+        #endif
 	}
     else {
         printf("Reading the file:\n");
@@ -126,7 +133,12 @@ int main(int argc, char *argv[])
 		quicksort(0, length - 1, &array[0]);
 	}
 	double end_time = omp_get_wtime();
-	/* Free main array and return */
+    printf("Sorted in %f ms \nSorted array:\n", (end_time-start_time)*1000);
+    #ifdef PRINT
+    print(array, length);
+    #endif
+
+	/* Free  array and return */
 	free(array);
     printf("c = %d\n", c);
 	return 0;
