@@ -6,17 +6,17 @@
    usage under Linux:
 
             gcc palindrome.c -o palindrome -fopenmp
-            ./palindrome <input file> <output file> numThreads
+            ./palindrome <input file> <output file> numberOfThreads
 */
 
 
 #include <stdio.h>
-#include <ctype.h>
 #include <stdlib.h>
+#include <ctype.h>
 #include <string.h>
 #include <omp.h>
 
-#define WORD_LENGTH 70
+#define WORD_LENGTH 35
 #define MAX_SIZE 400000
 #define MAX_THREADS 24 
 
