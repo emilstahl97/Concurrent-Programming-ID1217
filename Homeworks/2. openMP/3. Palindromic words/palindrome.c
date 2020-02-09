@@ -16,11 +16,11 @@
 #include <string.h>
 #include <omp.h>
 
-#define WORD_LENGTH 40
-#define MAX_SIZE 30000
+#define WORD_LENGTH 70
+#define MAX_SIZE 400000
 #define MAX_THREADS 24 
 
-int sum = 0;
+int threads, sum = 0;
 int result_buffer[MAX_SIZE];
 char dictionary[MAX_SIZE][WORD_LENGTH];
 FILE* fileToRead;
@@ -52,7 +52,9 @@ int binarySearch(int l, int r, char * x){
 
 void Worker(int size){
   int i, result;
-  #pragma omp parallel for reduction (+:sum)
+  #pragma omp parallel 
+  {
+  #pragma omp for reduction (+:sum)
   for (i = 0; i < size; i++) {
     // 1. Get word
     char * word = dictionary[i];
@@ -70,6 +72,11 @@ void Worker(int size){
         }
     }
   }
+    #pragma omp single 
+    {
+    threads = omp_get_num_threads();
+    }
+}
 }
 
 int main(int argc, char *argv[]){
@@ -107,8 +114,11 @@ int main(int argc, char *argv[]){
   end_time = omp_get_wtime();                  
 
   fclose(results);
-  
+  printf("Number of executing threads: %d\n", threads);
   printf("The execution took %g ms to complete\n", (end_time - start_time)*1000);
   printf("Number of palindromic words found: %d\n", sum);
-  printf("Result stored in results.txt\n");
+  if(argc > 2)
+  printf("Result stored in %s\n", argv[2]);
+  else 
+  printf("Result stored in results.txt");
 }
