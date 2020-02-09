@@ -1,4 +1,3 @@
-
 /* palindromic word finder using openMP 
 
    features: find all palindromic words in a input file and writes the results to a specified result file
