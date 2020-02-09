@@ -1,10 +1,14 @@
-/*
-  finding palindromic words in a dictionary using openmp
 
-    usage with gcc (version 4.2 or higher required):
-      gcc -O -fopenmp -o palindromic palindromic.c
-      ./palindromic size numThreads
+/* palindromic word finder using openMP 
+
+   features: find all palindromic words in a input file and writes the results to a specified result file
+
+   usage under Linux:
+
+            gcc palindrome.c -o palindrome -fopenmp
+            ./palindrome <input file> <output file> numThreads
 */
+
 
 #include <stdio.h>
 #include <ctype.h>
@@ -12,24 +16,16 @@
 #include <string.h>
 #include <omp.h>
 
-#define MAXWORKERS 24
-#define WORDLENGTH 40
-#define TASKLENGTH 10
-#define MAXSIZE 30000
-#define MAX_THREADS 12 
+#define WORD_LENGTH 40
+#define MAX_SIZE 30000
+#define MAX_THREADS 24 
 
 int sum = 0;
-int size;
-char dictionary[MAXSIZE][WORDLENGTH];
-int result_buffer[MAXSIZE];
-FILE* results;
+int result_buffer[MAX_SIZE];
+char dictionary[MAX_SIZE][WORD_LENGTH];
 FILE* fileToRead;
+FILE* results;
   
-
-/*
-    reverse string
-    char * word, string to reverse
-*/
 void reverse(char * word, char * r){
   int i, j;
   i = 0;
@@ -40,9 +36,6 @@ void reverse(char * word, char * r){
   r[i]  = '\0';
 }
 
-/*
-  binarySearch for searching in the dictionary
-*/
 int binarySearch(int l, int r, char * x){
   while (l <= r){
     int m = l + (r-l)/2;
@@ -57,28 +50,31 @@ int binarySearch(int l, int r, char * x){
   return -1;
 }
 
-void Workers(int size){
+void Worker(int size){
   int i, result;
   #pragma omp parallel for reduction (+:sum)
   for (i = 0; i < size; i++) {
     // 1. Get word
     char * word = dictionary[i];
     // 2. flip word
-    char flip[WORDLENGTH];
+    char flip[WORD_LENGTH];
     reverse(word, flip);
     // 3. search for fliped word in dictionary
     result = binarySearch(i, size -1, flip);
     // 4. if in dictionary, write to result file 
-    if(result != -1){
-      fprintf(results, "%s\n", dictionary[i]);
-      sum++;
+    if(result != -1) {
+        #pragma omp critical 
+        {
+        fprintf(results, "%s\n", dictionary[i]);
+        sum++;
+        }
     }
   }
 }
 
 int main(int argc, char *argv[]){
   double start_time, end_time;
-  int k = 0, i, numThreads;
+  int numThreads, i, j = 0;
   long l;
   
   fileToRead = (argc > 1) ? fopen(argv[1], "r+") : fopen("./words.txt", "r+");
@@ -93,29 +89,26 @@ int main(int argc, char *argv[]){
       exit(1);
     }
 
-
-  // Read dictionary
-  while(fscanf(fileToRead,"%s",dictionary[k]) == 1){
-    for(i= 0; dictionary[k][i]; i++){
-        dictionary[k][i] = tolower(dictionary[k][i]);
+  // Read input file into dictionary char buffer
+  while(fscanf(fileToRead, "%s", dictionary[j]) == 1) {
+    for(i= 0; dictionary[j][i]; i++) {
+        dictionary[j][i] = tolower(dictionary[j][i]);
     }
-    result_buffer[k] = 0;
-    k++;
+    result_buffer[j] = 0;
+    j++;
   }
   fclose(fileToRead);
-  size = k - 1;
 
   if(argc > 1)
   printf("\nSearching for palindromic words in %s . . . . .\n", argv[1]);
 
-  start_time = omp_get_wtime();                  // Start time for benchmark
-  Workers(size);
-  end_time = omp_get_wtime();                    // End time for benchmar
+  start_time = omp_get_wtime(); 
+  Worker(j-1);
+  end_time = omp_get_wtime();                  
 
   fclose(results);
   
   printf("The execution took %g ms to complete\n", (end_time - start_time)*1000);
   printf("Number of palindromic words found: %d\n", sum);
   printf("Result stored in results.txt\n");
-
 }
