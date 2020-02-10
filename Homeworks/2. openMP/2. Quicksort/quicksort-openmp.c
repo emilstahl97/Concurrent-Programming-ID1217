@@ -97,7 +97,7 @@ int main(int argc, char *argv[])
 	if (fh == NULL) {
         length = (argc > 1)? atoi(argv[1]) : MAX_SIZE;
         range = (argc > 2)? atoi(argv[2]) : MAX_RANGE;
-		printf("\nInitializing array with %d elements between 0 and %d\n", length, range);
+		//printf("\nInitializing array with %d elements between 0 and %d\n", length, range);
         array = malloc(sizeof(int) * length);
         
         //Initialize matrix with arraySize and range
