@@ -1,0 +1,49 @@
+words.txt 
+
+1 thread
+
+run 1: 15.657 ms
+run 2: 16.146 ms
+run 3: 15.682 ms
+run 4: 16.121 ms
+run 5: 15.716 ms
+
+2 threads
+
+run 1: 10.116 ms
+run 2: 10.081 ms
+run 3: 10.116 ms
+run 4: 10.077 ms
+run 5: 10.110 ms
+
+4 threads
+
+run 1: 6.272 ms
+run 2: 6.295 ms
+run 3: 6.228 ms
+run 4: 6.264 ms
+run 5: 6.256 ms
+
+8 threads
+
+run 1: 4.915 ms 
+run 2: 4.864 ms 
+run 3: 4.834 ms
+run 4: 4.839 ms 
+run 5: 4.885 ms
+
+16 threads
+
+run 1: 6.025 ms
+run 2: 5.754 ms
+run 3: 5.866 ms
+run 4: 5.932 ms
+run 5: 5.887 ms
+
+
+
+
+
+
+
+
