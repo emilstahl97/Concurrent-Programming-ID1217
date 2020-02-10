@@ -54,14 +54,11 @@ void Worker(int size){
   {
   #pragma omp for reduction (+:sum)
   for (i = 0; i < size; i++) {
-    // 1. Get word
-    char * word = dictionary[i];
-    // 2. reverse word
+
+    char* word = dictionary[i];
     char flip[WORD_LENGTH];
     reverse(word, flip);
-    // 3. search for fliped word in dictionary
-    result = binarySearch(i, size -1, flip);
-    // 4. if in dictionary, set index to 1 in result buffer 
+    result = binarySearch(i, size-1, flip);
     if(result != -1) {
         #pragma omp critical 
         {
