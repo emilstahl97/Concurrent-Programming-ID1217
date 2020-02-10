@@ -1,0 +1,56 @@
+Palindrome.c 
+
+1 thread words_alpha.txt
+
+run 1: 334.671 ms
+run 2: 333.585 ms
+run 3: 333.808 ms
+run 4: 333.344 ms
+run 5: 334.293 ms
+
+2 threads words_alpha.txt
+
+run 1: 215.434 ms
+run 2: 215.462 ms
+run 3: 214.420 ms
+run 4: 215.259 ms
+run 5: 214.945 ms
+
+4 threads words_alpha.txt
+
+run 1: 128.595 ms
+run 2: 128.064 ms
+run 3: 127.474 ms
+run 4: 134.861 ms
+run 5: 124.987 ms
+
+8 threads words_alpha.txt
+
+run 1: 80.813 ms
+run 2: 80.746 ms
+run 3: 79.504 ms
+run 4: 81.322 ms
+run 5: 80.513 ms
+
+16 threads words_alpha.txt
+
+run 1: 68.294 ms
+run 2: 73.750 ms
+run 3: 68.301 ms
+run 4: 67.776 ms
+run 5: 68.052 ms
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
