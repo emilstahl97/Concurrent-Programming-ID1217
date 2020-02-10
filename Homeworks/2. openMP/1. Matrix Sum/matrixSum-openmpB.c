@@ -30,8 +30,8 @@ int main(int argc, char *argv[]) {
 
   /* read command line args if any */
   size = (argc > 1)? atoi(argv[1]) : MAXSIZE;
-  numThreads = (argc > 2)? atoi(argv[2]) : MAXTHREADS;
-  range = (argc > 3) ? atoi(argv[3]) : 100;
+  range = (argc > 2) ? atoi(argv[2]) : 100;
+  numThreads = (argc > 3)? atoi(argv[3]) : MAXTHREADS;
   if (size > MAXSIZE) size = MAXSIZE;
   if (numThreads > MAXTHREADS) numThreads = MAXTHREADS;
 
@@ -90,8 +90,8 @@ start_time = omp_get_wtime();
     }
 }
       //only one thread needs to print number of threads
-      #pragma omp single
-      printf("Number of threads executing is: %d \n", omp_get_num_threads());
+      //#pragma omp single
+      //printf("Number of threads executing is: %d \n", omp_get_num_threads());
 }
 // implicit barrier
 
@@ -99,8 +99,9 @@ start_time = omp_get_wtime();
 
   #pragma omp master
 
-  printf("The execution took %g ms to complete\n", (end_time - start_time)*1000);
-  printf("The total sum of all the elements is %ld\n", element.total);
-  printf("The minimum element is %d at position [%d,%d]\n", element.min, element.minIndex[1]+1,element.minIndex[0]+1);
-  printf("The maximum element is %d at position [%d,%d]\n", element.max, element.maxIndex[1]+1,element.maxIndex[0]+1);
+  //printf("The execution took %g ms to complete\n", (end_time - start_time)*1000);
+  printf("%g ms\n", (end_time - start_time)*1000);
+  //printf("The total sum of all the elements is %ld\n", element.total);
+  //printf("The minimum element is %d at position [%d,%d]\n", element.min, element.minIndex[1]+1,element.minIndex[0]+1);
+  //printf("The maximum element is %d at position [%d,%d]\n", element.max, element.maxIndex[1]+1,element.maxIndex[0]+1);
 }
