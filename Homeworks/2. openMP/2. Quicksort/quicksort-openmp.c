@@ -130,7 +130,7 @@ int main(int argc, char *argv[])
 		quicksort(0, length - 1, &array[0]);
 	}
 	double end_time = omp_get_wtime();
-    printf("Sorted in %f ms:\n", (end_time-start_time)*1000);
+    printf("%f ms:\n", (end_time-start_time)*1000);
     #ifdef PRINT
 	printf("Sorted array\n");
     print(array, length);
