@@ -66,7 +66,7 @@ void Worker(int size){
     if(result != -1) {
         #pragma omp critical 
         {
-        fprintf(results, "%s\n", dictionary[i]);
+        result_buffer[i] = 1;
         sum++;
         }
     }
@@ -110,7 +110,13 @@ int main(int argc, char *argv[]){
 
   start_time = omp_get_wtime(); 
   Worker(j-1);
-  end_time = omp_get_wtime();                  
+  end_time = omp_get_wtime();  
+
+  for(i = 0; i < (j-1); i++) {
+    if(result_buffer[i] == 1)
+      fprintf(results, "%s\n", dictionary[i]);
+  }
+
 
   fclose(results);
   printf("Number of executing threads: %d\n", threads);
