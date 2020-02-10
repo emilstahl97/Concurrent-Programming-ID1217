@@ -8,7 +8,6 @@
             ./palindrome <input file> <output file> numberOfThreads
 */
 
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
@@ -17,7 +16,7 @@
 
 #define WORD_LENGTH 35
 #define MAX_SIZE 400000
-#define MAX_THREADS 24 
+#define MAX_THREADS 36 
 
 int threads, sum = 0;
 int result_buffer[MAX_SIZE];
@@ -57,12 +56,12 @@ void Worker(int size){
   for (i = 0; i < size; i++) {
     // 1. Get word
     char * word = dictionary[i];
-    // 2. flip word
+    // 2. reverse word
     char flip[WORD_LENGTH];
     reverse(word, flip);
     // 3. search for fliped word in dictionary
     result = binarySearch(i, size -1, flip);
-    // 4. if in dictionary, write to result file 
+    // 4. if in dictionary, set index to 1 in result buffer 
     if(result != -1) {
         #pragma omp critical 
         {
@@ -75,7 +74,7 @@ void Worker(int size){
     {
     threads = omp_get_num_threads();
     }
-}
+  }
 }
 
 int main(int argc, char *argv[]){
@@ -116,9 +115,8 @@ int main(int argc, char *argv[]){
     if(result_buffer[i] == 1)
       fprintf(results, "%s\n", dictionary[i]);
   }
-
-
   fclose(results);
+
   printf("Number of executing threads: %d\n", threads);
   printf("The execution took %g ms to complete\n", (end_time - start_time)*1000);
   printf("Number of palindromic words found: %d\n", sum);
