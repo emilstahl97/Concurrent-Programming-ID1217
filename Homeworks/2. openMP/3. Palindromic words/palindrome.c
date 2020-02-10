@@ -24,16 +24,6 @@ char dictionary[MAX_SIZE][WORD_LENGTH];
 FILE* fileToRead;
 FILE* results;
   
-void reverse(char * word, char * r){
-  int i, j;
-  i = 0;
-  j = strlen(word) - 1;
-  while (j >= 0) {
-    r[i++] = word[j--];
-  }
-  r[i]  = '\0';
-}
-
 int binarySearch(int l, int r, char * x){
   while (l <= r){
     int m = l + (r-l)/2;
@@ -46,6 +36,16 @@ int binarySearch(int l, int r, char * x){
       r = m - 1;
   }
   return -1;
+}
+
+void reverse(char * word, char * r){
+  int i, j;
+  i = 0;
+  j = strlen(word) - 1;
+  while (j >= 0) {
+    r[i++] = word[j--];
+  }
+  r[i]  = '\0';
 }
 
 void Worker(int size){
@@ -80,7 +80,6 @@ void Worker(int size){
 int main(int argc, char *argv[]){
   double start_time, end_time;
   int numThreads, i, j = 0;
-  long l;
   
   fileToRead = (argc > 1) ? fopen(argv[1], "r+") : fopen("./words.txt", "r+");
   results = (argc > 2) ? fopen(argv[2], "w+") : fopen("./results.txt", "w+");
