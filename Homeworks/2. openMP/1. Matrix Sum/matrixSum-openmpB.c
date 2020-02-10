@@ -11,6 +11,7 @@
 #define MAXSIZE 10000       /* maximum matrix size */
 #define MAXTHREADS 10000   /* maximum number of threads */
 //#define DEBUG            // Uncomment to get debugging printouts
+
 struct worker {
   int min;                    // Holds the minimum element
   int max;                    // Holds the maximum element
@@ -90,17 +91,17 @@ start_time = omp_get_wtime();
     }
 }
       //only one thread needs to print number of threads
-      //#pragma omp single
-      //printf("Number of threads executing is: %d \n", omp_get_num_threads());
+      #pragma omp single
+      printf("Number of threads executing is: %d \n", omp_get_num_threads());
 }
 // implicit barrier
   end_time = omp_get_wtime();
 
   #pragma omp master
 
-  //printf("The execution took %g ms to complete\n", (end_time - start_time)*1000);
+  printf("The execution took %g ms to complete\n", (end_time - start_time)*1000);
   printf("%g ms\n", (end_time - start_time)*1000);
-  //printf("The total sum of all the elements is %ld\n", element.total);
-  //printf("The minimum element is %d at position [%d,%d]\n", element.min, element.minIndex[1]+1,element.minIndex[0]+1);
-  //printf("The maximum element is %d at position [%d,%d]\n", element.max, element.maxIndex[1]+1,element.maxIndex[0]+1);
+  printf("The total sum of all the elements is %ld\n", element.total);
+  printf("The minimum element is %d at position [%d,%d]\n", element.min, element.minIndex[1]+1,element.minIndex[0]+1);
+  printf("The maximum element is %d at position [%d,%d]\n", element.max, element.maxIndex[1]+1,element.maxIndex[0]+1);
 }
