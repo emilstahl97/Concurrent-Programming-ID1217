@@ -94,7 +94,6 @@ start_time = omp_get_wtime();
       //printf("Number of threads executing is: %d \n", omp_get_num_threads());
 }
 // implicit barrier
-
   end_time = omp_get_wtime();
 
   #pragma omp master
