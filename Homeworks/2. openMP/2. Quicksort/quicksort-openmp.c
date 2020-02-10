@@ -3,16 +3,16 @@
 #include <stdbool.h>
 #include <time.h>
 #include <omp.h>
-#define RUNONCE
-#define LOW_LIMIT 1000
+
+#define MAX_THREADS 36
 #define MAX_SIZE 1000
 #define MAX_RANGE 10000
-//#define PRINT
+#define LOW_LIMIT 1000
 
 void print(int [], int);
-
-int c = 0;
-
+static void insertionSort(int [], int);
+static int partition(int, int, int*);
+static void quicksort(int, int, int*);
 
 void print(int array[], int length) {
 	int i;
@@ -21,7 +21,8 @@ void print(int array[], int length) {
 		printf(" %d", array[i]);
 	printf(" ]\n");
 }
-/* When list gets small */
+
+/* When list is < 1000 elements, insertionSort is used */
 static void insertionSort(int arr[], int n)
 {
 	int i, j;
@@ -40,7 +41,6 @@ static void insertionSort(int arr[], int n)
 	}
 }
 
-/* Meat of quick sort. Partitioning */
 static int partition(int pivot_index, int high, int *data)
 {
 	float pivot = data[pivot_index];
@@ -70,16 +70,10 @@ static void quicksort(int pivot, int high, int *list)
 		return;
 
 	if ((high - pivot) < LOW_LIMIT) {
-        printf("Insertion sort enabled\n");
-        #pragma omp critical
-        {
-        c++;
-        }
 		return insertionSort(&list[pivot], high - pivot);
     }
 
 	int mid = partition(pivot, high, list);
-    printf("doing quicksort\n");
 
     #pragma omp task
     {
@@ -95,7 +89,7 @@ int main(int argc, char *argv[])
 {
 	FILE *fh;
     double exTime = 0;
-	int data, range, length, *array;
+	int data, range, length, numThreads, *array;
 
 	/* Initialize data. */
 	fh = fopen(argv[1], "r");
@@ -126,6 +120,8 @@ int main(int argc, char *argv[])
 	    printf("%d elements read\n", length);
     }
 
+    numThreads = (argc > 3) ? atoi(argv[3]) : MAX_THREADS;
+	omp_set_num_threads(numThreads);
 
     double start_time = omp_get_wtime();
     #pragma omp parallel
@@ -134,13 +130,13 @@ int main(int argc, char *argv[])
 		quicksort(0, length - 1, &array[0]);
 	}
 	double end_time = omp_get_wtime();
-    printf("Sorted in %f ms \nSorted array:\n", (end_time-start_time)*1000);
+    printf("Sorted in %f ms:\n", (end_time-start_time)*1000);
     #ifdef PRINT
+	printf("Sorted array\n");
     print(array, length);
     #endif
 
 	/* Free  array and return */
 	free(array);
-    printf("c = %d\n", c);
 	return 0;
 }
