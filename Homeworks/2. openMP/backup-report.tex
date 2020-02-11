@@ -1,5 +1,7 @@
-\documentclass{article}
+\documentclass{article}
 \usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+
 
 \title{\textbf{Concurrent Programming ID1217} \\ 
 \textbf{Report I}}
@@ -77,7 +79,16 @@ Threads     Execution time (ms)     Speedup
 4   274.827     0,056
 8   381.215     0,041
 16  287.819     0,054
-      
+\end{verbatim}
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.5]{Matrix - 1k.png}
+\caption{Benchmarking of matrix computation with 1.000 elements}
+\end{figure}      
+
+\clearpage
+
+\begin{verbatim}
 5.000 elements
 
 1   387.737	   
@@ -85,6 +96,16 @@ Threads     Execution time (ms)     Speedup
 4   6809.2      0,056    
 8   9500.23     0,040   
 16  6594.98     0,058   
+\end{verbatim}
+
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.5]{5k.png}
+\caption{Benchmarking of matrix computation with 5.000 elements}
+\end{figure}      
+\clearpage
+
+\begin{verbatim}
 
 10.000 elements
 
@@ -93,7 +114,14 @@ Threads     Execution time (ms)     Speedup
 4   346.72      3,952   
 8   173.926     7,878  
 16  173.945     7,877
-
+\end{verbatim}
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.5]{Matrix - 10k.png}
+\caption{Benchmarking of matrix computation with 10.000 elements}
+\end{figure}      
+\clearpage
+\begin{verbatim}
 100.000 elements
 
 1   12335.1		       
@@ -101,9 +129,15 @@ Threads     Execution time (ms)     Speedup
 4   3118.69     3,955      
 8   1560.34     7,905       
 16  1605.09     7,685      
-
-
 \end{verbatim}
+
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.5]{Matrix - 100k.png}
+\caption{Benchmarking of matrix computation with 100.000 elements}
+\end{figure}      
+\clearpage
+
 
 \subsection{Parallel Quicksort}
 
@@ -118,7 +152,17 @@ Threads     Execution time (ms)     Speedup
 4   2.321036        0,934		
 8   2.507466        0,865 
 16  2.748051        0,789
+\end{verbatim}
 
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.5]{Quicksort - 1k.png}
+\caption{Benchmarking of Quicksort 1.000 elements}
+\end{figure}      
+\clearpage
+
+\begin{verbatim}
+    
 10.000 elements
 
 1   15.793323 
@@ -127,6 +171,19 @@ Threads     Execution time (ms)     Speedup
 8   2.973309        5,311 
 16  3.316422        4,762
 
+\end{verbatim}
+
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.5]{Quicksort - 10k.png}
+\caption{Benchmarking of Quicksort 10.000 elements}
+\end{figure}      
+\clearpage
+
+
+\begin{verbatim}
+    
+
 50.000 elements
 
 1   81.418417	 
@@ -134,6 +191,18 @@ Threads     Execution time (ms)     Speedup
 4   20.944908       3,887	 
 8   11.978569       6,797	 
 16  7.685462        10,594 
+ 
+\end{verbatim}
+
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.5]{Quiccksort - 50k.png}
+\caption{Benchmarking of Quicksort 50.000 elements}
+\end{figure}      
+\clearpage
+
+
+\begin{verbatim}
  
 100.000 elements
 
@@ -145,7 +214,13 @@ Threads     Execution time (ms)     Speedup
 
 \end{verbatim}
 
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.5]{Quicksort - 100k.png}
+\caption{Benchmarking of Quicksort 100.000 elements}
+\end{figure}      
 \clearpage
+
 \subsection{Find palindromic words }
 
 \begin{verbatim}
@@ -159,7 +234,17 @@ File with 25.143 words
 4   6.26        2,509
 8   4.864       3,231 
 16  5.887       2,667
+\end{verbatim}
 
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.5]{words.png}
+\caption{Benchmarking of searching for palindromic words}
+\end{figure}      
+\clearpage
+
+\begin{verbatim}
+    
 File with 370.102 words 
 
 1   333.808		
@@ -170,55 +255,15 @@ File with 370.102 words
 
 \end{verbatim}
 
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.5]{words-alpha.png}
+\caption{Benchmarking of searching for palindromic words}
+\end{figure}      
+
 \section{Conclusions}
 
 The result shows that at small data-sets the execution times are worse when utilizing multiple threads. This is most probably due to overhead cost of creating threads. However, when the number of elements gets over approximately 10.000 the results shows a clear improvement in execution time when utilizing multiple threads. When the data-sets gets reasonably big the overhead cost gets negligible. 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 \end{document}
