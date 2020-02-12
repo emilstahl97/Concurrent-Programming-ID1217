@@ -19,7 +19,7 @@ void *parent_bird() {
 		if(worms == 0);
 		worms = rand()%refill;
 		printf("---------------Parent: Refilled with %d new worms---------------\n", worms);
-		sleep(1);
+		sleep(2);
 		sem_post(&full);
 	}
 }
@@ -32,7 +32,8 @@ void *baby_bird(void *arg) {
 			worms--;
 			printf("Bird %d ate worm %d\n", id, worms);
 			sem_post(&full);
-			sleep(1);
+			sleep(rand()%3);
+			printf("Bird %d sleeps\n",id);
 		} else {
 			printf("Bird %d SQUEELS!!!!!!!!!!!!!!!!!!!!!\n", id);
 			sleep(rand()%3);
