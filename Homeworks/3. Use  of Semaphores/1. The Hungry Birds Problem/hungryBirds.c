@@ -67,7 +67,7 @@ void *consumer(void *arg){
 
 int main(int argc, char *argv[]) {
     
-    int numBirds, numWorms, i;
+    int numBirds, numWorms, id;
     
     numBirds = (argc > 1) ? atoi(argv[1]) : MAX_BIRDS;
     numWorms = (argc > 2) ? atoi(argv[2]) : MAX_WORMS;
@@ -84,13 +84,13 @@ int main(int argc, char *argv[]) {
 /* creating threads to represent birds */
  pthread_create(&parentBird, NULL, producer, NULL);
 
- for(i = 0; i < n; i++)
-	pthread_create(&babyBirds[i], NULL, consumer, (void*)i);
+ for(id = 0; id < n; id++)
+	pthread_create(&babyBirds[id], NULL, consumer, (void*)id);
 
 /* wait for threads to terminate (which they, incidentally, won't) */
  pthread_join(parentBird, NULL);
- for(i = 0; i < n; i++)
- 	pthread_join(babyBirds[i], NULL);
+ for(id = 0; id < n; id++)
+ 	pthread_join(babyBirds[id], NULL);
 
  return 0;
 
