@@ -1,28 +1,26 @@
+/*  This program simulates a consuumer/producer with birds. The program initiates a number of baby birds and a parent bird.
+	The baby birds eat out of a common dish that initially contains W worms. Each baby bird repeatedly takes a worm, eats it, sleeps for a while, takes another worm, and so on. 
+	If the dish is empty, the baby bird who discovers the empty dish chirps real loud to awaken the parent bird. The parent bird flies off and gathers W more worms, puts them in the dish, and then waits for the dish to be empty again. 
+	This pattern repeats forever.
+    
+   usage under Linux:
+            gcc hungryBirds.c -o hungryBird -lpthread
+            ./hungryBirds numBirds numWorms
+*/
 
 #include <stdlib.h>
 #include <stdio.h>
 #include <pthread.h>
 #include <semaphore.h>
-#include <unistd.h>
 
+#define MAX_SLEEP 10
 #define MAX_BIRDS 10
 #define MAX_WORMS 50
 #define MAX_REFILL numBirds*2
 #define SHARED 1
 
 sem_t empty, full;
-int worms, refill;
-
-void *parent_bird() {
-	while(1) {
-		sem_wait(&empty);
-		if(worms == 0);
-		worms = rand()%refill;
-		printf("---------------Parent: Refilled with %d new worms---------------\n", worms);
-		sleep(2);
-		sem_post(&full);
-	}
-}
+int worms, refill, sleepInterval;
 
 void *baby_bird(void *arg) {
 	int id = (int) arg;
@@ -32,16 +30,28 @@ void *baby_bird(void *arg) {
 			worms--;
 			printf("Bird %d ate worm %d\n", id, worms);
 			sem_post(&full);
-			sleep(rand()%3);
+			sleep(rand()%sleepInterval);
 			printf("Bird %d sleeps\n",id);
 		} else {
 			printf("Bird %d SQUEELS!!!!!!!!!!!!!!!!!!!!!\n", id);
-			sleep(rand()%3);
+			sleep(rand()%sleepInterval);
 			sem_post(&empty);
 		}
 	}
 }
 
+void *parent_bird() {
+	while(1) {
+		sem_wait(&empty);
+		if(worms == 0);
+		worms = rand()%refill;
+		printf("**********Parent bird awake**********************\n");
+		printf("**********Parent bird found %d new worms*********\n", worms);
+		printf("**********Parent bird sleeping*******************\n");
+		sleep(1);
+		sem_post(&full);
+	}
+}
 
 int main(int argc, char *argv[]) {
 	
@@ -50,6 +60,7 @@ int main(int argc, char *argv[]) {
     numBirds = (argc > 1) ? atoi(argv[1]) : MAX_BIRDS;
     worms = (argc > 2) ? atoi(argv[2]) : MAX_WORMS;
 	refill = (argc > 3) ? atoi(argv[2]) : MAX_REFILL;
+	sleepInterval = (argc > 4) ? atoi(argv[4]) : MAX_SLEEP;
 	
 	pthread_t birds[numBirds];
 	pthread_t parent;
