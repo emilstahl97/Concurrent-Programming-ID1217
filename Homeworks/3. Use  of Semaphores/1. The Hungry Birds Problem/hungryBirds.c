@@ -1,74 +1,97 @@
-#include <stdio.h>
-#include <stdlib.h>
+/*Hungry birds problem: one producer, multiple consumers
+
+Description:
+n baby birds, one parent bird. the baby birds eat out of
+a common dish containing W worms. when the dish is empty,
+the parent bird is signaled and refills it. only semaphores
+are used for mutual exclusion and signaling.
+
+Usage in Linux:
+
+	gcc hungrybirds.c -lpthread
+	./a.out n
+*/
+
 #include <pthread.h>
 #include <semaphore.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <stdio.h>
+
 
 #define MAX_BIRDS 10
 #define MAX_WORMS 50
+#define SHARED 1
+int n;	 		// number of baby birds
+int worms;			// current number of worms in dish
+int max = 10; 	// max number of worms in dish
 
-void* bird(void* arg);
-void* parent(void* arg);
+int consumed[MAX_BIRDS];	// how many worms each bird has consumed
 
 sem_t check_worm;
 sem_t get_worm;
 sem_t empty;
 
-int worms;
+/* refills dish when it's empty */
+void *producer(){
 
-int main(int argc, char* argv[]) {
+ while(1){
+	/* waits to be signaled */
+	sem_wait(&empty);
+	printf("parent bird. refilling dish\n");
+	worms = max;
+	sem_post(&check_worm);
+ }
+}
 
+
+/* eats worm. signals parent when dish is empty */
+void *consumer(void *arg){
+
+ long myid = (long) arg;
+
+ while(1){
+	sem_wait(&check_worm);				// lock to access dish	
+  		if(worms == 0){
+		/* dish is empty : signal parent */
+		printf("baby bird %ld. waking parent bird\n", myid);
+		sem_post(&empty);
+	} else {
+		printf("baby bird %ld eating. %d worms left. %d worms consumed\n", myid, --worms, ++consumed[myid]);
+		sem_post(&check_worm);			// unlock
+		sleep(rand()%5);			// sleep for random amount of time
+ 	}
+ }
+
+}
+
+int main(int argc, char *argv[]) {
+    
     int numBirds, numWorms, i;
     
     numBirds = (argc > 1) ? atoi(argv[1]) : MAX_BIRDS;
     numWorms = (argc > 2) ? atoi(argv[2]) : MAX_WORMS;
     
-    pthread_t birds[numBirds], parent;
 
-    sem_init(&check_worm, 0, 0);
-    sem_init(&get_worm, 0, 1);
-    sem_init(&empty, 0, 0);
+ worms = numWorms;
+ pthread_t babyBirds[n];
+ pthread_t parentBird;
 
+/* initiate semaphores */
+ sem_init(&empty, SHARED, 0); 		// dish starts out as full
+ sem_init(&check_worm, SHARED, 1);			// mutex initialized to 1 to indicate critical section is free  	
 
-    for(i = 0; i < numBirds; i++) {
-        pthread_create(&birds[i], NULL, bird, (void*)i);
-    }
+/* creating threads to represent birds */
+ pthread_create(&parentBird, NULL, producer, NULL);
 
-    pthread_create(&parent, NULL, parent, (void*)i);
+ for(i = 0; i < n; i++)
+	pthread_create(&babyBirds[i], NULL, consumer, (void*)i);
 
-    for(i = 0; i < numBirds; i++) {
-        pthread_join(birds[i], NULL);
-    }
+/* wait for threads to terminate (which they, incidentally, won't) */
+ pthread_join(parentBird, NULL);
+ for(i = 0; i < n; i++)
+ 	pthread_join(babyBirds[i], NULL);
 
-    pthread_join(parent, NULL);
+ return 0;
 
-
-    return 0;
-
-}
-
-void *bird(void* arg) {
-
-    int id = (int) arg;
-
-    while(1) {
-
-        sem_wait(&check_worm);
-            if(worms == 0) {
-                printf("bird %d waking parent\n", id);
-                sem_post(&empty);
-            } else {
-                printf("bird %d is eating, %d worms left %d\n", id, worms);
-                sem_post(&check_worm);
-                sleep(rand()%10);
-            }
-
-    }
-}
-
-void* parent() {
-
-    sem_wait(&empty);
-    printf("refilling");
-    worms = 10;
-    sem_post(&check_worm);
 }
