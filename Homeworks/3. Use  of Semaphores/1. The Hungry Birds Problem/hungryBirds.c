@@ -23,23 +23,25 @@ Usage in Linux:
 #define MAX_WORMS 50
 #define SHARED 1
 
-int numWorms;			// current number of numWorms in dish
+//int numWorms;			// current number of numWorms in dish
 int consumed[MAX_BIRDS];	// how many numWorms each bird has consumed
+int food;
 
-sem_t check_worm;
-sem_t get_worm;
-sem_t empty;
+sem_t parent;
+sem_t baby;
+sem_t chirp;
 
 /* refills dish when it's empty */
 void *parent_bird(){
 
  while(1){
 	/* waits to be signaled */
-	sem_wait(&empty);
-	printf("parent bird. refilling dish\n");
-	numWorms = rand()%10+1;
-    printf("%d worms found\n", numWorms);
-	sem_post(&check_worm);
+	sem_wait(&chirp);
+    printf("Parent bird on hunt for more worms\n");
+	food = rand()%10+1;
+    printf("%d worms found\n", food);
+	sem_post(&parent);
+	sleep(1);
  }
 }
 
@@ -47,19 +49,21 @@ void *parent_bird(){
 /* eats worm. signals parent when dish is empty */
 void *baby_bird(void *arg){
 
- long myid = (long) arg;
+ long id = (long) arg;
 
  while(1){
-	sem_wait(&check_worm);				// lock to access dish	
-  		if(numWorms == 0){
+	sem_wait(&baby);				// lock to access dish	
+  		if(food == 0){
 		/* dish is empty : signal parent */
-		printf("baby bird %ld. waking parent bird\n", myid);
-		sem_post(&empty);
-	} else {
-		printf("baby bird %ld eating. %d numWorms left. %d numWorms consumed\n", myid, --numWorms, ++consumed[myid]);
-		sem_post(&check_worm);			// unlock
-		sleep(rand()%5);			// sleep for random amount of time
- 	}
+		printf("baby bird %ld. waking parent bird\n", id);
+		sem_post(&chirp);
+		sem_wait(&parent);
+
+	}  
+	food--;
+	printf("Bird %d eats worm %d\n", id, food);
+	sem_post(&baby);
+	sleep(1);
  }
 
 }
@@ -69,14 +73,16 @@ int main(int argc, char *argv[]) {
     int numBirds, id;
     
     numBirds = (argc > 1) ? atoi(argv[1]) : MAX_BIRDS;
-    numWorms = (argc > 2) ? atoi(argv[2]) : MAX_WORMS;
+    food = (argc > 2) ? atoi(argv[2]) : MAX_WORMS;
+
+    printf("in main worms =%d\n",food);
     
  pthread_t birds[numBirds];
  pthread_t parent;
 
-/* initiate semaphores */
- sem_init(&empty, SHARED, 0); 		// dish starts out as full
- sem_init(&check_worm, SHARED, 1);			// mutex initialized to 1 to indicate critical section is free  	
+  sem_init(&parent, SHARED, 0);  /* sem empty = 1 */
+  sem_init(&baby, SHARED, 1);   /* sem full = 0  */
+  sem_init(&chirp, SHARED, 0);   /* sem full = 0  */
 
 /* creating threads to represent birds */
  pthread_create(&parent, NULL, parent_bird, NULL);
