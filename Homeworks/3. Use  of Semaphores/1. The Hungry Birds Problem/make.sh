@@ -1,3 +1,3 @@
 rm hungryBirds
 gcc hungryBirds.c -o hungryBirds -lpthread
-./hungryBirds 5 10
+./hungryBirds 10 20
