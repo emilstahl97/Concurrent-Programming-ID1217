@@ -34,9 +34,10 @@ void *bee(void *arg) {
 void *bear() {
 	while(1) {
 		sem_wait(&wakeUp);
+        printf("honeypot before eating = %d\n", honeyPot);
 		printf("---------------The bear is eating all the honey from the honeyPot---------------\n");
 		honeyPot = EATEN;
-		sleep(1);
+		sleep(2);
 		sem_post(&empty);
 	}
 }
