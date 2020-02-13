@@ -8,20 +8,20 @@
 #define HONEY 150
 #define HONEYBEES 25
 
-sem_t full, empty;
+sem_t wakeUp, empty;
 int pot = 0;
 int honey;
 
 
-void *bee(void *beeID) {
-	int bee = (int) beeID;
+void *bee(void *arg) {
+	int id = (int) arg;
 	while(1) {
 		sem_wait(&empty);
 		pot++;
-		printf("Bee %d is adding one portion of honey into the pot(%d)\n", bee, pot);
+		printf("Bee %d is adding one portion of honey into the pot(%d)\n", id, pot);
 		if (pot == honey) {
-			printf("---------------Bee %d is waking the bear up---------------\n", bee);
-			sem_post(&full);
+			printf("---------------Bee %d is waking the bear up---------------\n", id);
+			sem_post(&wakeUp);
 			sleep(1);
 		} else {
 			sem_post(&empty);
@@ -32,7 +32,7 @@ void *bee(void *beeID) {
 
 void *bear() {
 	while(1) {
-		sem_wait(&full);
+		sem_wait(&wakeUp);
 		printf("---------------The bear is eating all the honey from the pot---------------\n");
 		pot = 0;
 		sleep(1);
@@ -54,7 +54,7 @@ int main(int argc, char *argv[]) {
 	printf("********* STARTING *********\n");
 	sleep(2);
 
-	sem_init(&full, 1, 0);
+	sem_init(&wakeUp, 1, 0);
 	sem_init(&empty, 1, 1);
 
 	pthread_t bees[HONEYBEES];
