@@ -56,29 +56,12 @@ int numMales, numWomen;
  */
 int main(int argc, char ** argv)
 {
-    pthread_attr_t attr;
     pthread_t men, women;
     int index; /* Used to iterate over the threads. */
-
-    if(argc < 3) /* Check if insufficient number of arguments has been entered. */
-    {
-        printf("Usage ./unisex.out MALES WOMEN\n");
-        return EXIT_SUCCESS;
-    }
-    /* Read the number of males and females and make sure they are within the 
-     * allowed range. */ 
-    else
-    {
-        numMales = atoi(argv[1]);
-        if(numMales > MAXMALES) numMales = MAXMALES;
-        numWomen = atoi(argv[2]);
-        if(numWomen > MAXWOMEN) numWomen = MAXWOMEN;
-    }
-
-    /* Initialize the pthread attribute. */
-    pthread_attr_init(&attr);
-    pthread_attr_setscope(&attr, PTHREAD_SCOPE_SYSTEM);
-
+    
+    numMales = (argc > 1) ? atoi(argv[1]) : MAXMALES;
+    numWomen = (argc > 2) ? atoi(argv[2]) : MAXWOMEN;
+       
     /* Initialize the semaphores used. */
     sem_init(&crit_sem, SHARED, 1);
     sem_init(&waiting_male_sem, SHARED, 0);
@@ -96,11 +79,11 @@ int main(int argc, char ** argv)
 
     for(index = 0; index < numMales; index++) /* Creates the males. */
     {
-        pthread_create(&men, &attr, male, NULL);
+        pthread_create(&men, NULL, male, NULL);
     }
     for(index = 0; index < numWomen; index++) /* Creates the females. */
     {
-        pthread_create(&women, &attr, female, NULL);
+        pthread_create(&women, NULL, female, NULL);
     }
     for(index = 0; index < numWomen; index++) /* Joins the threads again. */
     {
