@@ -26,8 +26,8 @@
 #include <stdbool.h>
 
 #define SHARED 0        /* The semaphores should not be shared. */
-#define MAXMALES 10     /* The max number of males possible. */
-#define MAXWOMEN 10     /* The max number of women possible. */
+#define MAX_MEN 10     /* The max number of males possible. */
+#define MAX_WOMEN 10     /* The max number of women possible. */
 #define MAXTIMES 20     /* Max number of times the bathroom is used. */
 #define MAXTIMEIN 3     /* Max seconds in the bathroom. */
 #define MINTIMEIN 1     /* Min seconds in the bathroom. */
@@ -57,10 +57,10 @@ int numMales, numWomen;
 int main(int argc, char ** argv)
 {
     pthread_t men, women;
-    int index; /* Used to iterate over the threads. */
+    int i; /* Used to iterate over the threads. */
     
-    numMales = (argc > 1) ? atoi(argv[1]) : MAXMALES;
-    numWomen = (argc > 2) ? atoi(argv[2]) : MAXWOMEN;
+    numMales = (argc > 1) ? atoi(argv[1]) : MAX_MEN;
+    numWomen = (argc > 2) ? atoi(argv[2]) : MAX_WOMEN;
        
     /* Initialize the semaphores used. */
     sem_init(&crit_sem, SHARED, 1);
@@ -77,20 +77,20 @@ int main(int argc, char ** argv)
 
     srand(time(NULL)); /* Seed the randomizer to provide different results. */
 
-    for(index = 0; index < numMales; index++) /* Creates the males. */
+    for(i = 0; i < numMales; i++) /* Creates the males. */
     {
         pthread_create(&men, NULL, male, NULL);
     }
-    for(index = 0; index < numWomen; index++) /* Creates the females. */
+    for(i = 0; i < numWomen; i++) /* Creates the females. */
     {
         pthread_create(&women, NULL, female, NULL);
     }
-    for(index = 0; index < numWomen; index++) /* Joins the threads again. */
+    for(i = 0; i < numWomen; i++) /* Joins the threads again. */
     {
         pthread_join(women, NULL);
     }
 
-    for(index = 0; index < numWomen; index++) /* Joins the threads again. */
+    for(i = 0; i < numWomen; i++) /* Joins the threads again. */
     {
         pthread_join(men, NULL);
     }
@@ -123,7 +123,7 @@ void print_status()
  */
 void * male(void * input)
 {
-    int i; /* Index used for alerting other males. */
+    int i; /* i used for alerting other males. */
 
     /* Number of males in queue at the moment it is the males turn. */
     int males_in_queue;
@@ -249,7 +249,7 @@ void * male(void * input)
  */
 void * female(void * input)
 {
-    int i; /* Index used to iterate over the females to let inside the bathroom. */
+    int i; /* i used to iterate over the females to let inside the bathroom. */
     int females_in_queue; /* Number of females to let inside the bathroom. */
 
     /* Main loop executed a total MAXTIMES number of times between males and females. */
