@@ -1,3 +1,15 @@
+#ifndef _REENTRANT
+#define _REENTRANT
+#endif
+
+#include <pthread.h>
+#include <semaphore.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#include <unistd.h>
+#include <stdbool.h>
+
 #define SHARED 0        /* The semaphores should not be shared. */
 #define MAX_MEN 10     /* The max number of males possible. */
 #define MAX_WOMEN 10     /* The max number of women possible. */
