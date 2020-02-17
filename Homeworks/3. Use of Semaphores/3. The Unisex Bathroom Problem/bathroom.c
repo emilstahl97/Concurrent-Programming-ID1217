@@ -64,9 +64,9 @@ int main(int argc, char* argv[]) {
     sem_close(&waiting_female);
     sem_close(&waiting_male);
 
-    return 0;
-
     RESET;
+    
+	return 0;
 }
 
 void print(char* gender, int id, int v)
