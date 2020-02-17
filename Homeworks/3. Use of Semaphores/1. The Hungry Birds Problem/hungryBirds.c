@@ -4,7 +4,7 @@
 	This pattern repeats forever.
     
    usage under Linux:
-            gcc hungryBirds.c -o hungryBird -lpthread
+            gcc hungryBirds.c -o hungryBirds -lpthread
             ./hungryBirds numBirds numWorms refillSize sleepInterval
 */
 
