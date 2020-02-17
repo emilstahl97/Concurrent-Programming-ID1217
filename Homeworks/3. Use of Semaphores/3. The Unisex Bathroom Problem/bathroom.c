@@ -39,7 +39,6 @@
 #define CYN "\x1B[36m"
 #define RESET "\x1B[0m"
 
-
 void * male(void *);    /* Male method declaration. */
 void * female(void *);  /* Female method declaration. */
 
@@ -52,21 +51,19 @@ int males_waiting = 0;
 int females_waiting = 0;
 int times_used;
  
-/* Bool to keep record of we should let the other of the same gender in.
- * (Only one thread should do this.) */
-bool letting_in_people = false;
-bool men_shrinking = false;
-bool women_shrinking = false;
-
 /* Number of males and females specified by the user. */
 int numMen, numWomen;
+
+/* Bool to keep record of we should let the other of the same gender in. */
+bool men_leaving = false, women_leaving = false;
+
 
 /**
  * Main method, initiates all the semaphores and counters and then starts the
  * specified number of males and females. Then joines them together again after
  * the bathroom has been visited MAXTIMES number of times.
  */
-int main(int argc, char ** argv)
+int main(int argc, char* argv[])
 {
     int i; /* Used to iterate over the threads. */
     pthread_t men, women;
@@ -83,11 +80,11 @@ int main(int argc, char ** argv)
 
     for(i = 0; i < numMen; i++) /* Creates the males. */
     {
-        pthread_create(&men, NULL, male, NULL);
+        pthread_create(&men, NULL, male, (void*)i);
     }
     for(i = 0; i < numWomen; i++) /* Creates the females. */
     {
-        pthread_create(&women, NULL, female, NULL);
+        pthread_create(&women, NULL, female, (void*)i);
     }
     for(i = 0; i < numWomen; i++) /* Joins the threads again. */
     {
@@ -121,7 +118,7 @@ void *male(void *arg)
 
 		/* Should I wait for bathroom + other stuff */
 		sem_wait(&crit_sem);
-		if (females_inside > 0 || men_shrinking)
+		if (females_inside > 0 || men_leaving)
 		{
 			males_waiting++;
 			sem_post(&crit_sem);
@@ -145,11 +142,11 @@ void *male(void *arg)
 		/* What to do after finished with bathroom visit */
 		sem_wait(&crit_sem);
 		males_inside--;
-		men_shrinking = true;
+		men_leaving = true;
 
 		/* Make sure no more men enter while men leave */
 		if (males_inside == 0)
-			men_shrinking = false;
+			men_leaving = false;
 
 		/* Prioritize women */
 		if (males_inside == 0 && females_waiting > 0)
@@ -176,7 +173,7 @@ void *female(void *arg)
 
 		/* Should I wait for bathroom + other stuff */
 		sem_wait(&crit_sem);
-		if (males_inside > 0 || women_shrinking)
+		if (males_inside > 0 || women_leaving)
 		{
 			females_waiting++;
 			sem_post(&crit_sem);
@@ -202,9 +199,9 @@ void *female(void *arg)
 		females_inside--;
 
 		/* Make sure no more women enter while women leave */
-		women_shrinking = true;
+		women_leaving = true;
 		if (females_inside == 0)
-			women_shrinking = false;
+			women_leaving = false;
 
 		/* Prioritize men */
 		if (females_inside == 0 && males_waiting > 0)
