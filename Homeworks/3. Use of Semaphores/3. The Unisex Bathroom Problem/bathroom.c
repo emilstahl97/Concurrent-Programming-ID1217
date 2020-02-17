@@ -60,11 +60,11 @@ int numMales, numWomen;
  */
 int main(int argc, char ** argv)
 {
-    pthread_t men, women;
     int i; /* Used to iterate over the threads. */
+    pthread_t men, women;
     
-    numMales = (argc > 1) ? atoi(argv[1]) : MAX_MEN;
-    numWomen = (argc > 2) ? atoi(argv[2]) : MAX_WOMEN;
+    numWomen = (argc > 1) ? atoi(argv[1]) : MAX_WOMEN;
+    numMales = (argc > 2) ? atoi(argv[2]) : MAX_MEN;
        
     /* Initialize the semaphores used. */
     sem_init(&crit_sem, SHARED, 1);
