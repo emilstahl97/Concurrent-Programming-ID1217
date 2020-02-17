@@ -40,8 +40,12 @@ void * female(void *);  /* Female method declaration. */
 sem_t crit_sem, waiting_male_sem, waiting_female_sem; /* Semaphores used. */
 
 /* Counters used. */
-int males_inside, females_inside, males_waiting, females_waiting, times_used;
-
+int males_inside = 0; 
+int females_inside = 0; 
+int males_waiting = 0; 
+int females_waiting = 0;
+int times_used;
+ 
 /* Bool to keep record of we should let the other of the same gender in.
  * (Only one thread should do this.) */
 bool letting_in_people;
@@ -67,11 +71,6 @@ int main(int argc, char ** argv)
     sem_init(&waiting_male_sem, SHARED, 0);
     sem_init(&waiting_female_sem, SHARED, 0);
 
-    /* Initialize the counters. */
-    males_inside = 0;
-    females_inside = 0;
-    males_waiting = 0;
-    females_waiting = 0;
 
     letting_in_people = false; /* We are currently not letting people inside. */
 
