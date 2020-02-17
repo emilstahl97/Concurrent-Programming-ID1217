@@ -18,23 +18,29 @@
 #define MAX_WORMS 50
 #define MAX_REFILL numBirds*2
 #define SHARED 1
+//#define DEBUG
 
 sem_t empty, full;
 int worms, refill, sleepInterval;
 
 void *baby_bird(void *arg) {
 	int id = (int) arg;
+	int numEaten = 0;
 	while(1) {
 		sem_wait(&full);
 		if (worms > 0) {
 			worms--;
+			numEaten++;
 			printf("Bird %d ate worm %d\n", id, worms);
+			#ifdef DEBUG
+			printf("Bird %d has eaten %d worms\n", id, numEaten);
+			#endif
 			sem_post(&full);
-			sleep(rand()%sleepInterval);
+			sleep(2);
 			printf("Bird %d sleeps\n",id);
 		} else {
 			printf("Bird %d SQUEELS!!!!!!!!!!!!!!!!!!!!!\n", id);
-			sleep(rand()%sleepInterval);
+			sleep(2);
 			sem_post(&empty);
 		}
 	}
@@ -59,7 +65,7 @@ int main(int argc, char *argv[]) {
     
     numBirds = (argc > 1) ? atoi(argv[1]) : MAX_BIRDS;
     worms = (argc > 2) ? atoi(argv[2]) : MAX_WORMS;
-	refill = (argc > 3) ? atoi(argv[2]) : MAX_REFILL;
+	refill = (argc > 3) ? atoi(argv[3]) : MAX_REFILL;
 	sleepInterval = (argc > 4) ? atoi(argv[4]) : MAX_SLEEP;
 	
 	pthread_t birds[numBirds];
