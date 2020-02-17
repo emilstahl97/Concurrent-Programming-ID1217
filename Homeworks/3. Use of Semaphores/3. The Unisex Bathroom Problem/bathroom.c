@@ -102,15 +102,19 @@ int main(int argc, char* argv[])
 /**
  * Prints the current status of the bathroom and its two queues.
  */
-void print_status()
+void print(int gender, int id, int *v)
 {
-    printf("\nINSIDE: M=%d, F=%d.\nWAITING: M=%d, F=%d.\n\n", males_inside, females_inside, males_waiting, females_waiting);
+    int visits = (int)v;
+    if(gender == 1)
+	printf("🚹  %d enters the bathroom. Visit: " CYN "%d\n" RESET, id, visits + 1);
+    else
+	printf("🚺  %d enters the bathroom. Visit: " YEL "%d\n" RESET, id, visits + 1);
 }
 
 void *male(void *arg)
 {
 	int id = (int)arg;
-	int i;
+	int *i = 0;
 	for (i = 0; i < MAXTIMES; i++)
 	{
 		/* Do things before entering bathroom */
@@ -136,7 +140,7 @@ void *male(void *arg)
 		}
 
 		/* Go to bathroom */
-		printf("🚹  %d enters the bathroom. Visit: " CYN "%d\n" RESET, id, i + 1);
+		print(1, id, i);
 		sleep(rand() % 3);
 
 		/* What to do after finished with bathroom visit */
@@ -191,7 +195,7 @@ void *female(void *arg)
 		}
 
 		/* Go to bathroom */
-		printf("🚺  %d enters the bathroom. Visit: " YEL "%d\n" RESET, id, i + 1);
+        print(2, id, i);
 		sleep(rand() % 3);
 
 		/* What to do after finished with bathroom visit */
