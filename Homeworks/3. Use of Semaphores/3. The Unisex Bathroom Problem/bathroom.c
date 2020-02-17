@@ -48,10 +48,10 @@ int times_used;
  
 /* Bool to keep record of we should let the other of the same gender in.
  * (Only one thread should do this.) */
-bool letting_in_people;
+bool letting_in_people = false;
 
 /* Number of males and females specified by the user. */
-int numMales, numWomen;
+int numMen, numWomen;
 
 /**
  * Main method, initiates all the semaphores and counters and then starts the
@@ -64,19 +64,16 @@ int main(int argc, char ** argv)
     pthread_t men, women;
     
     numWomen = (argc > 1) ? atoi(argv[1]) : MAX_WOMEN;
-    numMales = (argc > 2) ? atoi(argv[2]) : MAX_MEN;
+    numMen = (argc > 2) ? atoi(argv[2]) : MAX_MEN;
        
     /* Initialize the semaphores used. */
     sem_init(&crit_sem, SHARED, 1);
     sem_init(&waiting_male_sem, SHARED, 0);
     sem_init(&waiting_female_sem, SHARED, 0);
 
-
-    letting_in_people = false; /* We are currently not letting people inside. */
-
     srand(time(NULL)); /* Seed the randomizer to provide different results. */
 
-    for(i = 0; i < numMales; i++) /* Creates the males. */
+    for(i = 0; i < numMen; i++) /* Creates the males. */
     {
         pthread_create(&men, NULL, male, NULL);
     }
@@ -94,7 +91,7 @@ int main(int argc, char ** argv)
         pthread_join(men, NULL);
     }
 
-    return EXIT_SUCCESS; /* Once we joined the thread we exit. */
+    return 0;
 }
 
 /**
