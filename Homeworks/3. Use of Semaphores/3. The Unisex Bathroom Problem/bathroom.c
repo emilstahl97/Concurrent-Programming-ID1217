@@ -65,13 +65,15 @@ int main(int argc, char* argv[])
 /**
  * Prints the current status of the bathroom and its two queues.
  */
-void print(char* gender, int id, int *v)
+void print(int gender, int id, int *v)
 {
     int visits = (int)v;
-    if(gender == 'w')
+    //if(gender == 'w')
+    if(gender == 1)
 	printf("🚺 %d enters the bathroom. Visit: " LMAG "%d\n" RESET, id, visits + 1);
-    else
+    if(gender == 2) {
 	printf("🚹 %d enters the bathroom. Visit: " LBLU "%d\n" RESET, id, visits + 1);
+    }
 }
 
 void *male(void *arg)
@@ -103,7 +105,7 @@ void *male(void *arg)
 		}
 
 		/* Go to bathroom */
-		print(man, id, &i);
+		print(2, id, i);
 		sleep(rand() % 3);
 
 		/* What to do after finished with bathroom visit */
@@ -158,7 +160,7 @@ void *female(void *arg)
 		}
 
 		/* Go to bathroom */
-        print(&woman, id, &i);
+        print(1, id, i);
 		sleep(rand() % 3);
 
 		/* What to do after finished with bathroom visit */
