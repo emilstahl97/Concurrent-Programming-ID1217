@@ -5,7 +5,7 @@
     
    usage under Linux:
             gcc hungryBirds.c -o hungryBird -lpthread
-            ./hungryBirds numBirds numWorms
+            ./hungryBirds numBirds numWorms refillSize sleepInterval
 */
 
 #include <stdlib.h>
@@ -75,12 +75,10 @@ int main(int argc, char *argv[]) {
 	sem_init(&empty, SHARED, 0); 			// worms starts out as full
 	sem_init(&full, SHARED, 1);				// mutex initialized to 1 to indicate critical section is free  	
 	
-	/* creating threads to represent birds */
 	for(id = 0; id < numBirds; id++)
 		pthread_create(&birds[id], NULL, baby_bird, (void*)id);
 	pthread_create(&parent, NULL, parent_bird, NULL);
 	
-	/* wait for threads to terminate (which they, incidentally, won't) */
 	for(id = 0; id < numBirds; id++)
 		pthread_join(birds[id], NULL);
 	pthread_join(parent, NULL);
