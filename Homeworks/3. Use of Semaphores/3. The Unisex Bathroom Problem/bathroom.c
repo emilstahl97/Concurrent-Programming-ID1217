@@ -68,9 +68,9 @@ void print(int gender, int id, int *v)
 {
     int visits = (int)v;
     if(gender == 1)
-	printf("🚹  %d enters the bathroom. Visit: " CYN "%d\n" RESET, id, visits + 1);
+	printf("🚹  %d enters the bathroom. Visit: " LBLU "%d\n" RESET, id, visits + 1);
     else
-	printf("🚺  %d enters the bathroom. Visit: " YEL "%d\n" RESET, id, visits + 1);
+	printf("🚺  %d enters the bathroom. Visit: " LMAG "%d\n" RESET, id, visits + 1);
 }
 
 void *male(void *arg)
