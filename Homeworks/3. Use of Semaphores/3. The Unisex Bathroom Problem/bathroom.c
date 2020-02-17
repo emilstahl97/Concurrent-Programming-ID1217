@@ -1,7 +1,7 @@
 /* The Unisex Bathroom Problem
 
    features: This program simulates a unisex bathroom used by an arbitrary number of men and women.
-             The men and women are represented as threads that work (sleeps) annd uses the bathroom for a random amount of time.
+             The men and women are represented as threads that work (sleeps) and uses the bathroom for a random amount of time.
              Synchronisation is done solely with semaphores.
 
    usage under Linux:
