@@ -4,23 +4,20 @@
 void * male(void *);    /* Male method declaration. */
 void * female(void *);  /* Female method declaration. */
 
-sem_t crit_sem, waiting_male_sem, waiting_female_sem; /* Semaphores used. */
+sem_t lock, waiting_male, waiting_female; /* Semaphores used. */
 
 /* Counters used. */
 int males_inside = 0; 
 int females_inside = 0; 
-int males_waiting = 0; 
-int females_waiting = 0;
-int times_used;
+int males_queue = 0; 
+int females_queue = 0;
  
 /* Number of males and females specified by the user. */
-int numMen, numWomen;
-char* man = 'm';
-char* woman = 'w';
+int numMen, numWomen, numVisits;
+char* man = 'm', woman = 'w';
 
 /* Bool to keep record of we should let the other of the same gender in. */
 bool men_leaving = false, women_leaving = false;
-
 
 /**
  * Main method, initiates all the semaphores and counters and then starts the
@@ -34,11 +31,12 @@ int main(int argc, char* argv[])
     
     numWomen = (argc > 1) ? atoi(argv[1]) : MAX_WOMEN;
     numMen = (argc > 2) ? atoi(argv[2]) : MAX_MEN;
+    numVisits = (argc > 3) ? atoi(argv[3]) : MAX_VISITS;
        
     /* Initialize the semaphores used. */
-    sem_init(&crit_sem, SHARED, 1);
-    sem_init(&waiting_male_sem, SHARED, 0);
-    sem_init(&waiting_female_sem, SHARED, 0);
+    sem_init(&lock, SHARED, 1);
+    sem_init(&waiting_male, SHARED, 0);
+    sem_init(&waiting_female, SHARED, 0);
 
     srand(time(NULL)); /* Seed the randomizer to provide different results. */
 
@@ -75,38 +73,38 @@ void print(char* gender, int id, int *v)
 
 void *male(void *arg)
 {
-	int id = (int)arg;
-	int i = 0;
-	for (i = 0; i < MAXTIMES; i++)
+	int i, id = (int)arg;
+
+	for (i = 0; i < numVisits; i++)
 	{
 		/* Do things before entering bathroom */
-		sleep(rand() % 4);
+		sleep(rand() % MAX_INTERVAL);
 
 		/* Should I wait for bathroom + other stuff */
-		sem_wait(&crit_sem);
+		sem_wait(&lock);
 		if (females_inside > 0 || men_leaving)
 		{
-			males_waiting++;
-			sem_post(&crit_sem);
-			sem_wait(&waiting_male_sem);
+			males_queue++;
+			sem_post(&lock);
+			sem_wait(&waiting_male);
 		}
 		males_inside++;
-		if (males_waiting > 0)
+		if (males_queue > 0)
 		{
-			males_waiting--;
-			sem_post(&waiting_male_sem);
+			males_queue--;
+			sem_post(&waiting_male);
 		}
 		else
 		{
-			sem_post(&crit_sem);
+			sem_post(&lock);
 		}
 
 		/* Go to bathroom */
 		print(man, id, i);
-		sleep(rand() % 3);
+		sleep(rand() % MAX_TIMEIN);
 
 		/* What to do after finished with bathroom visit */
-		sem_wait(&crit_sem);
+		sem_wait(&lock);
 		males_inside--;
 		men_leaving = true;
 
@@ -115,14 +113,14 @@ void *male(void *arg)
 			men_leaving = false;
 
 		/* Prioritize women */
-		if (males_inside == 0 && females_waiting > 0)
+		if (males_inside == 0 && females_queue > 0)
 		{
-			females_waiting--;
-			sem_post(&waiting_female_sem);
+			females_queue--;
+			sem_post(&waiting_female);
 		}
 		else
 		{
-			sem_post(&crit_sem);
+			sem_post(&lock);
 		}
 	}
 	pthread_exit(NULL);
@@ -132,36 +130,36 @@ void *female(void *arg)
 {
 	int id = (int)arg;
 	int i;
-	for (i = 0; i < MAXTIMES; i++)
+	for (i = 0; i < numVisits; i++)
 	{
 		/* Do things before entering bathroom */
-		sleep(rand() % 4);
+		sleep(rand() % MAX_INTERVAL);
 
 		/* Should I wait for bathroom + other stuff */
-		sem_wait(&crit_sem);
+		sem_wait(&lock);
 		if (males_inside > 0 || women_leaving)
 		{
-			females_waiting++;
-			sem_post(&crit_sem);
-			sem_wait(&waiting_female_sem);
+			females_queue++;
+			sem_post(&lock);
+			sem_wait(&waiting_female);
 		}
 		females_inside++;
-		if (females_waiting > 0)
+		if (females_queue > 0)
 		{
-			females_waiting--;
-			sem_post(&waiting_female_sem);
+			females_queue--;
+			sem_post(&waiting_female);
 		}
 		else
 		{
-			sem_post(&crit_sem);
+			sem_post(&lock);
 		}
 
 		/* Go to bathroom */
         print(woman, id, i);
-		sleep(rand() % 3);
+		sleep(rand() % MAX_TIMEIN);
 
 		/* What to do after finished with bathroom visit */
-		sem_wait(&crit_sem);
+		sem_wait(&lock);
 		females_inside--;
 
 		/* Make sure no more women enter while women leave */
@@ -170,14 +168,14 @@ void *female(void *arg)
 			women_leaving = false;
 
 		/* Prioritize men */
-		if (females_inside == 0 && males_waiting > 0)
+		if (females_inside == 0 && males_queue > 0)
 		{
-			males_waiting--;
-			sem_post(&waiting_male_sem);
+			males_queue--;
+			sem_post(&waiting_male);
 		}
 		else
 		{
-			sem_post(&crit_sem);
+			sem_post(&lock);
 		}
 	}
 	pthread_exit(NULL);
