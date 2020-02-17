@@ -1,9 +1,6 @@
 
 #include "config.h"
 
-void * male(void *);    /* Male method declaration. */
-void * female(void *);  /* Female method declaration. */
-
 sem_t lock, waiting_male, waiting_female; /* Semaphores used. */
 
 /* Counters used. */
@@ -18,6 +15,10 @@ char* man = 'm', woman = 'w';
 
 /* Bool to keep record of we should let the other of the same gender in. */
 bool men_leaving = false, women_leaving = false;
+
+void * male(void *);    /* Male method declaration. */
+void * female(void *);  /* Female method declaration. */
+void print(char*, int, int);
 
 /**
  * Main method, initiates all the semaphores and counters and then starts the
@@ -38,44 +39,48 @@ int main(int argc, char* argv[])
     sem_init(&waiting_male, SHARED, 0);
     sem_init(&waiting_female, SHARED, 0);
 
-    srand(time(NULL)); /* Seed the randomizer to provide different results. */
+    for(i = 0; i < numWomen; i++) /* Creates the females. */
+    {
+        pthread_create(&women, NULL, female, (void*)i);
+    }
 
     for(i = 0; i < numMen; i++) /* Creates the males. */
     {
         pthread_create(&men, NULL, male, (void*)i);
     }
-    for(i = 0; i < numWomen; i++) /* Creates the females. */
-    {
-        pthread_create(&women, NULL, female, (void*)i);
-    }
+
     for(i = 0; i < numWomen; i++) /* Joins the threads again. */
     {
         pthread_join(women, NULL);
     }
 
-    for(i = 0; i < numWomen; i++) /* Joins the threads again. */
+    for(i = 0; i < numMen; i++) /* Joins the threads again. */
     {
         pthread_join(men, NULL);
     }
 
+    sem_close(&lock);
+    sem_close(&waiting_female);
+    sem_close(&waiting_male);
+
     return 0;
 }
 
-void print(char* gender, int id, int *v)
+void print(char* gender, int id, int v)
 {
     int visits = (int)v;
     if(gender == 'w')
-	printf("🚺 %d enters the bathroom. Visit: " LMAG "%d\n" RESET, id, visits + 1);
+	printf("🚺 %d enters the bathroom - Visit: " LMAG "#%d\n" RESET, id, visits + 1);
     if(gender == 'm') {
-	printf("🚹 %d enters the bathroom. Visit: " LBLU "%d\n" RESET, id, visits + 1);
+	printf("🚹 %d enters the bathroom - Visit: " LBLU "#%d\n" RESET, id, visits + 1);
     }
 }
 
 void *male(void *arg)
 {
-	int i, id = (int)arg;
+	int visit, id = (int)arg;
 
-	for (i = 0; i < numVisits; i++)
+	for (visit = 0; visit < numVisits; visit++)
 	{
 		/* Do things before entering bathroom */
 		sleep(rand() % MAX_INTERVAL);
@@ -100,7 +105,7 @@ void *male(void *arg)
 		}
 
 		/* Go to bathroom */
-		print(man, id, i);
+		print(man, id, visit);
 		sleep(rand() % MAX_TIMEIN);
 
 		/* What to do after finished with bathroom visit */
@@ -129,8 +134,8 @@ void *male(void *arg)
 void *female(void *arg)
 {
 	int id = (int)arg;
-	int i;
-	for (i = 0; i < numVisits; i++)
+	int visit;
+	for (visit = 0; visit < numVisits; visit++)
 	{
 		/* Do things before entering bathroom */
 		sleep(rand() % MAX_INTERVAL);
@@ -155,7 +160,7 @@ void *female(void *arg)
 		}
 
 		/* Go to bathroom */
-        print(woman, id, i);
+        print(woman, id, visit);
 		sleep(rand() % MAX_TIMEIN);
 
 		/* What to do after finished with bathroom visit */
