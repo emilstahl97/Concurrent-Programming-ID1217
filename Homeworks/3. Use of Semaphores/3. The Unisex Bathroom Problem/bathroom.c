@@ -28,8 +28,7 @@ void * female(void *);
 void print(char*, int, int);
 
 
-int main(int argc, char* argv[])
-{
+int main(int argc, char* argv[]) {
     int i;
     pthread_t men, women;
     
