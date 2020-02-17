@@ -15,7 +15,8 @@ int times_used;
  
 /* Number of males and females specified by the user. */
 int numMen, numWomen;
-char* man = 'm', woman = 'w';
+char* man = 'm';
+char* woman = 'w';
 
 /* Bool to keep record of we should let the other of the same gender in. */
 bool men_leaving = false, women_leaving = false;
@@ -62,16 +63,12 @@ int main(int argc, char* argv[])
     return 0;
 }
 
-/**
- * Prints the current status of the bathroom and its two queues.
- */
-void print(int gender, int id, int *v)
+void print(char* gender, int id, int *v)
 {
     int visits = (int)v;
-    //if(gender == 'w')
-    if(gender == 1)
+    if(gender == 'w')
 	printf("🚺 %d enters the bathroom. Visit: " LMAG "%d\n" RESET, id, visits + 1);
-    if(gender == 2) {
+    if(gender == 'm') {
 	printf("🚹 %d enters the bathroom. Visit: " LBLU "%d\n" RESET, id, visits + 1);
     }
 }
@@ -105,7 +102,7 @@ void *male(void *arg)
 		}
 
 		/* Go to bathroom */
-		print(2, id, i);
+		print(man, id, i);
 		sleep(rand() % 3);
 
 		/* What to do after finished with bathroom visit */
@@ -160,7 +157,7 @@ void *female(void *arg)
 		}
 
 		/* Go to bathroom */
-        print(1, id, i);
+        print(woman, id, i);
 		sleep(rand() % 3);
 
 		/* What to do after finished with bathroom visit */
