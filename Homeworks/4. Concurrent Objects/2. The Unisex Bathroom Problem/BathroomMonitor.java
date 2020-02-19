@@ -11,6 +11,17 @@ import java.util.concurrent.locks.ReentrantLock;
  */
 public class BathroomMonitor {
 
+    public enum BathroomState {
+
+        Empty,
+        MenEntering,
+        WomenEntering,
+        MenLeaving,
+        WomenLeaving,
+    }
+
+    private BathroomState state = BathroomState.Empty;
+
     private final Lock lock = new ReentrantLock();
     private final Condition activeMen  = lock.newCondition(); 
     private final Condition activeWomen = lock.newCondition();
