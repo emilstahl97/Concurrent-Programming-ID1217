@@ -23,7 +23,7 @@ public class BathroomMonitor {
      * Sets the bathroom object.
      * @param bathroom The bathroom to let the entering people use.
      */
-    public BathroomMonitor(Bathroom bathroom, int numMen, int numWomen) {
+    public BathroomMonitor(Bathroom bathroom) {
         if(bathroom == null) 
             throw new IllegalArgumentException("Can not set a bathroom which is null");
         this.bathroom = bathroom;
