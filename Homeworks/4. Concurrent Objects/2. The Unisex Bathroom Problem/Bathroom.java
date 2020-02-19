@@ -1,10 +1,6 @@
 
 import java.util.Random;
 
-/**
- * This class represents a bathroom which you can use.
- * @author Kim
- */
 public class Bathroom {
 
     private static final int USE_TIME_DEFAULT = 3 * 1000;

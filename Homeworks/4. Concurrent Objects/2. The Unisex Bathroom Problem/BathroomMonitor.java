@@ -3,12 +3,6 @@ import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-/**
- * This class will act as a monitor for the access to the specified Bathroom.
- * It will use condition variables for synchronization in a Signal and Continue 
- * way.
- * @author Kim
- */
 public class BathroomMonitor {
 
     public enum BathroomState {
@@ -26,10 +20,23 @@ public class BathroomMonitor {
     private final Condition activeMen  = lock.newCondition(); 
     private final Condition activeWomen = lock.newCondition();
     private final Bathroom bathroom;
-    private int womenInBathroom = 0;
-    private int menInBathroom = 0;
     private int numMen;
     private int numWomen;
+    private int time = 0;
+    private int menInQueue = 0;
+    private int menInBathroom = 0;
+    private int womenInQueue = 0;
+    private int womenInBathroom = 0;
+
+    public static final String ANSI_RESET = "\u001B[0m";
+    public static final String ANSI_PURPLE = "\u001B[35m";
+    public static final String ANSI_BLUE = "\u001B[34m";
+    public static final String ANSI_RED = "\u001B[31m";
+    public static final String ANSI_GREEN = "\u001B[32m";
+    public static final String ANSI_YELLOW = "\u001B[33m";
+
+    public static final char BLACK_SQUARE = '\u25A0';
+    public static final char WHITE_SQUARE = '\u25A1';
 
     /**
      * Sets the bathroom object.
@@ -48,8 +55,11 @@ public class BathroomMonitor {
      * if there are women waiting, wait until they are done.
      */
     public void manEnter() {
+        printQueues();
+        System.out.println("Man wants to enter");
         lock.lock();
         try {
+            menInQueue++;
           while (womenInBathroom > 0) {
               try {
                   activeWomen.await();
@@ -57,9 +67,12 @@ public class BathroomMonitor {
                   System.err.println("Man interrupted while waiting for bathroom");
               }
           }
-          
-          menInBathroom++;
+          menInQueue--;
           state = BathroomState.MenEntering;
+          menInBathroom++;
+
+          printQueues();
+          System.out.println("Man enters");
           bathroom.use();
         } finally {
           lock.unlock();
@@ -73,8 +86,10 @@ public class BathroomMonitor {
     public void manExit() {
         lock.lock();
         try {
-            menInBathroom--;
             state = BathroomState.MenLeaving;
+            menInBathroom--;
+            printQueues();
+            System.out.println("Man leaves");
             if(menInBathroom == 0) 
                 activeMen.signalAll();
         } finally {
@@ -87,8 +102,11 @@ public class BathroomMonitor {
      * if there are men waiting, wait until they are done.
      */
     public void womanEnter() {
+        printQueues();
+        System.out.println("Woman wants to enter");
        lock.lock();
         try {
+            womenInQueue++;
           while (menInBathroom > 0) {
               try {
                   activeMen.await();
@@ -96,10 +114,14 @@ public class BathroomMonitor {
                   System.err.println("Woman interrupted while waiting for bathroom");
               }
           }
-          
-          womenInBathroom++;
+          womenInQueue--;
           state = BathroomState.WomenEntering;
+          womenInBathroom++;
+          
           bathroom.use();
+          
+          printQueues();
+          System.out.println("Woman leaves");
         } finally {
           lock.unlock();
         }
@@ -112,12 +134,86 @@ public class BathroomMonitor {
     public void womanExit() {
         lock.lock();
         try {
-            womenInBathroom--;
             state = BathroomState.WomenLeaving;
+            womenInBathroom--;
+            printQueues();
+            System.out.println("Woman leaves");
             if(womenInBathroom == 0) 
                 activeWomen.signalAll();
         } finally {
           lock.unlock();
         }
     }
+
+    private void printQueues() {
+        String timeStamp = "";
+        if (time < 10)
+            timeStamp = "[ " + time++ + "  ] ";
+        else if (time >= 10 && time < 100)
+            timeStamp = "[ " + time++ + " ] ";
+        else if (time >= 100 && time < 1000)
+            timeStamp = "[" + time++ + " ] ";
+        else
+            timeStamp = "[" + time++ + "] ";
+
+        String stateColour = "";
+        String statePadded = "";
+        switch (state) {
+            case Empty:
+                stateColour = ANSI_YELLOW;
+                statePadded = "    Empty     ";
+                break;
+            case MenEntering:
+                stateColour = ANSI_GREEN;
+                statePadded = " Men Entering ";
+                break;
+            case MenLeaving:
+                stateColour = ANSI_RED;
+                statePadded = " Men Leaving  ";
+                break;
+            case WomenEntering:
+                stateColour = ANSI_GREEN;
+                statePadded = "Women Entering";
+                break;
+            case WomenLeaving:
+                stateColour = ANSI_RED;
+                statePadded = "Women Leaving ";
+                break;
+        }
+
+        String stateString = stateColour + "State: [" + statePadded + "] " + ANSI_RESET;
+
+        String menQueue = "[";
+        for (int i = 0; i < menInQueue; i++)
+            menQueue += BLACK_SQUARE;
+        for (int i = 0; i < numMen - menInQueue; i++)
+            menQueue += WHITE_SQUARE;
+        menQueue += "]";
+
+        String womenQueue = "[";
+        for (int i = 0; i < womenInQueue; i++)
+            womenQueue += BLACK_SQUARE;
+        for (int i = 0; i < numWomen - womenInQueue; i++)
+            womenQueue += WHITE_SQUARE;
+        womenQueue += "]";
+
+        String menBathroom = "[";
+        for (int i = 0; i < menInBathroom; i++)
+            menBathroom += BLACK_SQUARE;
+        for (int i = 0; i < numMen - menInBathroom; i++)
+            menBathroom += ' ';
+        menBathroom += "]";
+
+        String womenBathroom = "[";
+        for (int i = 0; i < womenInBathroom; i++)
+            womenBathroom += BLACK_SQUARE;
+        for (int i = 0; i < numWomen - womenInBathroom; i++)
+            womenBathroom += ' ';
+        womenBathroom += "]";
+
+        System.out.print(timeStamp + stateString + "Bathroom: " + ANSI_BLUE + "M:" + menBathroom + ANSI_PURPLE + "W:" + womenBathroom + ANSI_RESET + " Queues: " + ANSI_BLUE + "M:" + menQueue + ANSI_PURPLE + "W:" + womenQueue + ANSI_RESET + " ");
+
+    }
+
+
 }
