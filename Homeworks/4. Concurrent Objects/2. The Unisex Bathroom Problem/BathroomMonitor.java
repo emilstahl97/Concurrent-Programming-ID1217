@@ -141,7 +141,7 @@ public class BathroomMonitor {
             state = BathroomState.WomenLeaving;
             womenInBathroom--;
             printQueues();
-            System.out.println("\uD83D\uDEBA leaves");
+            System.out.println(WOMAN +" leaves");
             if(womenInBathroom == 0) 
                 activeWomen.signalAll();
         } finally {
