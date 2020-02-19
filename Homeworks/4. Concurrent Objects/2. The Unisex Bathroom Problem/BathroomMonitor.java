@@ -211,7 +211,7 @@ public class BathroomMonitor {
             womenBathroom += ' ';
         womenBathroom += "]";
 
-        System.out.print(timeStamp + stateString + "Bathroom: " + ANSI_BLUE + "M:" + menBathroom + ANSI_PURPLE + "W:" + womenBathroom + ANSI_RESET + " Queues: " + ANSI_BLUE + "M:" + menQueue + ANSI_PURPLE + "W:" + womenQueue + ANSI_RESET + " ");
+        System.out.print(timeStamp + stateString + "Bathroom: " + ANSI_BLUE + "M:" + menInBathroom + ANSI_PURPLE + "W:" + womenInBathroom + ANSI_RESET + " Queues: " + ANSI_BLUE + "M:" + menQueue + ANSI_PURPLE + "W:" + womenQueue + ANSI_RESET + " ");
 
     }
 
