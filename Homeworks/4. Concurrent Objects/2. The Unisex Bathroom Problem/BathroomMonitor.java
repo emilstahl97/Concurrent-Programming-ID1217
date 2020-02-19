@@ -59,6 +59,7 @@ public class BathroomMonitor {
           }
           
           menInBathroom++;
+          state = BathroomState.MenEntering;
           bathroom.use();
         } finally {
           lock.unlock();
@@ -73,6 +74,7 @@ public class BathroomMonitor {
         lock.lock();
         try {
             menInBathroom--;
+            state = BathroomState.MenLeaving;
             if(menInBathroom == 0) 
                 activeMen.signalAll();
         } finally {
@@ -96,6 +98,7 @@ public class BathroomMonitor {
           }
           
           womenInBathroom++;
+          state = BathroomState.WomenEntering;
           bathroom.use();
         } finally {
           lock.unlock();
@@ -110,6 +113,7 @@ public class BathroomMonitor {
         lock.lock();
         try {
             womenInBathroom--;
+            state = BathroomState.WomenLeaving;
             if(womenInBathroom == 0) 
                 activeWomen.signalAll();
         } finally {
