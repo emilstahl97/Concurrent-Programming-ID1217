@@ -32,11 +32,12 @@ public class Bathroom {
      * a random amount of time.
      */
     public void use() {
-        System.out.println("inside bathroom.use\n");
+        //System.out.println("inside bathroom.use\n");
         Random rand = new Random();
         int time = rand.nextInt(USE_TIME);
 
         try {
+            System.out.println("inside use, thread sleeping\n");
             Thread.sleep(time);
         } catch (InterruptedException ex) {
             System.err.println("Bathroom usage has been interrupted.");
