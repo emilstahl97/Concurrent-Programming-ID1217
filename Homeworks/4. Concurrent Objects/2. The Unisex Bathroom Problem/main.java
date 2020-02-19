@@ -11,13 +11,13 @@ public class main {
         System.exit(1);
         }
 
-        System.out.print("got here\n");   
         numWomen = Integer.parseInt(args[0]);
         numMen = Integer.parseInt(args[1]);
         numVisits = Integer.parseInt(args[2]);
 
+        System.out.println("numWomen = " + numWomen + "\nnumMen = " + numMen + "\nnumVisits = "+numVisits+"\n");
+
         BathroomMonitor bathroommonitor = new BathroomMonitor(new Bathroom(), numWomen, numWomen);
-        System.out.print("got here\n");   
 
         for(int i = 0; i < numWomen; i++) {
             Female female = new Female(bathroommonitor, numVisits, i);

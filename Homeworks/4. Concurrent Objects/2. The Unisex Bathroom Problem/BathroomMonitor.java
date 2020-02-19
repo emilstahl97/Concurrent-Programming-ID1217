@@ -37,7 +37,6 @@ public class BathroomMonitor {
      * if there are women waiting, wait until they are done.
      */
     public void manEnter() {
-        System.out.println("manEnter\n");
         lock.lock();
         try {
           while (womenInBathroom > 0) {
@@ -61,7 +60,6 @@ public class BathroomMonitor {
      */
     public void manExit() {
         lock.lock();
-        System.out.println("manExit\n");
         try {
             menInBathroom--;
             if(menInBathroom == 0) 
@@ -87,7 +85,6 @@ public class BathroomMonitor {
           }
           
           womenInBathroom++;
-          System.out.println("womenEnter\n");
           bathroom.use();
         } finally {
           lock.unlock();
@@ -102,7 +99,6 @@ public class BathroomMonitor {
         lock.lock();
         try {
             womenInBathroom--;
-            System.out.println("womenExit\n");
             if(womenInBathroom == 0) 
                 activeWomen.signalAll();
         } finally {
