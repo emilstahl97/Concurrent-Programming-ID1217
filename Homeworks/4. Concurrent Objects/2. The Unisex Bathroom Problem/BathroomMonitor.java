@@ -6,41 +6,18 @@ import java.util.Date;
 
 public class BathroomMonitor {
 
-    public enum BathroomState {
 
-        Empty,
-        MenEntering,
-        WomenEntering,
-        MenLeaving,
-        WomenLeaving,
-    }
+    public BathroomState.State state = BathroomState.State.Empty;
 
-    private BathroomState state = BathroomState.Empty;
+    BathroomState bathroomState = new BathroomState();
 
     private final Lock lock = new ReentrantLock();
     private final Condition activeMen  = lock.newCondition(); 
     private final Condition activeWomen = lock.newCondition();
     private final Bathroom bathroom;
-    private int numMen;
-    private int numWomen;
-    private int time = 0;
-    private int menInQueue = 0;
-    private int menInBathroom = 0;
-    private int womenInQueue = 0;
-    private int womenInBathroom = 0;
 
-    public static final String ANSI_RESET = "\u001B[0m";
-    public static final String ANSI_PURPLE = "\u001B[35m";
-    public static final String ANSI_BLUE = "\u001B[34m";
-    public static final String ANSI_RED = "\u001B[31m";
-    public static final String ANSI_GREEN = "\u001B[32m";
-    public static final String ANSI_YELLOW = "\u001B[33m";
-
-    public static final char BLACK_SQUARE = '\u25A0';
-    public static final char WHITE_SQUARE = '\u25A1';
-
-    public static final String WOMAN = "\uD83D\uDEBA";
-    public static final String MAN = "\uD83D\uDEB9";
+    private static final String WOMAN = "\uD83D\uDEBA";
+    private static final String MAN = "\uD83D\uDEB9";
 
     /**
      * Sets the bathroom object.
@@ -50,8 +27,6 @@ public class BathroomMonitor {
         if(bathroom == null) 
             throw new IllegalArgumentException("Can not set a bathroom which is null");
         this.bathroom = bathroom;
-        this.numMen = numMen;
-        this.numWomen = numWomen;
     }
     
     /**
@@ -59,23 +34,22 @@ public class BathroomMonitor {
      * if there are women waiting, wait until they are done.
      */
     public void manEnter() {
-        printQueues();
+        bathroomState.printQueues();
         System.out.println(MAN +" wants to enter");
         lock.lock();
         try {
-            menInQueue++;
-          while (womenInBathroom > 0) {
+            bathroomState.menInQueue++;
+          while (bathroomState.womenInBathroom > 0) {
               try {
                   activeWomen.await();
               } catch (InterruptedException ex) {
                   System.err.println(MAN +" interrupted while waiting for bathroom");
               }
           }
-          menInQueue--;
-          state = BathroomState.MenEntering;
-          menInBathroom++;
-
-          printQueues();
+          bathroomState.menInQueue--;
+          state = BathroomState.State.MenEntering;
+          bathroomState.menInBathroom++;
+          bathroomState.printQueues();
           System.out.println(MAN +" enters");
           bathroom.use();
         } finally {
@@ -90,11 +64,11 @@ public class BathroomMonitor {
     public void manExit() {
         lock.lock();
         try {
-            state = BathroomState.MenLeaving;
-            menInBathroom--;
-            printQueues();
+            state = BathroomState.State.MenLeaving;
+            bathroomState.menInBathroom--;
+            bathroomState.printQueues();
             System.out.println(MAN +" leaves");
-            if(menInBathroom == 0) 
+            if(bathroomState.menInBathroom == 0) 
                 activeMen.signalAll();
         } finally {
           lock.unlock();
@@ -106,25 +80,25 @@ public class BathroomMonitor {
      * if there are men waiting, wait until they are done.
      */
     public void womanEnter() {
-        printQueues();
+        bathroomState.printQueues();
         System.out.println(WOMAN + " wants to enter");
        lock.lock();
         try {
-            womenInQueue++;
-          while (menInBathroom > 0) {
+            bathroomState.womenInQueue++;
+          while (bathroomState.menInBathroom > 0) {
               try {
                   activeMen.await();
               } catch (InterruptedException ex) {
                   System.err.println(WOMAN +" interrupted while waiting for bathroom");
               }
           }
-          womenInQueue--;
-          state = BathroomState.WomenEntering;
-          womenInBathroom++;
+          bathroomState.womenInQueue--;
+          state = BathroomState.State.WomenEntering;
+          bathroomState.womenInBathroom++;
           
           bathroom.use();
           
-          printQueues();
+          bathroomState.printQueues();
           System.out.println(WOMAN + " leaves");
         } finally {
           lock.unlock();
@@ -138,86 +112,15 @@ public class BathroomMonitor {
     public void womanExit() {
         lock.lock();
         try {
-            state = BathroomState.WomenLeaving;
-            womenInBathroom--;
-            printQueues();
+            state = BathroomState.State.WomenLeaving;
+            bathroomState.womenInBathroom--;
+            bathroomState.printQueues();
             System.out.println(WOMAN +" leaves");
-            if(womenInBathroom == 0) 
+            if(bathroomState.womenInBathroom == 0) 
                 activeWomen.signalAll();
         } finally {
           lock.unlock();
         }
     }
-
-    private void printQueues() {
-        String timeStamp = "";
-        if (time < 10)
-            timeStamp = "[ " + time++ + "  ] ";
-        else if (time >= 10 && time < 100)
-            timeStamp = "[ " + time++ + " ] ";
-        else if (time >= 100 && time < 1000)
-            timeStamp = "[" + time++ + " ] ";
-        else
-            timeStamp = "[" + time++ + "] ";
-
-        String stateColour = "";
-        String statePadded = "";
-        switch (state) {
-            case Empty:
-                stateColour = ANSI_YELLOW;
-                statePadded = "    Empty     ";
-                break;
-            case MenEntering:
-                stateColour = ANSI_GREEN;
-                statePadded = " Men Entering ";
-                break;
-            case MenLeaving:
-                stateColour = ANSI_RED;
-                statePadded = " Men Leaving  ";
-                break;
-            case WomenEntering:
-                stateColour = ANSI_GREEN;
-                statePadded = "Women Entering";
-                break;
-            case WomenLeaving:
-                stateColour = ANSI_RED;
-                statePadded = "Women Leaving ";
-                break;
-        }
-
-        String stateString = stateColour + "State: [" + statePadded + "] " + ANSI_RESET;
-
-        String menQueue = "[";
-        for (int i = 0; i < menInQueue; i++)
-            menQueue += BLACK_SQUARE;
-        for (int i = 0; i < numMen - menInQueue; i++)
-            menQueue += WHITE_SQUARE;
-        menQueue += "]";
-
-        String womenQueue = "[";
-        for (int i = 0; i < womenInQueue; i++)
-            womenQueue += BLACK_SQUARE;
-        for (int i = 0; i < numWomen - womenInQueue; i++)
-            womenQueue += WHITE_SQUARE;
-        womenQueue += "]";
-
-        String menBathroom = "[";
-        for (int i = 0; i < menInBathroom; i++)
-            menBathroom += BLACK_SQUARE;
-        for (int i = 0; i < numMen - menInBathroom; i++)
-            menBathroom += ' ';
-        menBathroom += "]";
-
-        String womenBathroom = "[";
-        for (int i = 0; i < womenInBathroom; i++)
-            womenBathroom += BLACK_SQUARE;
-        for (int i = 0; i < numWomen - womenInBathroom; i++)
-            womenBathroom += ' ';
-        womenBathroom += "]";
-
-        System.out.print(timeStamp + stateString + "Bathroom: " + ANSI_BLUE + "M:" + menBathroom + ANSI_PURPLE + "W:" + womenBathroom + ANSI_RESET + " Queues: " + ANSI_BLUE + "M:" + menQueue + ANSI_PURPLE + "W:" + womenQueue + ANSI_RESET + " ");
-
-    }
-
-
 }
+
