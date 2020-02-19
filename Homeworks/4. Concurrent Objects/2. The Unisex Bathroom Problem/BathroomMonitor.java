@@ -3,12 +3,6 @@ import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-/**
- * This class will act as a monitor for the access to the specified Bathroom.
- * It will use condition variables for synchronization in a Signal and Continue 
- * way.
- * @author Kim
- */
 public class BathroomMonitor {
 
     private final Lock lock = new ReentrantLock();
