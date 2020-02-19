@@ -2,6 +2,7 @@
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.Date;
 
 public class BathroomMonitor {
 
@@ -38,6 +39,9 @@ public class BathroomMonitor {
     public static final char BLACK_SQUARE = '\u25A0';
     public static final char WHITE_SQUARE = '\u25A1';
 
+    public static final String WOMAN = "\uD83D\uDEBA";
+    public static final String MAN = "\uD83D\uDEB9";
+
     /**
      * Sets the bathroom object.
      * @param bathroom The bathroom to let the entering people use.
@@ -56,7 +60,7 @@ public class BathroomMonitor {
      */
     public void manEnter() {
         printQueues();
-        System.out.println("Man wants to enter");
+        System.out.println(MAN +" wants to enter");
         lock.lock();
         try {
             menInQueue++;
@@ -64,7 +68,7 @@ public class BathroomMonitor {
               try {
                   activeWomen.await();
               } catch (InterruptedException ex) {
-                  System.err.println("Man interrupted while waiting for bathroom");
+                  System.err.println(MAN +" interrupted while waiting for bathroom");
               }
           }
           menInQueue--;
@@ -72,7 +76,7 @@ public class BathroomMonitor {
           menInBathroom++;
 
           printQueues();
-          System.out.println("Man enters");
+          System.out.println(MAN +" enters");
           bathroom.use();
         } finally {
           lock.unlock();
@@ -89,7 +93,7 @@ public class BathroomMonitor {
             state = BathroomState.MenLeaving;
             menInBathroom--;
             printQueues();
-            System.out.println("Man leaves");
+            System.out.println(MAN +" leaves");
             if(menInBathroom == 0) 
                 activeMen.signalAll();
         } finally {
@@ -103,7 +107,7 @@ public class BathroomMonitor {
      */
     public void womanEnter() {
         printQueues();
-        System.out.println("Woman wants to enter");
+        System.out.println(WOMAN + " wants to enter");
        lock.lock();
         try {
             womenInQueue++;
@@ -111,7 +115,7 @@ public class BathroomMonitor {
               try {
                   activeMen.await();
               } catch (InterruptedException ex) {
-                  System.err.println("Woman interrupted while waiting for bathroom");
+                  System.err.println(WOMAN +" interrupted while waiting for bathroom");
               }
           }
           womenInQueue--;
@@ -121,7 +125,7 @@ public class BathroomMonitor {
           bathroom.use();
           
           printQueues();
-          System.out.println("Woman leaves");
+          System.out.println(WOMAN + " leaves");
         } finally {
           lock.unlock();
         }
@@ -137,7 +141,7 @@ public class BathroomMonitor {
             state = BathroomState.WomenLeaving;
             womenInBathroom--;
             printQueues();
-            System.out.println("Woman leaves");
+            System.out.println("\uD83D\uDEBA leaves");
             if(womenInBathroom == 0) 
                 activeWomen.signalAll();
         } finally {
@@ -211,7 +215,7 @@ public class BathroomMonitor {
             womenBathroom += ' ';
         womenBathroom += "]";
 
-        System.out.print(timeStamp + stateString + "Bathroom: " + ANSI_BLUE + "M:" + menInBathroom + ANSI_PURPLE + "W:" + womenInBathroom + ANSI_RESET + " Queues: " + ANSI_BLUE + "M:" + menQueue + ANSI_PURPLE + "W:" + womenQueue + ANSI_RESET + " ");
+        System.out.print(timeStamp + stateString + "Bathroom: " + ANSI_BLUE + "M:" + menBathroom + ANSI_PURPLE + "W:" + womenBathroom + ANSI_RESET + " Queues: " + ANSI_BLUE + "M:" + menQueue + ANSI_PURPLE + "W:" + womenQueue + ANSI_RESET + " ");
 
     }
 
