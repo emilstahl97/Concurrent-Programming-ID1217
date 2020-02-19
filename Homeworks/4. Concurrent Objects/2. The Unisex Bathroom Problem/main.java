@@ -20,8 +20,7 @@ public class main {
         BathroomMonitor bathroommonitor = new BathroomMonitor(new Bathroom());
         BathroomState bathroomState = new BathroomState();
 
-        bathroomState.numWomen = numWomen;
-        bathroomState.numMen = numMen;
+        bathroomState.setNum(numWomen, numMen);
 
         for(int i = 0; i < numWomen; i++) {
             Female female = new Female(bathroommonitor, numVisits, i);

@@ -1,5 +1,4 @@
 
-
 public class BathroomState {
 
     public enum State {
@@ -11,7 +10,7 @@ public class BathroomState {
         WomenLeaving,
     }
 
-   public State state = State.Empty;
+   public BathroomState.State state = BathroomState.State.Empty;
 
     public int menInQueue = 0;
     public int menInBathroom = 0;
@@ -31,8 +30,15 @@ public class BathroomState {
     public static final char BLACK_SQUARE = '\u25A0';
     public static final char WHITE_SQUARE = '\u25A1';
 
+    public void setNum(int numWomen, int numMen) {
+
+        this.numWomen = numWomen;
+        this.numMen = numMen;
+    }
+
 
     public void printQueues() {
+        System.out.println("numMen = " + numMen);
         String timeStamp = "";
         if (time < 10)
             timeStamp = "[ " + time++ + "  ] ";
