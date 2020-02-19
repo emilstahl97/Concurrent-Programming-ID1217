@@ -6,9 +6,6 @@ import java.util.Date;
 
 public class BathroomMonitor {
 
-
-    public BathroomState.State state = BathroomState.State.Empty;
-
     BathroomState bathroomState = new BathroomState();
 
     private final Lock lock = new ReentrantLock();
@@ -47,7 +44,7 @@ public class BathroomMonitor {
               }
           }
           bathroomState.menInQueue--;
-          state = BathroomState.State.MenEntering;
+          bathroomState.state = BathroomState.State.MenEntering;
           bathroomState.menInBathroom++;
           bathroomState.printQueues();
           System.out.println(MAN +" enters");
@@ -64,7 +61,7 @@ public class BathroomMonitor {
     public void manExit() {
         lock.lock();
         try {
-            state = BathroomState.State.MenLeaving;
+            bathroomState.state = BathroomState.State.MenLeaving;
             bathroomState.menInBathroom--;
             bathroomState.printQueues();
             System.out.println(MAN +" leaves");
@@ -93,7 +90,7 @@ public class BathroomMonitor {
               }
           }
           bathroomState.womenInQueue--;
-          state = BathroomState.State.WomenEntering;
+          bathroomState.state = BathroomState.State.WomenEntering;
           bathroomState.womenInBathroom++;
           
           bathroom.use();
@@ -112,7 +109,7 @@ public class BathroomMonitor {
     public void womanExit() {
         lock.lock();
         try {
-            state = BathroomState.State.WomenLeaving;
+            bathroomState.state = BathroomState.State.WomenLeaving;
             bathroomState.womenInBathroom--;
             bathroomState.printQueues();
             System.out.println(WOMAN +" leaves");

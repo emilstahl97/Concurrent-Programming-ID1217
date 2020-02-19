@@ -38,7 +38,6 @@ public class BathroomState {
 
 
     public void printQueues() {
-        System.out.println("numMen = " + numMen);
         String timeStamp = "";
         if (time < 10)
             timeStamp = "[ " + time++ + "  ] ";
