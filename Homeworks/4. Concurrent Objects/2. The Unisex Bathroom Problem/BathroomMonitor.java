@@ -31,9 +31,9 @@ public class BathroomMonitor {
      * if there are women waiting, wait until they are done.
      */
     public void manEnter() {
+        lock.lock();
         bathroomState.printQueues();
         System.out.println(MAN +" wants to enter");
-        lock.lock();
         try {
             bathroomState.menInQueue++;
           while (bathroomState.womenInBathroom > 0) {
@@ -77,9 +77,9 @@ public class BathroomMonitor {
      * if there are men waiting, wait until they are done.
      */
     public void womanEnter() {
+        lock.lock();
         bathroomState.printQueues();
         System.out.println(WOMAN + " wants to enter");
-       lock.lock();
         try {
             bathroomState.womenInQueue++;
           while (bathroomState.menInBathroom > 0) {

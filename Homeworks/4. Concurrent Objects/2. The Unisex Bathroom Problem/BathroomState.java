@@ -16,9 +16,9 @@ public class BathroomState {
     public int menInBathroom = 0;
     public int womenInQueue = 0;
     public int womenInBathroom = 0;
-    public int numWomen;
-    public int numMen;
-    private int time;
+    private int time = 0;
+    public int numWomen = 8;
+    public int numMen = 8;
 
     public static final String ANSI_RESET = "\u001B[0m";
     public static final String ANSI_PURPLE = "\u001B[35m";
@@ -30,11 +30,19 @@ public class BathroomState {
     public static final char BLACK_SQUARE = '\u25A0';
     public static final char WHITE_SQUARE = '\u25A1';
 
-    public void setNum(int numWomen, int numMen) {
+    /* public setNum(int numWomen, int numMen) {
 
         this.numWomen = numWomen;
         this.numMen = numMen;
+    } */
+    main m = new main();
+
+    private void printNum() {
+
+        System.out.println("Number of women = " + numWomen + "\n");
+        System.out.println("Number of men = " + numMen + "\n");
     }
+
 
 
     public void printQueues() {
@@ -50,7 +58,6 @@ public class BathroomState {
 
         String stateColour = "";
         String statePadded = "";
-
         switch (state) {
             case Empty:
                 stateColour = ANSI_YELLOW;
@@ -100,13 +107,15 @@ public class BathroomState {
         String womenBathroom = "[";
         for (int i = 0; i < womenInBathroom; i++)
             womenBathroom += BLACK_SQUARE;
-        for (int i = 0; i < numWomen - womenInBathroom; i++)
+        for (int i = 0; i < (numWomen - womenInBathroom); i++)
             womenBathroom += ' ';
         womenBathroom += "]";
 
         System.out.print(timeStamp + stateString + "Bathroom: " + ANSI_BLUE + "M:" + menBathroom + ANSI_PURPLE + "W:" + womenBathroom + ANSI_RESET + " Queues: " + ANSI_BLUE + "M:" + menQueue + ANSI_PURPLE + "W:" + womenQueue + ANSI_RESET + " ");
+        //System.out.println("women in Bathroom = " + (womenInBathroom)+"\n");
+        //printNum();
+        //System.out.println(+numWomen +" numWomen - " + womenInBathroom +" womenInBathroom = " + (numWomen - womenInBathroom)+"\n");
 
     }
-
 
 }
