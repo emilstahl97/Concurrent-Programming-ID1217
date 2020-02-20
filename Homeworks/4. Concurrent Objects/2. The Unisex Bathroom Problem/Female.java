@@ -22,11 +22,10 @@ public class Female implements Runnable {
 
             while(visit < numVisits + 1) {
 
-                Thread.sleep(rand.nextInt(5000));
+                Thread.sleep(500);
                 bathroommonitor.womanEnter(this);
-                Thread.sleep(rand.nextInt(2000));
-                //toilet.use();
-          
+
+               Thread.sleep(200);
                bathroommonitor.womanExit(this); 
             }
         }
