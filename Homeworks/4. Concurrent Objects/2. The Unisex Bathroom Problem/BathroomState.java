@@ -9,8 +9,8 @@ public class BathroomState {
         MenLeaving,
         WomenLeaving,
     }
-
-   public BathroomState.State state = BathroomState.State.Empty;
+    
+    public BathroomState.State state = BathroomState.State.Empty;
 
     public int menInQueue = 0;
     public int menInBathroom = 0;
@@ -20,29 +20,21 @@ public class BathroomState {
     private int numMen;
     private int time = 0;
 
-    public static final String ANSI_RESET = "\u001B[0m";
-    public static final String ANSI_PURPLE = "\u001B[35m";
-    public static final String ANSI_BLUE = "\u001B[34m";
-    public static final String ANSI_RED = "\u001B[31m";
-    public static final String ANSI_GREEN = "\u001B[32m";
-    public static final String ANSI_YELLOW = "\u001B[33m";
+    private static final String ANSI_RESET = "\u001B[0m";
+    private static final String ANSI_PURPLE = "\u001B[35m";
+    private static final String ANSI_BLUE = "\u001B[34m";
+    private static final String ANSI_RED = "\u001B[31m";
+    private static final String ANSI_GREEN = "\u001B[32m";
+    private static final String ANSI_YELLOW = "\u001B[33m";
 
-    public static final char BLACK_SQUARE = '\u25A0';
-    public static final char WHITE_SQUARE = '\u25A1';
+    private static final char BLACK_SQUARE = '\u25A0';
+    private static final char WHITE_SQUARE = '\u25A1';
     
     public void setNum(int numWomen, int numMen) {
 
         this.numWomen = numWomen;
         this.numMen = numMen;
     }
-
-    private void printNum() {
-
-        System.out.println("Number of women = " + numWomen + "\n");
-        System.out.println("Number of men = " + numMen + "\n");
-    }
-
-
 
     public void printQueues() {
         String timeStamp = "";
@@ -111,10 +103,5 @@ public class BathroomState {
         womenBathroom += "]";
 
         System.out.print(timeStamp + stateString + "Bathroom: " + ANSI_BLUE + "M:" + menBathroom + ANSI_PURPLE + "W:" + womenBathroom + ANSI_RESET + " Queues: " + ANSI_BLUE + "M:" + menQueue + ANSI_PURPLE + "W:" + womenQueue + ANSI_RESET + " ");
-        //System.out.println("women in Bathroom = " + (womenInBathroom)+"\n");
-        printNum();
-        //System.out.println(+numWomen +" numWomen - " + womenInBathroom +" womenInBathroom = " + (numWomen - womenInBathroom)+"\n");
-
     }
-
 }
