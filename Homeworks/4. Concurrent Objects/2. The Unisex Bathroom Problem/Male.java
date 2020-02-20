@@ -17,7 +17,6 @@ public class Male implements Runnable {
     }
     
     public void run() {
-        System.out.print("got into male before run\n");   
 
         try {
 

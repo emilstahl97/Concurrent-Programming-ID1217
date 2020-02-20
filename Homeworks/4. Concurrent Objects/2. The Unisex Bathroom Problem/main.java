@@ -11,14 +11,17 @@ public class main {
         System.exit(1);
         }
 
-        System.out.print("got here\n");   
         numWomen = Integer.parseInt(args[0]);
         numMen = Integer.parseInt(args[1]);
         numVisits = Integer.parseInt(args[2]);
 
-        BathroomMonitor bathroommonitor = new BathroomMonitor(new Bathroom(), numWomen, numWomen);
-        System.out.print("got here\n");   
+        System.out.println("numWomen = " + numWomen + "\nnumMen = " + numMen + "\nnumVisits = "+numVisits+"\n");
 
+        BathroomState bathroomState = new BathroomState();
+        BathroomMonitor bathroommonitor = new BathroomMonitor(new Bathroom(), bathroomState);
+        
+        bathroomState.setNum(numWomen, numMen);
+        
         for(int i = 0; i < numWomen; i++) {
             Female female = new Female(bathroommonitor, numVisits, i);
             new Thread(female).start();
@@ -27,7 +30,5 @@ public class main {
             Male male = new Male(bathroommonitor, numVisits, i);
             new Thread(male).start();
         }
-
-
     }
 }
