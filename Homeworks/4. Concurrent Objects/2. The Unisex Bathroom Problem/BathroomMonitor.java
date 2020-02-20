@@ -30,11 +30,9 @@ public class BathroomMonitor {
           bathroomState.state = BathroomState.State.MenEntering;
           bathroomState.menInBathroom++;
           bathroomState.printQueues();
-          System.out.println(bathroomState.MAN + " " + man.id + " enters. Visit: " + bathroomState.ANSI_BLUE + man.visit++ + bathroomState.ANSI_RESET);
-          toilet.use();
         } 
         finally {
-
+            System.out.println(bathroomState.MAN + " " + man.id + " enters. Visit: " + bathroomState.ANSI_BLUE + man.visit++ + bathroomState.ANSI_RESET);
         }
     }
     
@@ -75,9 +73,6 @@ public class BathroomMonitor {
           bathroomState.womenInQueue--;
           bathroomState.state = BathroomState.State.WomenEntering;
           bathroomState.womenInBathroom++;
-          
-          toilet.use();
-          
           bathroomState.printQueues();
         } finally {
             System.out.println(bathroomState.WOMAN + " " + woman.id + " enters. Visit: " + bathroomState.ANSI_PURPLE + woman.visit++ + bathroomState.ANSI_RESET);

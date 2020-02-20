@@ -22,9 +22,11 @@ public class Male implements Runnable {
 
             while(visit < numVisits + 1) {
 
-                Thread.sleep(500);
+                Thread.sleep(rand.nextInt(5000));
                 bathroommonitor.manEnter(this);
-
+                Thread.sleep(rand.nextInt(2000));
+                //toilet.use();
+                
                bathroommonitor.manExit(this); 
 
                
