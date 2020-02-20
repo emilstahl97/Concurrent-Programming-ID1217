@@ -1,14 +1,5 @@
-
-import java.util.concurrent.locks.Condition;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
-import java.util.Date;
-
 public class BathroomMonitor {
 
-    private final Lock lock = new ReentrantLock();
-    private final Condition activeMen  = lock.newCondition(); 
-    private final Condition activeWomen = lock.newCondition();
     private final Bathroom bathroom;
     private final BathroomState bathroomState;
 
