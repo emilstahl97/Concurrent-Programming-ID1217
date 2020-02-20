@@ -1,11 +1,11 @@
 public class BathroomMonitor {
 
-    private final Bathroom bathroom;
+    private final Toilet toilet;
     private final BathroomState bathroomState;
 
-    public BathroomMonitor(Bathroom bathroom, BathroomState bathroomState) {
+    public BathroomMonitor(Toilet toilet, BathroomState bathroomState) {
         
-        this.bathroom = bathroom;
+        this.toilet = toilet;
         this.bathroomState = bathroomState;
     }
     
@@ -31,7 +31,7 @@ public class BathroomMonitor {
           bathroomState.menInBathroom++;
           bathroomState.printQueues();
           System.out.println(bathroomState.MAN + " " + man.id + " enters. Visit: " + bathroomState.ANSI_BLUE + man.visit++ + bathroomState.ANSI_RESET);
-          bathroom.use();
+          toilet.use();
         } 
         finally {
 
@@ -76,7 +76,7 @@ public class BathroomMonitor {
           bathroomState.state = BathroomState.State.WomenEntering;
           bathroomState.womenInBathroom++;
           
-          bathroom.use();
+          toilet.use();
           
           bathroomState.printQueues();
         } finally {

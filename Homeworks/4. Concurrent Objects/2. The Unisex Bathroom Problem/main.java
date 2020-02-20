@@ -18,7 +18,7 @@ public class main {
         System.out.println("numWomen = " + numWomen + "\nnumMen = " + numMen + "\nnumVisits = "+numVisits+"\n");
 
         BathroomState bathroomState = new BathroomState();
-        BathroomMonitor bathroommonitor = new BathroomMonitor(new Bathroom(), bathroomState);
+        BathroomMonitor bathroommonitor = new BathroomMonitor(new Toilet(), bathroomState);
         
         bathroomState.setNum(numWomen, numMen);
         

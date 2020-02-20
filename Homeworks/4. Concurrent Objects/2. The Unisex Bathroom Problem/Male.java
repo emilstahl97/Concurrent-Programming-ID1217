@@ -25,7 +25,6 @@ public class Male implements Runnable {
                 Thread.sleep(500);
                 bathroommonitor.manEnter(this);
 
-               Thread.sleep(200);
                bathroommonitor.manExit(this); 
 
                
