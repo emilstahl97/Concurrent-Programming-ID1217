@@ -16,8 +16,8 @@ public class BathroomState {
     public int menInBathroom = 0;
     public int womenInQueue = 0;
     public int womenInBathroom = 0;
-    private int numWomen = 8;
-    private int numMen = 8;
+    private int numWomen;
+    private int numMen;
     private int time = 0;
 
     public static final String ANSI_RESET = "\u001B[0m";
@@ -112,7 +112,7 @@ public class BathroomState {
 
         System.out.print(timeStamp + stateString + "Bathroom: " + ANSI_BLUE + "M:" + menBathroom + ANSI_PURPLE + "W:" + womenBathroom + ANSI_RESET + " Queues: " + ANSI_BLUE + "M:" + menQueue + ANSI_PURPLE + "W:" + womenQueue + ANSI_RESET + " ");
         //System.out.println("women in Bathroom = " + (womenInBathroom)+"\n");
-        //printNum();
+        printNum();
         //System.out.println(+numWomen +" numWomen - " + womenInBathroom +" womenInBathroom = " + (numWomen - womenInBathroom)+"\n");
 
     }

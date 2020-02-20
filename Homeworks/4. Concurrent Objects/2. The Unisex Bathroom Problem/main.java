@@ -17,11 +17,10 @@ public class main {
 
         System.out.println("numWomen = " + numWomen + "\nnumMen = " + numMen + "\nnumVisits = "+numVisits+"\n");
 
-        BathroomMonitor bathroommonitor = new BathroomMonitor(new Bathroom());
         BathroomState bathroomState = new BathroomState();
-
         bathroomState.setNum(numWomen, numMen);
-
+        BathroomMonitor bathroommonitor = new BathroomMonitor(new Bathroom(), bathroomState);
+        
         for(int i = 0; i < numWomen; i++) {
             Female female = new Female(bathroommonitor, numVisits, i);
             new Thread(female).start();

@@ -6,12 +6,11 @@ import java.util.Date;
 
 public class BathroomMonitor {
 
-    BathroomState bathroomState = new BathroomState();
-
     private final Lock lock = new ReentrantLock();
     private final Condition activeMen  = lock.newCondition(); 
     private final Condition activeWomen = lock.newCondition();
     private final Bathroom bathroom;
+    private final BathroomState bathroomState;
 
     private static final String WOMAN = "\uD83D\uDEBA";
     private static final String MAN = "\uD83D\uDEB9";
@@ -20,10 +19,11 @@ public class BathroomMonitor {
      * Sets the bathroom object.
      * @param bathroom The bathroom to let the entering people use.
      */
-    public BathroomMonitor(Bathroom bathroom) {
+    public BathroomMonitor(Bathroom bathroom, BathroomState bathroomState) {
         if(bathroom == null) 
             throw new IllegalArgumentException("Can not set a bathroom which is null");
         this.bathroom = bathroom;
+        this.bathroomState = bathroomState;
     }
     
     /**
