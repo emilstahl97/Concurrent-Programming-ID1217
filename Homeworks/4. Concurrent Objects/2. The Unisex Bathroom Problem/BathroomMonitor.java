@@ -3,16 +3,8 @@ public class BathroomMonitor {
     private final Bathroom bathroom;
     private final BathroomState bathroomState;
 
-    private static final String WOMAN = "\uD83D\uDEBA";
-    private static final String MAN = "\uD83D\uDEB9";
-
-    /**
-     * Sets the bathroom object.
-     * @param bathroom The bathroom to let the entering people use.
-     */
     public BathroomMonitor(Bathroom bathroom, BathroomState bathroomState) {
-        if(bathroom == null) 
-            throw new IllegalArgumentException("Can not set a bathroom which is null");
+        
         this.bathroom = bathroom;
         this.bathroomState = bathroomState;
     }
@@ -22,22 +14,23 @@ public class BathroomMonitor {
      * if there are women waiting, wait until they are done.
      */
     public synchronized void manEnter() throws InterruptedException {
+       
         bathroomState.printQueues();
-        System.out.println(MAN +" wants to enter");
+        System.out.println(bathroomState.MAN +" wants to enter");
         try {
             bathroomState.menInQueue++;
           while (bathroomState.womenInBathroom > 0) {
               try {
                 wait();
               } catch (InterruptedException ex) {
-                  System.err.println(MAN +" interrupted while waiting for bathroom");
+                  System.err.println(bathroomState.MAN +" interrupted while waiting for bathroom");
               }
           }
           bathroomState.menInQueue--;
           bathroomState.state = BathroomState.State.MenEntering;
           bathroomState.menInBathroom++;
           bathroomState.printQueues();
-          System.out.println(MAN +" enters");
+          System.out.println(bathroomState.MAN +" enters");
           bathroom.use();
         } 
         finally {
@@ -55,7 +48,7 @@ public class BathroomMonitor {
         bathroomState.menInBathroom--;
         bathroomState.printQueues();
         
-        System.out.println(MAN +" leaves");
+        System.out.println(bathroomState.MAN +" leaves");
         
         if(bathroomState.menInBathroom == 0) 
             notifyAll();
@@ -69,14 +62,14 @@ public class BathroomMonitor {
     public synchronized void womanEnter() {
 
         bathroomState.printQueues();
-        System.out.println(WOMAN + " wants to enter");
+        System.out.println(bathroomState.WOMAN + " wants to enter");
         try {
             bathroomState.womenInQueue++;
           while (bathroomState.menInBathroom > 0) {
               try {
                 wait();
               } catch (InterruptedException ex) {
-                  System.err.println(WOMAN +" interrupted while waiting for bathroom");
+                  System.err.println(bathroomState.WOMAN +" interrupted while waiting for bathroom");
               }
           }
           bathroomState.womenInQueue--;
@@ -86,7 +79,7 @@ public class BathroomMonitor {
           bathroom.use();
           
           bathroomState.printQueues();
-          System.out.println(WOMAN + " leaves");
+          System.out.println(bathroomState.WOMAN + " leaves");
         } finally {
         }
     }
@@ -101,7 +94,7 @@ public class BathroomMonitor {
         bathroomState.womenInBathroom--;
         bathroomState.printQueues();
         
-        System.out.println(WOMAN +" leaves");
+        System.out.println(bathroomState.WOMAN +" leaves");
         
         if(bathroomState.womenInBathroom == 0) 
             notifyAll();

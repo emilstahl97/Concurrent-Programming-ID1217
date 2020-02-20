@@ -1,8 +1,8 @@
-
 public class BathroomState {
 
     public BathroomState.State state = BathroomState.State.Empty;
     
+    private int time = 0;
     public int menInQueue = 0;
     public int menInBathroom = 0;
     public int womenInQueue = 0;
@@ -10,8 +10,13 @@ public class BathroomState {
     
     private int numWomen;
     private int numMen;
-    private int time = 0;
     
+    public final String WOMAN = "\uD83D\uDEBA";
+    public final String MAN = "\uD83D\uDEB9";
+
+    private static final char BLACK_SQUARE = '\u25A0';
+    private static final char WHITE_SQUARE = '\u25A1';
+
     private static final String ANSI_RESET = "\u001B[0m";
     private static final String ANSI_PURPLE = "\u001B[35m";
     private static final String ANSI_BLUE = "\u001B[34m";
@@ -19,8 +24,6 @@ public class BathroomState {
     private static final String ANSI_GREEN = "\u001B[32m";
     private static final String ANSI_YELLOW = "\u001B[33m";
     
-    private static final char BLACK_SQUARE = '\u25A0';
-    private static final char WHITE_SQUARE = '\u25A1';
 
     public enum State {
         
