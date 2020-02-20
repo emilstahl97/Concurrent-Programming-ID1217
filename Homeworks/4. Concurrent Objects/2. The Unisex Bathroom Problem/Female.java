@@ -4,9 +4,9 @@ import java.util.Random;
 public class Female implements Runnable {
 
     private Random rand = new Random();
-    private int numVisits;
     private BathroomMonitor bathroommonitor;
-    private int id; 
+    public int numVisits;
+    public int id; 
     private int i;
 
     public Female(BathroomMonitor bathroommonitor, int numVisits, int id) {
@@ -23,10 +23,10 @@ public class Female implements Runnable {
             while(i < numVisits) {
 
                 Thread.sleep(500);
-                bathroommonitor.womanEnter();
+                bathroommonitor.womanEnter(this);
 
                Thread.sleep(200);
-               bathroommonitor.womanExit(); 
+               bathroommonitor.womanExit(this); 
             }
         }
         catch (InterruptedException exception) {

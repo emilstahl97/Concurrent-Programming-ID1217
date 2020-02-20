@@ -4,10 +4,10 @@ import java.util.Random;
 public class Male implements Runnable {
 
     private Random rand = new Random();
-    private int numVisits;
+    public int numVisits;
     private BathroomMonitor bathroommonitor;
     public int id; 
-    private int i;
+    public int visit = 0;
 
     public Male(BathroomMonitor bathroommonitor, int numVisits, int id) {
 
@@ -20,7 +20,7 @@ public class Male implements Runnable {
 
         try {
 
-            while(i < numVisits) {
+            while(visit < numVisits) {
 
                 Thread.sleep(500);
                 bathroommonitor.manEnter(this);

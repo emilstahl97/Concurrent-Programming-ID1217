@@ -30,7 +30,7 @@ public class BathroomMonitor {
           bathroomState.state = BathroomState.State.MenEntering;
           bathroomState.menInBathroom++;
           bathroomState.printQueues();
-          System.out.println(bathroomState.MAN + " " + man.id + " enters");
+          System.out.println(bathroomState.MAN + " " + man.id + " enters. Visit: " + bathroomState.ANSI_BLUE + ++man.visit + bathroomState.ANSI_RESET);
           bathroom.use();
         } 
         finally {
@@ -48,7 +48,7 @@ public class BathroomMonitor {
         bathroomState.menInBathroom--;
         bathroomState.printQueues();
         
-        System.out.println(bathroomState.MAN +" leaves");
+        System.out.println(bathroomState.MAN + " " + man.id + " leaves");
         
         if(bathroomState.menInBathroom == 0) 
             notifyAll();
@@ -59,17 +59,17 @@ public class BathroomMonitor {
      * This method will use the bathroom directly if no men are waiting or,
      * if there are men waiting, wait until they are done.
      */
-    public synchronized void womanEnter() {
+    public synchronized void womanEnter(Female woman) {
 
         bathroomState.printQueues();
-        System.out.println(bathroomState.WOMAN + " wants to enter");
+        System.out.println(bathroomState.WOMAN + " " + woman.id + " wants to enter");
         try {
             bathroomState.womenInQueue++;
           while (bathroomState.menInBathroom > 0) {
               try {
                 wait();
               } catch (InterruptedException ex) {
-                  System.err.println(bathroomState.WOMAN +" interrupted while waiting for bathroom");
+                  System.err.println(bathroomState.WOMAN + " " + woman.id + " interrupted while waiting for bathroom");
               }
           }
           bathroomState.womenInQueue--;
@@ -79,8 +79,8 @@ public class BathroomMonitor {
           bathroom.use();
           
           bathroomState.printQueues();
-          System.out.println(bathroomState.WOMAN + " leaves");
         } finally {
+            System.out.println(bathroomState.WOMAN + " " + woman.id + " enters. Visit: " + bathroomState.ANSI_PURPLE + woman.numVisits++ + bathroomState.ANSI_RESET);
         }
     }
     
@@ -88,13 +88,13 @@ public class BathroomMonitor {
      * Notifies that the woman is done.
      * If it's the last woman, notify all men.
      */
-    public synchronized void womanExit() {
+    public synchronized void womanExit(Female women) {
 
         bathroomState.state = BathroomState.State.WomenLeaving;
         bathroomState.womenInBathroom--;
         bathroomState.printQueues();
         
-        System.out.println(bathroomState.WOMAN +" leaves");
+        System.out.println(bathroomState.WOMAN + " " + women.id +  " leaves");
         
         if(bathroomState.womenInBathroom == 0) 
             notifyAll();

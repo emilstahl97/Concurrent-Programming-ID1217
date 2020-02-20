@@ -17,9 +17,9 @@ public class BathroomState {
     private static final char BLACK_SQUARE = '\u25A0';
     private static final char WHITE_SQUARE = '\u25A1';
 
-    private static final String ANSI_RESET = "\u001B[0m";
-    private static final String ANSI_PURPLE = "\u001B[35m";
-    private static final String ANSI_BLUE = "\u001B[34m";
+    public static final String ANSI_RESET = "\u001B[0m";
+    public static final String ANSI_PURPLE = "\u001B[35m";
+    public static final String ANSI_BLUE = "\u001B[34m";
     private static final String ANSI_RED = "\u001B[31m";
     private static final String ANSI_GREEN = "\u001B[32m";
     private static final String ANSI_YELLOW = "\u001B[33m";
@@ -34,7 +34,7 @@ public class BathroomState {
         WomenLeaving,
     }
     
-    public void setNum(int numWomen, int numMen) {
+    public void setNum(final int numWomen, final int numMen) {
 
         this.numWomen = numWomen;
         this.numMen = numMen;
@@ -55,29 +55,29 @@ public class BathroomState {
         String statePadded = "";
 
         switch (state) {
-            case Empty:
-                stateColour = ANSI_YELLOW;
-                statePadded = "    Empty     ";
-                break;
-            case MenEntering:
-                stateColour = ANSI_GREEN;
-                statePadded = " Men Entering ";
-                break;
-            case MenLeaving:
-                stateColour = ANSI_RED;
-                statePadded = " Men Leaving  ";
-                break;
-            case WomenEntering:
-                stateColour = ANSI_GREEN;
-                statePadded = "Women Entering";
-                break;
-            case WomenLeaving:
-                stateColour = ANSI_RED;
-                statePadded = "Women Leaving ";
-                break;
+        case Empty:
+            stateColour = ANSI_YELLOW;
+            statePadded = "    Empty     ";
+            break;
+        case MenEntering:
+            stateColour = ANSI_GREEN;
+            statePadded = " Men Entering ";
+            break;
+        case MenLeaving:
+            stateColour = ANSI_RED;
+            statePadded = " Men Leaving  ";
+            break;
+        case WomenEntering:
+            stateColour = ANSI_GREEN;
+            statePadded = "Women Entering";
+            break;
+        case WomenLeaving:
+            stateColour = ANSI_RED;
+            statePadded = "Women Leaving ";
+            break;
         }
 
-        String stateString = stateColour + "State: [" + statePadded + "] " + ANSI_RESET;
+        final String stateString = stateColour + "State: [" + statePadded + "] " + ANSI_RESET;
 
         String womenQueue = "[";
         for (int i = 0; i < womenInQueue; i++)
