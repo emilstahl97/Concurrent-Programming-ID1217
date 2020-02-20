@@ -50,7 +50,7 @@ public class BathroomState {
 
         String stateColour = "";
         String statePadded = "";
-        
+
         switch (state) {
             case Empty:
                 stateColour = ANSI_YELLOW;
@@ -76,13 +76,6 @@ public class BathroomState {
 
         String stateString = stateColour + "State: [" + statePadded + "] " + ANSI_RESET;
 
-        String menQueue = "[";
-        for (int i = 0; i < menInQueue; i++)
-            menQueue += BLACK_SQUARE;
-        for (int i = 0; i < numMen - menInQueue; i++)
-            menQueue += WHITE_SQUARE;
-        menQueue += "]";
-
         String womenQueue = "[";
         for (int i = 0; i < womenInQueue; i++)
             womenQueue += BLACK_SQUARE;
@@ -90,12 +83,12 @@ public class BathroomState {
             womenQueue += WHITE_SQUARE;
         womenQueue += "]";
 
-        String menBathroom = "[";
-        for (int i = 0; i < menInBathroom; i++)
-            menBathroom += BLACK_SQUARE;
-        for (int i = 0; i < numMen - menInBathroom; i++)
-            menBathroom += ' ';
-        menBathroom += "]";
+        String menQueue = "[";
+        for (int i = 0; i < menInQueue; i++)
+            menQueue += BLACK_SQUARE;
+        for (int i = 0; i < numMen - menInQueue; i++)
+            menQueue += WHITE_SQUARE;
+        menQueue += "]";
 
         String womenBathroom = "[";
         for (int i = 0; i < womenInBathroom; i++)
@@ -104,6 +97,13 @@ public class BathroomState {
             womenBathroom += ' ';
         womenBathroom += "]";
 
-        System.out.print(timeStamp + stateString + "Bathroom: " + ANSI_BLUE + "M:" + menBathroom + ANSI_PURPLE + "W:" + womenBathroom + ANSI_RESET + " Queues: " + ANSI_BLUE + "M:" + menQueue + ANSI_PURPLE + "W:" + womenQueue + ANSI_RESET + " ");
+        String menBathroom = "[";
+        for (int i = 0; i < menInBathroom; i++)
+            menBathroom += BLACK_SQUARE;
+        for (int i = 0; i < numMen - menInBathroom; i++)
+            menBathroom += ' ';
+        menBathroom += "]";
+
+        System.out.print(timeStamp + stateString + "Bathroom: " + ANSI_PURPLE + "W:" + womenBathroom + ANSI_BLUE + "M:" + menBathroom + ANSI_RESET + " Queues: " + ANSI_PURPLE + "W:" + womenQueue + ANSI_BLUE + "M:" + menQueue + ANSI_RESET + " ");
     }
 }
