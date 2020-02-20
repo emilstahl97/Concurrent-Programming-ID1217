@@ -1,34 +1,35 @@
 
 public class BathroomState {
 
-    public enum State {
-
-        Empty,
-        MenEntering,
-        WomenEntering,
-        MenLeaving,
-        WomenLeaving,
-    }
-    
     public BathroomState.State state = BathroomState.State.Empty;
-
+    
     public int menInQueue = 0;
     public int menInBathroom = 0;
     public int womenInQueue = 0;
     public int womenInBathroom = 0;
+    
     private int numWomen;
     private int numMen;
     private int time = 0;
-
+    
     private static final String ANSI_RESET = "\u001B[0m";
     private static final String ANSI_PURPLE = "\u001B[35m";
     private static final String ANSI_BLUE = "\u001B[34m";
     private static final String ANSI_RED = "\u001B[31m";
     private static final String ANSI_GREEN = "\u001B[32m";
     private static final String ANSI_YELLOW = "\u001B[33m";
-
+    
     private static final char BLACK_SQUARE = '\u25A0';
     private static final char WHITE_SQUARE = '\u25A1';
+
+    public enum State {
+        
+        Empty,
+        MenEntering,
+        WomenEntering,
+        MenLeaving,
+        WomenLeaving,
+    }
     
     public void setNum(int numWomen, int numMen) {
 
@@ -49,6 +50,7 @@ public class BathroomState {
 
         String stateColour = "";
         String statePadded = "";
+        
         switch (state) {
             case Empty:
                 stateColour = ANSI_YELLOW;
