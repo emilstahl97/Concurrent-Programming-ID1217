@@ -30,15 +30,14 @@ public class BathroomMonitor {
      * This method will use the bathroom directly if no women are waiting or,
      * if there are women waiting, wait until they are done.
      */
-    public void manEnter() {
-        lock.lock();
+    public synchronized void manEnter() throws InterruptedException {
         bathroomState.printQueues();
         System.out.println(MAN +" wants to enter");
         try {
             bathroomState.menInQueue++;
           while (bathroomState.womenInBathroom > 0) {
               try {
-                  activeWomen.await();
+                wait();
               } catch (InterruptedException ex) {
                   System.err.println(MAN +" interrupted while waiting for bathroom");
               }
@@ -49,8 +48,9 @@ public class BathroomMonitor {
           bathroomState.printQueues();
           System.out.println(MAN +" enters");
           bathroom.use();
-        } finally {
-          lock.unlock();
+        } 
+        finally {
+
         }
     }
     
@@ -58,33 +58,32 @@ public class BathroomMonitor {
      * Notifies that the man is done.
      * If it's the last man, notify all men.
      */
-    public void manExit() {
-        lock.lock();
-        try {
-            bathroomState.state = BathroomState.State.MenLeaving;
-            bathroomState.menInBathroom--;
-            bathroomState.printQueues();
-            System.out.println(MAN +" leaves");
-            if(bathroomState.menInBathroom == 0) 
-                activeMen.signalAll();
-        } finally {
-          lock.unlock();
-        }
+    public synchronized void manExit() {
+        
+        bathroomState.state = BathroomState.State.MenLeaving;
+        bathroomState.menInBathroom--;
+        bathroomState.printQueues();
+        
+        System.out.println(MAN +" leaves");
+        
+        if(bathroomState.menInBathroom == 0) 
+            notifyAll();
+        
     }
  
     /**
      * This method will use the bathroom directly if no men are waiting or,
      * if there are men waiting, wait until they are done.
      */
-    public void womanEnter() {
-        lock.lock();
+    public synchronized void womanEnter() {
+
         bathroomState.printQueues();
         System.out.println(WOMAN + " wants to enter");
         try {
             bathroomState.womenInQueue++;
           while (bathroomState.menInBathroom > 0) {
               try {
-                  activeMen.await();
+                wait();
               } catch (InterruptedException ex) {
                   System.err.println(WOMAN +" interrupted while waiting for bathroom");
               }
@@ -98,7 +97,6 @@ public class BathroomMonitor {
           bathroomState.printQueues();
           System.out.println(WOMAN + " leaves");
         } finally {
-          lock.unlock();
         }
     }
     
@@ -106,18 +104,17 @@ public class BathroomMonitor {
      * Notifies that the woman is done.
      * If it's the last woman, notify all men.
      */
-    public void womanExit() {
-        lock.lock();
-        try {
-            bathroomState.state = BathroomState.State.WomenLeaving;
-            bathroomState.womenInBathroom--;
-            bathroomState.printQueues();
-            System.out.println(WOMAN +" leaves");
-            if(bathroomState.womenInBathroom == 0) 
-                activeWomen.signalAll();
-        } finally {
-          lock.unlock();
-        }
+    public synchronized void womanExit() {
+
+        bathroomState.state = BathroomState.State.WomenLeaving;
+        bathroomState.womenInBathroom--;
+        bathroomState.printQueues();
+        
+        System.out.println(WOMAN +" leaves");
+        
+        if(bathroomState.womenInBathroom == 0) 
+            notifyAll();
+        
     }
 }
 
