@@ -7,7 +7,7 @@ public class Male implements Runnable {
     public int numVisits;
     private BathroomMonitor bathroommonitor;
     public int id; 
-    public int visit = 0;
+    public int visit = 1;
 
     public Male(BathroomMonitor bathroommonitor, int numVisits, int id) {
 
@@ -20,7 +20,7 @@ public class Male implements Runnable {
 
         try {
 
-            while(visit < numVisits) {
+            while(visit < numVisits + 1) {
 
                 Thread.sleep(500);
                 bathroommonitor.manEnter(this);
