@@ -6,7 +6,7 @@ public class Male implements Runnable {
     private Random rand = new Random();
     private int numVisits;
     private BathroomMonitor bathroommonitor;
-    private int id; 
+    public int id; 
     private int i;
 
     public Male(BathroomMonitor bathroommonitor, int numVisits, int id) {
@@ -23,10 +23,10 @@ public class Male implements Runnable {
             while(i < numVisits) {
 
                 Thread.sleep(500);
-                bathroommonitor.manEnter();
+                bathroommonitor.manEnter(this);
 
                Thread.sleep(200);
-               bathroommonitor.manExit(); 
+               bathroommonitor.manExit(this); 
 
                
             }
