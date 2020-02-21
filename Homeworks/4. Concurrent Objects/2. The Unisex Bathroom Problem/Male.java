@@ -3,14 +3,13 @@ import java.util.Random;
 
 public class Male implements Runnable {
 
-    private Random rand = new Random();
-    public int numVisits;
-    private BathroomMonitor bathroommonitor;
-    private Work work;
-    private Bathroom bathroom;
-    public int id; 
     public int visit = 1;
-
+    public int id; 
+    private Work work;
+    public int numVisits;
+    private Bathroom bathroom;
+    private BathroomMonitor bathroommonitor;
+    
     public Male(BathroomMonitor bathroommonitor, Work work, Bathroom bathroom, int numVisits, int id) {
 
         this.bathroommonitor = bathroommonitor;
@@ -28,13 +27,11 @@ public class Male implements Runnable {
 
                 work.doWork();
                 bathroommonitor.manEnter(this);
-
+                bathroom.use(200);
                 bathroommonitor.manExit(this); 
-
-               
+                Thread.sleep(10);               
             }
-        }
-        catch (InterruptedException exception) {
+        } catch (InterruptedException exception) {
             Thread.currentThread().interrupt();
             throw new RuntimeException(exception);
         }

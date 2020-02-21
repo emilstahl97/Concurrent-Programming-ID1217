@@ -4,7 +4,6 @@ public class Work {
 
 
     public Work() {
-        //this(WORK_TIME);
     }
 
 
