@@ -9,10 +9,6 @@ public class BathroomMonitor {
         this.bathroomState = bathroomState;
     }
     
-    /**
-     * This method will use the bathroom directly if no women are waiting or,
-     * if there are women waiting, wait until they are done.
-     */
     public synchronized void manEnter(Male man) throws InterruptedException {
        
         bathroomState.printQueues();
@@ -56,14 +52,14 @@ public class BathroomMonitor {
                 wait();
               } catch (InterruptedException ex) {
                   System.err.println(bathroomState.WOMAN + " " + woman.id + " interrupted while waiting for bathroom");
-              }
-          }
-          bathroomState.womenInQueue--;
-          bathroomState.state = BathroomState.State.WomenEntering;
-          bathroomState.womenInBathroom++;
-          bathroomState.printQueues();
-          System.out.println(bathroomState.WOMAN + " " + woman.id + " enters: Visit: " + bathroomState.ANSI_PURPLE + woman.visit++ + bathroomState.ANSI_RESET);  
-          bathroom.use();
+                }
+        }
+        bathroomState.womenInQueue--;
+        bathroomState.state = BathroomState.State.WomenEntering;
+        bathroomState.womenInBathroom++;
+        bathroomState.printQueues();
+        System.out.println(bathroomState.WOMAN + " " + woman.id + " enters: Visit: " + bathroomState.ANSI_PURPLE + woman.visit++ + bathroomState.ANSI_RESET);  
+        bathroom.use();
     }
 
     public synchronized void womanExit(Female women) {
@@ -75,7 +71,6 @@ public class BathroomMonitor {
         System.out.println(bathroomState.WOMAN + " " + women.id +  " leaves");
         
         if(bathroomState.womenInBathroom == 0) 
-            notifyAll();
-        
+            notifyAll();   
     }
 }
