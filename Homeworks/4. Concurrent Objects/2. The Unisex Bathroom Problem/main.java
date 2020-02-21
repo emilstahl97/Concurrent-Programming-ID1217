@@ -18,17 +18,18 @@ public class main {
         System.out.println("numWomen = " + numWomen + "\nnumMen = " + numMen + "\nnumVisits = "+numVisits+"\n");
 
         BathroomState bathroomState = new BathroomState();
-        BathroomMonitor bathroommonitor = new BathroomMonitor(new Bathroom(), bathroomState);
+        Bathroom bathroom = new Bathroom();
+        BathroomMonitor bathroommonitor = new BathroomMonitor(bathroom, bathroomState);
         Work work = new Work();
 
         bathroomState.setNum(numWomen, numMen);
         
         for(int i = 0; i < numWomen; i++) {
-            Female female = new Female(bathroommonitor, work, numVisits, i);
+            Female female = new Female(bathroommonitor, work, bathroom, numVisits, i);
             new Thread(female).start();
         }
         for(int i = 0; i < numMen; i++) {
-            Male male = new Male(bathroommonitor, work, numVisits, i);
+            Male male = new Male(bathroommonitor, work, bathroom, numVisits, i);
             new Thread(male).start();
         }
     }

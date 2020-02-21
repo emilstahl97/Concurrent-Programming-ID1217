@@ -7,13 +7,15 @@ public class Male implements Runnable {
     public int numVisits;
     private BathroomMonitor bathroommonitor;
     private Work work;
+    private Bathroom bathroom;
     public int id; 
     public int visit = 1;
 
-    public Male(BathroomMonitor bathroommonitor, Work work, int numVisits, int id) {
+    public Male(BathroomMonitor bathroommonitor, Work work, Bathroom bathroom, int numVisits, int id) {
 
         this.bathroommonitor = bathroommonitor;
         this.work = work;
+        this.bathroom = bathroom;
         this.numVisits = numVisits;
         this.id = id;    
     }
@@ -27,8 +29,7 @@ public class Male implements Runnable {
                 work.doWork();
                 bathroommonitor.manEnter(this);
 
-               Thread.sleep(200);
-               bathroommonitor.manExit(this); 
+                bathroommonitor.manExit(this); 
 
                
             }

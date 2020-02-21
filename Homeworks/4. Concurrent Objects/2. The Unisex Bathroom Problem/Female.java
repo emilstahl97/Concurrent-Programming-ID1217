@@ -6,14 +6,16 @@ public class Female implements Runnable {
     private Random rand = new Random();
     private BathroomMonitor bathroommonitor;
     private Work work;
+    private Bathroom bathroom;
     public int numVisits;
     public int id; 
     public int visit = 1;
 
-    public Female(BathroomMonitor bathroommonitor, Work work, int numVisits, int id) {
+    public Female(BathroomMonitor bathroommonitor, Work work, Bathroom bathroom, int numVisits, int id) {
 
         this.bathroommonitor = bathroommonitor;
         this.work = work;
+        this.bathroom = bathroom;
         this.numVisits = numVisits;
         this.id = id;    
     }
@@ -27,7 +29,6 @@ public class Female implements Runnable {
                 work.doWork();
                 bathroommonitor.womanEnter(this);
 
-               Thread.sleep(200);
                bathroommonitor.womanExit(this); 
             }
         }
