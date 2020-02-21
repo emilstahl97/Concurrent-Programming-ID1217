@@ -3,7 +3,7 @@ import java.util.Random;
 
 public class Bathroom {
 
-    private static final int USE_TIME_DEFAULT = 3 * 1000;
+    private static final int USE_TIME_DEFAULT = 3000;
   
     public Bathroom() {}
 

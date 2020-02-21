@@ -1,5 +1,3 @@
-
-
 public class main {
 
     public static void main(String[] args) {
@@ -7,8 +5,8 @@ public class main {
         int numMen, numWomen, numVisits;
 
         if(args.length < 3) {
-        System.out.println("Usage: <numWomen> <numMen> <numVisits>");
-        System.exit(1);
+            System.out.println("Usage: <numWomen> <numMen> <numVisits>");
+            System.exit(1);
         }
 
         numWomen = Integer.parseInt(args[0]);
@@ -17,10 +15,10 @@ public class main {
 
         System.out.println("numWomen = " + numWomen + "\nnumMen = " + numMen + "\nnumVisits = "+numVisits+"\n");
 
-        BathroomState bathroomState = new BathroomState();
-        Bathroom bathroom = new Bathroom();
-        BathroomMonitor bathroommonitor = new BathroomMonitor(bathroom, bathroomState);
         Work work = new Work();
+        Bathroom bathroom = new Bathroom();
+        BathroomState bathroomState = new BathroomState();
+        BathroomMonitor bathroommonitor = new BathroomMonitor(bathroom, bathroomState);
 
         bathroomState.setNum(numWomen, numMen);
         
