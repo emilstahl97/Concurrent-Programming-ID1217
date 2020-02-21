@@ -4,10 +4,13 @@ public class HoneyPot {
     private static int FULL = 20;
     private static int EATEN = 0;
     public int honeyPot = 0;
+    public int id;
 
 
 
-    public synchronized void create() {
+    public synchronized void create(int id) {
+
+        this.id = id;
 
         while(honeyPot == FULL) {
 
@@ -18,7 +21,7 @@ public class HoneyPot {
             }
         }
         honeyPot++;
-        System.out.println(Thread.currentThread().getId() + " added some honey to the pot");
+        System.out.println("Bee nr " + id + " added some honey to the pot");
         
         if(honeyPot == FULL) {
 

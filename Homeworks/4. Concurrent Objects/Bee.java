@@ -19,7 +19,7 @@ public class Bee implements Runnable {
         } catch (InterruptedException exception) {}
 
 
-        honeyPot.create();
+        honeyPot.create(id);
 
     }
 
