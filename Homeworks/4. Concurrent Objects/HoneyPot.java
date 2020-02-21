@@ -1,3 +1,5 @@
+import javax.print.DocFlavor.STRING;
+
 public class HoneyPot {
 
 
@@ -6,7 +8,7 @@ public class HoneyPot {
     public int honeyPot = 0;
     public int id;
     private static final String BEE = "\ud83d\udc1d";
-
+    private static final String BEAR = "\ud83d\udc3b";
 
 
     public synchronized void create(int id) {
@@ -43,7 +45,7 @@ public class HoneyPot {
             } catch (InterruptedException exception) {}
         }
         honeyPot = EATEN;
-        System.out.println("The bear ate the honey");
+        System.out.println(BEAR + " ate all the honey");
 
         notifyAll();
     }
