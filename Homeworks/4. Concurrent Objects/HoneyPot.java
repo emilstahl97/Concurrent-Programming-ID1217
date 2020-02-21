@@ -46,7 +46,7 @@ public class HoneyPot {
             } catch (InterruptedException exception) {}
         }
         honeyPot = EATEN;
-        System.out.println(BEAR + " ate all the " + HONEY);
+        System.out.println(BEAR + " ate all the  " + HONEY);
 
         notifyAll();
     }

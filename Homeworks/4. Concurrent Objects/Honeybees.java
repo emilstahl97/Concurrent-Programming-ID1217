@@ -1,11 +1,6 @@
 public class Honeybees {
 
-    private static int HONEY = 150;
     private static int MAX_BEES = 25;
-    private static int EATEN = 0;
-
-    public int honeyPot = 0;
-
 
     public static void main(String[] args) {
 
@@ -13,7 +8,10 @@ public class Honeybees {
 
         numBees = (args.length > 0) ? Integer.parseInt(args[0]) : MAX_BEES;
 
-        System.out.println("Starting: \n numBees = " + numBees + "\n");
+        System.out.println("numBees = " + numBees + "\n");
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {}
 
         HoneyPot honeyPot = new HoneyPot();
 
