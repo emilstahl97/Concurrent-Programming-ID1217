@@ -7,6 +7,7 @@ public class Honeybees {
         int numBees;
 
         numBees = (args.length > 0) ? Integer.parseInt(args[0]) : MAX_BEES;
+        numBees = (Integer.parseInt(args[0]) > MAX_BEES) ? MAX_BEES : numBees;
 
         System.out.println("numBees = " + numBees + "\n");
         try {
