@@ -5,13 +5,15 @@ public class Female implements Runnable {
 
     private Random rand = new Random();
     private BathroomMonitor bathroommonitor;
+    private Work work;
     public int numVisits;
     public int id; 
     public int visit = 1;
 
-    public Female(BathroomMonitor bathroommonitor, int numVisits, int id) {
+    public Female(BathroomMonitor bathroommonitor, Work work, int numVisits, int id) {
 
         this.bathroommonitor = bathroommonitor;
+        this.work = work;
         this.numVisits = numVisits;
         this.id = id;    
     }
@@ -22,7 +24,7 @@ public class Female implements Runnable {
 
             while(visit < numVisits + 1) {
 
-                Thread.sleep(500);
+                work.doWork();
                 bathroommonitor.womanEnter(this);
 
                Thread.sleep(200);

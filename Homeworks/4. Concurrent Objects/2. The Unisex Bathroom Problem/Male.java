@@ -6,12 +6,14 @@ public class Male implements Runnable {
     private Random rand = new Random();
     public int numVisits;
     private BathroomMonitor bathroommonitor;
+    private Work work;
     public int id; 
     public int visit = 1;
 
-    public Male(BathroomMonitor bathroommonitor, int numVisits, int id) {
+    public Male(BathroomMonitor bathroommonitor, Work work, int numVisits, int id) {
 
         this.bathroommonitor = bathroommonitor;
+        this.work = work;
         this.numVisits = numVisits;
         this.id = id;    
     }
@@ -22,7 +24,7 @@ public class Male implements Runnable {
 
             while(visit < numVisits + 1) {
 
-                Thread.sleep(500);
+                work.doWork();
                 bathroommonitor.manEnter(this);
 
                Thread.sleep(200);
