@@ -9,6 +9,7 @@ public class HoneyPot {
     public int id;
     private static final String BEE = "\ud83d\udc1d";
     private static final String BEAR = "\ud83d\udc3b";
+    private static final String HONEY = "\ud83c\udf6f";
 
 
     public synchronized void create(int id) {
@@ -24,8 +25,8 @@ public class HoneyPot {
             }
         }
         honeyPot++;
-        System.out.println(BEE + " nr " + id + " added some honey to the pot");
-        
+        System.out.println(BEE + " nr " + id + " created " + HONEY + " Quantity = " + honeyPot);
+         
         if(honeyPot == FULL) {
 
             notifyAll();
@@ -45,7 +46,7 @@ public class HoneyPot {
             } catch (InterruptedException exception) {}
         }
         honeyPot = EATEN;
-        System.out.println(BEAR + " ate all the honey");
+        System.out.println(BEAR + " ate all the " + HONEY);
 
         notifyAll();
     }
