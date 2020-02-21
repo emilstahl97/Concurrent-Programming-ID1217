@@ -5,6 +5,7 @@ public class HoneyPot {
     private static int EATEN = 0;
     public int honeyPot = 0;
     public int id;
+    private static final String BEE = "\ud83d\udc1d";
 
 
 
@@ -21,7 +22,7 @@ public class HoneyPot {
             }
         }
         honeyPot++;
-        System.out.println("Bee nr " + id + " added some honey to the pot");
+        System.out.println(BEE + " nr " + id + " added some honey to the pot");
         
         if(honeyPot == FULL) {
 
