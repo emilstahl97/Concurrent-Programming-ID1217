@@ -5,15 +5,15 @@ public class HoneyPot {
 
     private int FULL;
     private static int EMPTY = 0;
-    public int honeyPot = 0;
+    public int worms = 0;
     public int id;
     private static final String BEE = "\ud83d\udc1d";
     private static final String BEAR = "\ud83d\udc3b";
     private static final String HONEY = "\ud83c\udf6f";
 
-    public HoneyPot(int maxHoney) {
+    public HoneyPot(int maxWorms) {
 
-        this.FULL = maxHoney;
+        this.FULL = maxWorms;
     } 
 
 
@@ -21,18 +21,18 @@ public class HoneyPot {
 
         this.id = id;
 
-        while(honeyPot == EMPTY) {
+        while(worms == EMPTY) {
 
             try {
                 wait();
             } catch(InterruptedException exception) {
-                System.out.println("Honey creation interrupted");
+                System.out.println("Eating interrupted");
             }
         }
-        honeyPot--;
-        System.out.println(BEE + " nr " + id + " ate " + HONEY + " Quantity = " + honeyPot);
+        worms--;
+        System.out.println("Bee nr " + id + " ate a worm: Quantity = " + worms);
          
-        if(honeyPot == EMPTY) {
+        if(worms == EMPTY) {
 
             notifyAll();
 
@@ -44,13 +44,13 @@ public class HoneyPot {
 
     public synchronized void refill() {
 
-        while(honeyPot != EMPTY) {
+        while(worms != EMPTY) {
 
             try {
                 wait();
             } catch (InterruptedException exception) {}
         }
-        honeyPot = 25;
+        worms = 25;
         System.out.println("Parent added");
 
         notifyAll();

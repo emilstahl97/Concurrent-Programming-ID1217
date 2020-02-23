@@ -1,28 +1,25 @@
 public class Honeybees {
 
-    private static int MAX_BEES = 25;
-    private static int MAX_HONEY = 25;
+    private static int MAX_BIRDS = 25;
+    private static int MAX_WORMS = 25;
 
     public static void main(String[] args) {
 
-        int numBees, maxHoney;
+        int numBirds, maxWorms;
 
-        numBees = (args.length > 0) ? Integer.parseInt(args[0]) : MAX_BEES;
-        numBees = (Integer.parseInt(args[0]) > MAX_BEES) ? MAX_BEES : numBees;
+        numBirds = (args.length > 0) && (Integer.parseInt(args[0]) < MAX_BIRDS) ? Integer.parseInt(args[0]) : MAX_BIRDS;
+        maxWorms = (args.length > 1) && (Integer.parseInt(args[1]) < MAX_WORMS) ? Integer.parseInt(args[1]) : MAX_WORMS;
 
-        maxHoney = (args.length > 1) ? Integer.parseInt(args[1]) : MAX_HONEY;
-        maxHoney = (maxHoney > MAX_HONEY) ? MAX_HONEY : maxHoney;
-
-        System.out.println("numBees = " + numBees + "\n" + "Max honey = " + maxHoney);
+        System.out.println("numBirds = " + numBirds + "\n" + "Max worms = " + maxWorms);
         System.out.println("args.length = " + args.length);
 
         try {
             Thread.sleep(1000);
         } catch (InterruptedException e) {}
 
-        HoneyPot honeyPot = new HoneyPot(maxHoney);
+        HoneyPot honeyPot = new HoneyPot(maxWorms);
 
-       for(int i = 0; i < numBees; i++) {
+       for(int i = 0; i < numBirds; i++) {
            Bee bee = new Bee(honeyPot, i);
            new Thread(bee).start();
        }
