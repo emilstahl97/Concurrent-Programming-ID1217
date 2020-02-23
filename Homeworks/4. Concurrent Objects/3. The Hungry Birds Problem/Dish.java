@@ -6,9 +6,9 @@ public class Dish {
     private int REFILL;
     private int worms = 0;
     private static int EMPTY = 0;
-    private static final String BEE = "\ud83d\udc1d";
-    private static final String BEAR = "\ud83d\udc3b";
-    private static final String HONEY = "\ud83c\udf6f";
+    private static final String BABY_BIRD = "\ud83d\udc26";
+    private static final String PARENT_BIRD = "\ud83e\udd85";
+    private static final String WORM = "\ud83d\udc1b";
 
     public Dish(int maxWorms) {
 
@@ -28,16 +28,12 @@ public class Dish {
             }
         }
         worms--;
-        System.out.println("Bee nr " + id + " ate a worm: Quantity = " + worms);
+        System.out.println(BABY_BIRD + " nr " + id + " ate a: " + WORM + " Quantity = " + worms);
          
         if(worms == EMPTY) {
 
-            System.out.println("Bird nr " + id + " SQUEEEELS!!!!");
+            System.out.println(BABY_BIRD + " nr " + id + " SQUEEEELS!!!!");
             notifyAll();
-
-            try {
-                wait(); 
-            } catch (InterruptedException exception) {}
         }
     }
 
@@ -50,7 +46,7 @@ public class Dish {
             } catch (InterruptedException exception) {}
         }
         worms = REFILL;
-        System.out.println("Parent added " + worms + " the dish");
+        System.out.println(PARENT_BIRD + " added " + worms + " to the dish");
 
         notifyAll();
     }
