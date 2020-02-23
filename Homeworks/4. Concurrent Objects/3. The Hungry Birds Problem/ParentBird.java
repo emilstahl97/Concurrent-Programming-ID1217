@@ -1,6 +1,6 @@
 public class ParentBird implements Runnable {
 
-    Dish dish;
+    private final Dish dish;
 
     public ParentBird(Dish dish) {
 

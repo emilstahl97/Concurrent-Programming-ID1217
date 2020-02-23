@@ -2,10 +2,10 @@
 public class Dish {
 
 
+    private int id;
     private int REFILL;
+    private int worms = 0;
     private static int EMPTY = 0;
-    public int worms = 0;
-    public int id;
     private static final String BEE = "\ud83d\udc1d";
     private static final String BEAR = "\ud83d\udc3b";
     private static final String HONEY = "\ud83c\udf6f";
@@ -14,7 +14,6 @@ public class Dish {
 
         this.REFILL = maxWorms;
     } 
-
 
     public synchronized void eat(int id) {
 
