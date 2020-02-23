@@ -1,8 +1,8 @@
-public class Bear implements Runnable {
+public class ParentBird implements Runnable {
 
     Dish dish;
 
-    public Bear(Dish dish) {
+    public ParentBird(Dish dish) {
 
         this.dish = dish;
     }

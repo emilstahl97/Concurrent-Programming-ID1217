@@ -24,8 +24,8 @@ public class Hungrybirds {
            new Thread(babyBird).start();
        }
 
-       Bear bear = new Bear(dish);
-       new Thread(bear).start();
+       ParentBird parentBird = new ParentBird(dish);
+       new Thread(parentBird).start();
      }
 
 }
