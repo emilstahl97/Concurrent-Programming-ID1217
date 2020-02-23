@@ -28,7 +28,7 @@ public class Dish {
             }
         }
         worms--;
-        System.out.println(BABY_BIRD + " nr " + id + " ate a: " + WORM + " Quantity = " + worms);
+        System.out.println(BABY_BIRD + " nr " + id + " ate a " + WORM + " Quantity = " + worms);
          
         if(worms == EMPTY) {
 
@@ -46,7 +46,7 @@ public class Dish {
             } catch (InterruptedException exception) {}
         }
         worms = REFILL;
-        System.out.println(PARENT_BIRD + " added " + worms + " to the dish");
+        System.out.println(PARENT_BIRD + " added " + worms + " " + WORM + " to the dish");
 
         notifyAll();
     }
