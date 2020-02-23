@@ -2,7 +2,7 @@
 public class Dish {
 
 
-    private int FULL;
+    private int REFILL;
     private static int EMPTY = 0;
     public int worms = 0;
     public int id;
@@ -12,7 +12,7 @@ public class Dish {
 
     public Dish(int maxWorms) {
 
-        this.FULL = maxWorms;
+        this.REFILL = maxWorms;
     } 
 
 
@@ -33,6 +33,7 @@ public class Dish {
          
         if(worms == EMPTY) {
 
+            System.out.println("Bird nr " + id + " SQUEEEELS!!!!");
             notifyAll();
 
             try {
@@ -49,8 +50,8 @@ public class Dish {
                 wait();
             } catch (InterruptedException exception) {}
         }
-        worms = 25;
-        System.out.println("Parent added");
+        worms = REFILL;
+        System.out.println("Parent added " + worms + " the dish");
 
         notifyAll();
     }
