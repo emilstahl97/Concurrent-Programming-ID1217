@@ -1,7 +1,7 @@
 public class BabyBird implements Runnable {
 
-    Dish dish;
-    private int id;
+    private Dish dish;
+    public int id;
 
     public BabyBird(Dish Dish, int id) {
 

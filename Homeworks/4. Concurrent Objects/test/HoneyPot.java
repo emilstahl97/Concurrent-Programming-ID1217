@@ -1,17 +1,19 @@
-public class Dish {
+import javax.print.DocFlavor.STRING;
+
+public class HoneyPot {
 
 
     private int FULL;
     private static int EMPTY = 0;
-    public int worms = 10;
+    public int honeyPot = 0;
     public int id;
     private static final String BEE = "\ud83d\udc1d";
     private static final String BEAR = "\ud83d\udc3b";
     private static final String HONEY = "\ud83c\udf6f";
 
-    public Dish(int maxWorms) {
+    public HoneyPot(int maxHoney) {
 
-        this.FULL = maxWorms;
+        this.FULL = maxHoney;
     } 
 
 
@@ -19,18 +21,18 @@ public class Dish {
 
         this.id = id;
 
-        while(worms == EMPTY) {
+        while(honeyPot == EMPTY) {
 
             try {
                 wait();
             } catch(InterruptedException exception) {
-                System.out.println("Waiting for worms interrupted");
+                System.out.println("Honey creation interrupted");
             }
         }
-        worms--;
-        System.out.println("Bee nr " + id + " ate a worm: Quantity = " + worms);
+        honeyPot--;
+        System.out.println(BEE + " nr " + id + " ate " + HONEY + " Quantity = " + honeyPot);
          
-        if(worms == EMPTY) {
+        if(honeyPot == EMPTY) {
 
             notifyAll();
 
@@ -42,14 +44,14 @@ public class Dish {
 
     public synchronized void refill() {
 
-        while(worms != EMPTY) {
+        while(honeyPot != EMPTY) {
 
             try {
                 wait();
             } catch (InterruptedException exception) {}
         }
-        worms = 25;
-        System.out.println("Parent bird refilled dish");
+        honeyPot = 25;
+        System.out.println("Parent added");
 
         notifyAll();
     }
