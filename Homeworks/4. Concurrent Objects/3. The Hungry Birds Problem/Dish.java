@@ -1,9 +1,10 @@
+
 public class Dish {
 
 
     private int FULL;
     private static int EMPTY = 0;
-    public int worms = 10;
+    public int worms = 0;
     public int id;
     private static final String BEE = "\ud83d\udc1d";
     private static final String BEAR = "\ud83d\udc3b";
@@ -24,7 +25,7 @@ public class Dish {
             try {
                 wait();
             } catch(InterruptedException exception) {
-                System.out.println("Waiting for worms interrupted");
+                System.out.println("Eating interrupted");
             }
         }
         worms--;
@@ -49,7 +50,7 @@ public class Dish {
             } catch (InterruptedException exception) {}
         }
         worms = 25;
-        System.out.println("Parent bird refilled dish");
+        System.out.println("Parent added");
 
         notifyAll();
     }

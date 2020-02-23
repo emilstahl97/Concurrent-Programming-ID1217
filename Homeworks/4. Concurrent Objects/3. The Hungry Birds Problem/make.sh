@@ -1,3 +1,3 @@
-echo "Running Hungrybirds"
-javac Hungrybirds.java
-java Hungrybirds 10 10
+echo "Running HoneyBees"
+javac Honeybees.java
+java Honeybees 10
