@@ -17,14 +17,14 @@ public class Honeybees {
             Thread.sleep(1000);
         } catch (InterruptedException e) {}
 
-        HoneyPot honeyPot = new HoneyPot(maxWorms);
+        Dish dish = new Dish(maxWorms);
 
        for(int i = 0; i < numBirds; i++) {
-           Bee bee = new Bee(honeyPot, i);
+           Bee bee = new Bee(dish, i);
            new Thread(bee).start();
        }
 
-       Bear bear = new Bear(honeyPot);
+       Bear bear = new Bear(dish);
        new Thread(bear).start();
      }
 

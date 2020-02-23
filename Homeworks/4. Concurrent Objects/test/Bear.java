@@ -1,10 +1,10 @@
 public class Bear implements Runnable {
 
-    HoneyPot honeyPot;
+    Dish dish;
 
-    public Bear(HoneyPot honeyPot) {
+    public Bear(Dish dish) {
 
-        this.honeyPot = honeyPot;
+        this.dish = dish;
     }
 
     public void run() {
@@ -15,7 +15,7 @@ public class Bear implements Runnable {
                 Thread.sleep(1000);
             } catch (InterruptedException exception) {}
         
-        honeyPot.refill();
+        dish.refill();
         }
     }
 }

@@ -1,6 +1,5 @@
-import javax.print.DocFlavor.STRING;
 
-public class HoneyPot {
+public class Dish {
 
 
     private int FULL;
@@ -11,7 +10,7 @@ public class HoneyPot {
     private static final String BEAR = "\ud83d\udc3b";
     private static final String HONEY = "\ud83c\udf6f";
 
-    public HoneyPot(int maxWorms) {
+    public Dish(int maxWorms) {
 
         this.FULL = maxWorms;
     } 

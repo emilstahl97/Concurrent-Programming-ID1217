@@ -1,11 +1,11 @@
 public class Bee implements Runnable {
 
     public int id;
-    private HoneyPot honeyPot;
+    private Dish dish;
 
-    public Bee(HoneyPot honeyPot, int id) {
+    public Bee(Dish dish, int id) {
         
-        this.honeyPot = honeyPot;
+        this.dish = dish;
         this.id = id;
     }
 
@@ -19,7 +19,7 @@ public class Bee implements Runnable {
         } catch (InterruptedException exception) {}
 
 
-        honeyPot.eat(id);
+        dish.eat(id);
 
     }
 
