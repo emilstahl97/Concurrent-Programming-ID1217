@@ -1,9 +1,9 @@
-public class Bee implements Runnable {
+public class BabyBird implements Runnable {
 
     public int id;
     private Dish dish;
 
-    public Bee(Dish dish, int id) {
+    public BabyBird(Dish dish, int id) {
         
         this.dish = dish;
         this.id = id;

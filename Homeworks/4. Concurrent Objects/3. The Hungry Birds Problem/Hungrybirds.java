@@ -20,8 +20,8 @@ public class Hungrybirds {
         Dish dish = new Dish(maxWorms);
 
        for(int i = 0; i < numBirds; i++) {
-           Bee bee = new Bee(dish, i);
-           new Thread(bee).start();
+           BabyBird babyBird = new BabyBird(dish, i);
+           new Thread(babyBird).start();
        }
 
        Bear bear = new Bear(dish);
