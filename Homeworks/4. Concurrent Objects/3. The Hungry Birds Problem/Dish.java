@@ -1,10 +1,8 @@
-
 public class Dish {
-
 
     private int id;
     private int REFILL;
-    private int worms = 0;
+    private int worms;
     private static int EMPTY = 0;
     private static final String BABY_BIRD = "\ud83d\udc26";
     private static final String PARENT_BIRD = "\ud83e\udd85";
@@ -13,6 +11,7 @@ public class Dish {
     public Dish(int maxWorms) {
 
         this.REFILL = maxWorms;
+        this.worms = maxWorms;
     } 
 
     public synchronized void eat(int id) {

@@ -10,12 +10,7 @@ public class Hungrybirds {
         numBirds = (args.length > 0) && (Integer.parseInt(args[0]) < MAX_BIRDS) ? Integer.parseInt(args[0]) : MAX_BIRDS;
         maxWorms = (args.length > 1) && (Integer.parseInt(args[1]) < MAX_WORMS) ? Integer.parseInt(args[1]) : MAX_WORMS;
 
-        System.out.println("numBirds = " + numBirds + "\n" + "Max worms = " + maxWorms);
-        System.out.println("args.length = " + args.length);
-
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {}
+        System.out.println("Number of birds = " + numBirds + "\n" + "Number of worms = " + maxWorms + "\n");
 
         Dish dish = new Dish(maxWorms);
 
