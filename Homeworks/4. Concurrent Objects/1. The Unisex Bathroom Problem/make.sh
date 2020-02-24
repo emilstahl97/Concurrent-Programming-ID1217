@@ -1,3 +1,3 @@
 echo "Running program"
-javac main.java
-java main 8 8 6
+javac Main.java
+java Main 8 8 6
