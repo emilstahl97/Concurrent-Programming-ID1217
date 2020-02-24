@@ -1,12 +1,11 @@
 public class Dish {
 
-    private int id;
-    private int REFILL;
     private int worms;
+    private int REFILL;
     private static int EMPTY = 0;
+    private static final String WORM = "\ud83d\udc1b";
     private static final String BABY_BIRD = "\ud83d\udc26";
     private static final String PARENT_BIRD = "\ud83e\udd85";
-    private static final String WORM = "\ud83d\udc1b";
 
     public Dish(int maxWorms) {
 
@@ -15,8 +14,6 @@ public class Dish {
     } 
 
     public synchronized void eat(int id) {
-
-        this.id = id;
 
         while(worms == EMPTY) {
 
