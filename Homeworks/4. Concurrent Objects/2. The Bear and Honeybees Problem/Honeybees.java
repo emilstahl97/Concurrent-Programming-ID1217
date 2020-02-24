@@ -7,17 +7,13 @@ public class Honeybees {
 
         int numBees, maxHoney;
 
-        numBees = (args.length > 0) ? Integer.parseInt(args[0]) : MAX_BEES;
-        numBees = (Integer.parseInt(args[0]) > MAX_BEES) ? MAX_BEES : numBees;
-
-        maxHoney = (args.length > 1) ? Integer.parseInt(args[1]) : MAX_HONEY;
-        maxHoney = (maxHoney > MAX_HONEY) ? MAX_HONEY : maxHoney;
-
-        System.out.println("numBees = " + numBees + "\n" + "Max honey = " + maxHoney);
-        System.out.println("args.length = " + args.length);
+        numBees = (args.length > 0) && (Integer.parseInt(args[0]) < MAX_BEES) ? Integer.parseInt(args[0]) : MAX_BEES;
+        maxHoney = (args.length > 1) && (Integer.parseInt(args[1]) < MAX_HONEY) ? Integer.parseInt(args[1]) : MAX_HONEY;
+    
+        System.out.println("Number of bees = " + numBees + "\n" + "Max honey = " + maxHoney + "\n");
 
         try {
-            Thread.sleep(1000);
+            Thread.sleep(800);
         } catch (InterruptedException e) {}
 
         HoneyPot honeyPot = new HoneyPot(maxHoney);
@@ -25,10 +21,9 @@ public class Honeybees {
        for(int i = 0; i < numBees; i++) {
            Bee bee = new Bee(honeyPot, i);
            new Thread(bee).start();
-       }
+        }
 
        Bear bear = new Bear(honeyPot);
        new Thread(bear).start();
      }
-
 }
