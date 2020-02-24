@@ -25,5 +25,5 @@ public class Honeybees {
 
        Bear bear = new Bear(honeyPot);
        new Thread(bear).start();
-     }
+    }
 }

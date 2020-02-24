@@ -9,21 +9,15 @@ public class Bee implements Runnable {
         this.id = id;
     }
 
-
     public void run() {
 
-    while(true) {
+        while(true) {
 
-        try {
-            Thread.sleep(100);
-        } catch (InterruptedException exception) {}
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException exception) {}
 
-
-        honeyPot.create(id);
-
+            honeyPot.create(id);
+        }
     }
-
-
-    }
-    
 } 

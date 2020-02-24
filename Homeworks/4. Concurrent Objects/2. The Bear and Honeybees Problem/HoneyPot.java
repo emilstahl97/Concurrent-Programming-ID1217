@@ -1,12 +1,9 @@
-import javax.print.DocFlavor.STRING;
-
 public class HoneyPot {
 
-
+    private int id;
     private int FULL;
+    private int honeyPot = 0;
     private static int EATEN = 0;
-    public int honeyPot = 0;
-    public int id;
     private static final String BEE = "\ud83d\udc1d";
     private static final String BEAR = "\ud83d\udc3b";
     private static final String HONEY = "\ud83c\udf6f";
@@ -15,7 +12,6 @@ public class HoneyPot {
 
         this.FULL = maxHoney;
     } 
-
 
     public synchronized void create(int id) {
 
