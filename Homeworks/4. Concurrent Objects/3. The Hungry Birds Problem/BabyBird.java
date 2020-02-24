@@ -1,7 +1,7 @@
 public class BabyBird implements Runnable {
 
     private final Dish dish;
-    public int id;
+    private int id;
 
     public BabyBird(Dish dish, int id) {
         
@@ -11,11 +11,11 @@ public class BabyBird implements Runnable {
 
     public void run() {
 
-    while(true) {
+        while(true) {
 
-        try {
-            Thread.sleep(100);
-        } catch (InterruptedException exception) {}
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException exception) {}
 
             dish.eat(id);
         }

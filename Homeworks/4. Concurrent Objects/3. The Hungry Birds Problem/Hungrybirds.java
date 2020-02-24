@@ -17,10 +17,9 @@ public class Hungrybirds {
        for(int i = 0; i < numBirds; i++) {
            BabyBird babyBird = new BabyBird(dish, i);
            new Thread(babyBird).start();
-       }
+        }
 
        ParentBird parentBird = new ParentBird(dish);
        new Thread(parentBird).start();
-     }
-
+    }
 }

@@ -15,7 +15,7 @@ public class ParentBird implements Runnable {
                 Thread.sleep(1000);
             } catch (InterruptedException exception) {}
         
-        dish.refill();
+            dish.refill();
         }
     }
 }
