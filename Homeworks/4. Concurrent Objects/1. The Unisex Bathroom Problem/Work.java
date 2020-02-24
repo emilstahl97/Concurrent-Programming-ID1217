@@ -9,7 +9,7 @@ public class Work {
         try {
             Thread.sleep(WORK_TIME);
         } catch (InterruptedException exception) {
-            System.out.println("Work");
+            System.out.println("Work interrupted");
         }
     }
 } 
