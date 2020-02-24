@@ -28,14 +28,8 @@ public class HoneyPot {
         honeyPot++;
         System.out.println(BEE + " nr " + id + " created " + HONEY + " Quantity = " + honeyPot);
          
-        if(honeyPot == FULL) {
-
+        if(honeyPot == FULL) 
             notifyAll();
-
-            try {
-                wait(); 
-            } catch (InterruptedException exception) {}
-        }
     }
 
     public synchronized void eat() {
