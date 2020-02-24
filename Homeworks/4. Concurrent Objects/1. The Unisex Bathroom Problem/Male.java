@@ -1,6 +1,3 @@
-import java.util.Random;
-
-
 public class Male implements Runnable {
 
     public int visit = 1;
