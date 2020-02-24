@@ -1,5 +1,8 @@
 public class Main {
 
+private static int MAX_WOMEN = 10;
+private static int MAX_MEN = 10;
+private static int MAX_VISITS = 5;
     public static void main(String[] args) {
 
         int numMen, numWomen, numVisits;
@@ -9,9 +12,9 @@ public class Main {
             System.exit(1);
         }
 
-        numWomen = Integer.parseInt(args[0]);
-        numMen = Integer.parseInt(args[1]);
-        numVisits = Integer.parseInt(args[2]);
+        numWomen = (Integer.parseInt(args[0]) < MAX_WOMEN) ? Integer.parseInt(args[0]) : MAX_WOMEN;
+        numMen = (Integer.parseInt(args[1]) < MAX_MEN) ? Integer.parseInt(args[1]) : MAX_MEN;
+        numVisits = (Integer.parseInt(args[2]) < MAX_VISITS) ? Integer.parseInt(args[2]) : MAX_VISITS;
 
         System.out.println("numWomen = " + numWomen + "\nnumMen = " + numMen + "\nnumVisits = "+numVisits+"\n");
 
