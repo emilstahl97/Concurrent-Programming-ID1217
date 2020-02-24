@@ -24,7 +24,6 @@ public class BathroomState {
     private static final String ANSI_GREEN = "\u001B[32m";
     private static final String ANSI_YELLOW = "\u001B[33m";
     
-
     public enum State {
         
         Empty,
