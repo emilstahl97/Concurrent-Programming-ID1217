@@ -1,7 +1,5 @@
-
 import java.util.Random;
 import java.util.concurrent.CyclicBarrier;
-
 
  class ParallelNbody {
 
@@ -89,9 +87,8 @@ import java.util.concurrent.CyclicBarrier;
          ParallelNbody simulation = new ParallelNbody();
          CyclicBarrier barrier = new CyclicBarrier(numWorkers);
 
-
         for (int i = 0; i < numWorkers; i++) {
-            final Worker worker = new Worker(i, simulation, numSteps, barrier);
+            final Worker worker = new Worker(i, numSteps, simulation, barrier);
             worker.start();
         }
     }

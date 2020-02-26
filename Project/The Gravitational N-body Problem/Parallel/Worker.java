@@ -11,22 +11,20 @@ public class Worker extends Thread {
     ParallelNbody work;
     CyclicBarrier barrier;
 
-
-    public Worker(int w, ParallelNbody work, int numSteps, CyclicBarrier barrier) {
+    public Worker(int w, int numSteps, ParallelNbody work, CyclicBarrier barrier) {
+        
         this.id = w;
         this.work = work;
         this.numSteps = numSteps;
         this.barrier = barrier;
-
     }
-
 
     public void barrier(final int w) {
         try {
             barrier.await();
         } catch (final InterruptedException ex) {
         } catch (final BrokenBarrierException ex) {
-            // Logger.getLogger(ParallelNbody.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ParallelNbody.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
