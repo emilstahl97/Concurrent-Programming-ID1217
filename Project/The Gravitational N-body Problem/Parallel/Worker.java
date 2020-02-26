@@ -1,14 +1,33 @@
+import java.util.concurrent.BrokenBarrierException;
+import java.util.concurrent.CyclicBarrier;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+
 public class Worker extends Thread {
 
     int id;
     int numSteps;
     ParallelNbody work;
+    CyclicBarrier barrier;
 
-    public Worker(int w, ParallelNbody work, int numSteps) {
+
+    public Worker(int w, ParallelNbody work, int numSteps, CyclicBarrier barrier) {
         this.id = w;
         this.work = work;
         this.numSteps = numSteps;
+        this.barrier = barrier;
 
+    }
+
+
+    public void barrier(final int w) {
+        try {
+            barrier.await();
+        } catch (final InterruptedException ex) {
+        } catch (final BrokenBarrierException ex) {
+            // Logger.getLogger(ParallelNbody.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @Override
@@ -25,9 +44,9 @@ public class Worker extends Thread {
 
         for (int i = 0; i < numSteps; i++) {
             work.calculateForces(id);
-            work.barrier(id);
+            barrier(id);
             work.moveBodies(id);
-            work.barrier(id);
+            barrier(id);
         }
         if (id == 0) {
             for (int i = 0; i < 5; i++) {

@@ -1,9 +1,6 @@
 
 import java.util.Random;
-import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.CyclicBarrier;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 
  class ParallelNbody {
@@ -19,13 +16,10 @@ import java.util.logging.Logger;
     double massOfBodies = 10;
     Point[] points;
    
-    CyclicBarrier barrier;
 
     public ParallelNbody() {
         points = new Point[gnumBodies];
         final Random r = new Random();
-
-        barrier = new CyclicBarrier(numWorkers);
 
         for (int i = 0; i < gnumBodies; i++) {
             points[i] = new Point((10 * (i % (int) Math.sqrt(gnumBodies))) + r.nextDouble() * 7,
@@ -33,14 +27,6 @@ import java.util.logging.Logger;
         }
     }
 
-    public void barrier(final int w) {
-        try {
-            barrier.await();
-        } catch (final InterruptedException ex) {
-        } catch (final BrokenBarrierException ex) {
-            // Logger.getLogger(ParallelNbody.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
 
     public void calculateForces(final int w) {
         double distance, magnitude, dirX, dirY;
@@ -101,9 +87,11 @@ import java.util.logging.Logger;
         System.out.println("gnumBodies = " + gnumBodies + "\nnumSteps = " + numSteps + "\n numWorkers = " + numWorkers);
 
          ParallelNbody simulation = new ParallelNbody();
+         CyclicBarrier barrier = new CyclicBarrier(numWorkers);
+
 
         for (int i = 0; i < numWorkers; i++) {
-            final Worker worker = new Worker(i, simulation, numSteps);
+            final Worker worker = new Worker(i, simulation, numSteps, barrier);
             worker.start();
         }
     }
