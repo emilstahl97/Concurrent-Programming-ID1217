@@ -1,4 +1,0 @@
-elevator
-elevator.rmi
-elevator.rmi.impl
-elevator.demo
