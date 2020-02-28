@@ -8,8 +8,8 @@ public class BarnesHut {
         double G = 6.67e-11;
         double DT = 0.1;
 
-        int gnumBodies = 10;
-        int numSteps = 275;
+        int gnumBodies = 100;
+        int numSteps = 2750;
 
         double massOfBodies = 10;
 

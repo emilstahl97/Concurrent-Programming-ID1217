@@ -34,6 +34,7 @@ public class BHTree {
      */
     public void insert(Point p) {
 
+//        System.out.println("got into insert");
         // if this node does not contain a body, put the new body b here
         if (point == null) {
             point = p;
