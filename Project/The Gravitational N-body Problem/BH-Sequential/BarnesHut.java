@@ -60,7 +60,7 @@ public class BarnesHut {
             System.out.println("body " + i + " at " + points[i].posX);
         }
 
-        System.out.println("\nTotal execution time: " + (endTime-startTime) + "ms");
+        System.out.println("\nTotal execution time: " + (endTime-startTime) + " ms");
 
     }
 }

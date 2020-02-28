@@ -11,14 +11,7 @@ public class BHTree {
     private BHTree NE;     // tree representing northeast quadrant
     private BHTree SW;     // tree representing southwest quadrant
     private BHTree SE;     // tree representing southeast quadrant
-  
-    /**
-     * Constructor: creates a new Barnes-Hut tree with no bodies. 
-     * Each BHTree represents a quadrant and an aggregate body 
-     * that represents all bodies inside the quadrant.
-     *
-     * @param q the quadrant this node is contained within
-     */
+ 
     public BHTree(Quad q) {
         this.quad = q;
         this.point = null;
