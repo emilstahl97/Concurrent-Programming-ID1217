@@ -2,16 +2,27 @@ import java.util.Random;
 
 public class BarnesHut {
 
+    private static int MAX_BODIES = 100;
+    private static int MAX_STEPS = 300000;
+
     public static void main(String[] args) {
 
         Point[] points;
         double G = 6.67e-11;
         double DT = 0.1;
 
-        int gnumBodies = 100;
-        int numSteps = 2750;
+        int gnumBodies;
+        int numSteps;
 
         double massOfBodies = 10;
+
+        if(args.length != 2)
+            System.out.println("Executing with default arguments:\n");
+
+        gnumBodies = (args.length > 0) && (Integer.parseInt(args[0]) < MAX_BODIES) ? Integer.parseInt(args[0]) : MAX_BODIES;
+        numSteps = (args.length > 1) && (Integer.parseInt(args[1]) < MAX_STEPS) ? Integer.parseInt(args[1]) : MAX_STEPS;
+
+        System.out.println("gnumBodies = " + gnumBodies + "\nnumSteps = " + numSteps);
 
         points = new Point[gnumBodies];
 
