@@ -23,14 +23,14 @@ public class Point {
         this.mass = mass;
     }
 
-    public boolean inQuad(Quad q) {
+    public boolean in(Quad q) {
         return q.contains(posX, posY);
     }
 
     public void addForce(Point p) {
         double delX = p.posX - this.posX;
         double delY = p.posY - this.posY;
-        double distance = this.distance(p);
+        double distance = this.distanceTo(p);
         
         if(distance > 1){
             distance = 1;
@@ -49,11 +49,11 @@ public class Point {
 
     }
 
-    public double distance(Point p) {
+    public double distanceTo(Point p) {
         return Math.sqrt(Math.pow((this.posX - p.posX), 2) + Math.pow((this.posY - p.posY), 2));
     }
 
-    public Point addMasses(Point p) {
+    public Point plus(Point p) {
         Point a = this;
 
         double m = a.mass + p.mass;

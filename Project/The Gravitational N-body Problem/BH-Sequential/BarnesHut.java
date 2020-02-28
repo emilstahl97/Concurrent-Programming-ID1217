@@ -1,7 +1,6 @@
-
 import java.util.Random;
 
- class BarnesHut {
+public class BarnesHut {
 
     public static void main(String[] args) {
 
@@ -9,8 +8,8 @@ import java.util.Random;
         double G = 6.67e-11;
         double DT = 0.1;
 
-        int gnumBodies = 120;
-        int numSteps = 275000;
+        int gnumBodies = 10;
+        int numSteps = 275;
 
         double massOfBodies = 10;
 
@@ -25,8 +24,6 @@ import java.util.Random;
 
         double maxlength = points[gnumBodies - 1].posX + 7;
 
-        double theta = 0.8;
-
         //print five first points to track
         for (int i = 0; i < 5; i++) {
             System.out.println("body " + i + " at " + points[i].posX);
@@ -36,16 +33,16 @@ import java.util.Random;
 
         for (int i = 0; i < numSteps; i++) {
             Quad q = new Quad(0, 0, maxlength);
-            BHTree tree = new BHTree(q, theta);
+            BHTree tree = new BHTree(q);
 
             for (int j = 0; j < gnumBodies; j++) {
-                if (points[j].inQuad(q)) {
-                    tree.insertPoint(points[j]);
+                if (points[j].in(q)) {
+                    tree.insert(points[j]);
                 }
             }
             for (int j = 0; j < gnumBodies; j++) {
                 points[j].forceX = points[j].forceY = 0;
-                tree.calculateForce(points[j]);
+                tree.updateForce(points[j]);
                 points[j].movePoint();
             }
         }
