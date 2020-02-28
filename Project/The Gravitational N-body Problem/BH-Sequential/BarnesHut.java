@@ -4,33 +4,27 @@ public class BarnesHut {
 
     private static int MAX_BODIES = 100;
     private static int MAX_STEPS = 300000;
+    private static int MAX_MASS = 1000;
 
     public static void main(String[] args) {
+ 
 
-        Point[] points;
-        double G = 6.67e-11;
-        double DT = 0.1;
-
-        int gnumBodies;
-        int numSteps;
-
-        double massOfBodies = 10;
-
-        if(args.length != 2)
+        if(args.length != 3)
             System.out.println("Executing with default arguments:\n");
 
-        gnumBodies = (args.length > 0) && (Integer.parseInt(args[0]) < MAX_BODIES) ? Integer.parseInt(args[0]) : MAX_BODIES;
-        numSteps = (args.length > 1) && (Integer.parseInt(args[1]) < MAX_STEPS) ? Integer.parseInt(args[1]) : MAX_STEPS;
+        int gnumBodies = (args.length > 0) && (Integer.parseInt(args[0]) < MAX_BODIES) ? Integer.parseInt(args[0]) : MAX_BODIES;
+        int numSteps = (args.length > 1) && (Integer.parseInt(args[1]) < MAX_STEPS) ? Integer.parseInt(args[1]) : MAX_STEPS;
+        int mass = (args.length > 2) && (Integer.parseInt(args[2]) < MAX_MASS) ? Integer.parseInt(args[2]) : MAX_MASS;
 
-        System.out.println("gnumBodies = " + gnumBodies + "\nnumSteps = " + numSteps);
+        System.out.println("\ngnumBodies = " + gnumBodies + "\nnumSteps = " + numSteps + "\nmass = " + mass + "\n");
 
-        points = new Point[gnumBodies];
+        Point[] points = new Point[gnumBodies];
+        Random rand = new Random();
 
         //INITIALIZE POINTS
-        Random r = new Random();
         for (int i = 0; i < gnumBodies; i++) {
-            points[i] = new Point((10 * (i % (int) Math.sqrt(gnumBodies))) + r.nextDouble() * 7,
-                    10 * (i / (int) Math.sqrt(gnumBodies)) + r.nextDouble() * 7, 0, 0, 0, 0, massOfBodies);
+            points[i] = new Point((10 * (i % (int) Math.sqrt(gnumBodies))) + rand.nextDouble() * 7,
+                    10 * (i / (int) Math.sqrt(gnumBodies)) + rand.nextDouble() * 7, 0, 0, 0, 0, mass);
         }
 
         double maxlength = points[gnumBodies - 1].posX + 7;
@@ -40,7 +34,9 @@ public class BarnesHut {
             System.out.println("body " + i + " at " + points[i].posX);
         }
 
-        long start = System.nanoTime();
+        System.out.println("\nRunning simulation:\n");
+
+        long startTime = System.currentTimeMillis();
 
         for (int i = 0; i < numSteps; i++) {
             Quad q = new Quad(0, 0, maxlength);
@@ -58,13 +54,13 @@ public class BarnesHut {
             }
         }
 
-        long end = System.nanoTime() - start;
+        long endTime = System.currentTimeMillis();
 
         for (int i = 0; i < 5; i++) {
             System.out.println("body " + i + " at " + points[i].posX);
         }
 
-        System.out.println("Total execution time: " + end * Math.pow(10, -9) + " seconds");
+        System.out.println("\nTotal execution time: " + (endTime-startTime) + "ms");
 
     }
 }

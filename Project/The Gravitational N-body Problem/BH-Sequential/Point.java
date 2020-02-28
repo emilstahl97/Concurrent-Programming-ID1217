@@ -10,10 +10,10 @@ public class Point {
     double velY;
     double forceX;
     double forceY;
-    double mass;
+    int mass;
 
     public Point(double posX, double posY, double velX, double velY,
-            double forceX, double forceY, double mass) {
+            double forceX, double forceY, int mass) {
         this.posX = posX;
         this.posY = posY;
         this.velX = velX;
@@ -56,7 +56,7 @@ public class Point {
     public Point plus(Point p) {
         Point a = this;
 
-        double m = a.mass + p.mass;
+        int m = a.mass + p.mass;
         double x = (a.posX * a.mass + p.posX * p.mass) / m;
         double y = (a.posY * a.mass + p.posY * p.mass) / m;
 
