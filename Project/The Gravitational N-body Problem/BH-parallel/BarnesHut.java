@@ -13,8 +13,7 @@ class BarnesHut {
     public double DT = 1;  
     double G = 6.67e-11;
     int massOfBodies = 10;
-    Point[] points;
-   
+    public Point[] points;
 
     public BarnesHut() {
         points = new Point[gnumBodies];
@@ -29,17 +28,17 @@ class BarnesHut {
 
     public static void main(final String[] args) {
 
-        if (args.length != 2)
+        if (args.length != 3)
             System.out.println("Executing with default arguments:\n");
 
         gnumBodies = (args.length > 0) && (Integer.parseInt(args[0]) < MAX_BODIES) ? Integer.parseInt(args[0]) : MAX_BODIES;
         numSteps = (args.length > 1) && (Integer.parseInt(args[1]) < MAX_STEPS) ? Integer.parseInt(args[1]) : MAX_STEPS;
         numWorkers = (args.length > 2) && (Integer.parseInt(args[2]) < MAX_WORKERS) ? Integer.parseInt(args[2]) : MAX_WORKERS;
 
-        System.out.println("gnumBodies = " + gnumBodies + "\nnumSteps = " + numSteps + "\n numWorkers = " + numWorkers);
+        System.out.println("\ngnumBodies = " + gnumBodies + "\nnumSteps = " + numSteps + "\nnumWorkers = " + numWorkers + "\n");
 
-         BarnesHut simulation = new BarnesHut();
-         CyclicBarrier barrier = new CyclicBarrier(numWorkers);
+        BarnesHut simulation = new BarnesHut();
+        CyclicBarrier barrier = new CyclicBarrier(numWorkers);
 
         for (int i = 0; i < numWorkers; i++) {
             final Worker worker = new Worker(i, numSteps, maxlength, gnumBodies, numWorkers, simulation, barrier);

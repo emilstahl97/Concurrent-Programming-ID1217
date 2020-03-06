@@ -42,6 +42,7 @@ public class Worker extends Thread {
             for (int i = 0; i < 5; i++) {
                 System.out.println("body " + i + " at " + work.points[i].posX);
             }
+            System.out.println("\nRunning Simulation\n");
             start = System.nanoTime();
         }
 
@@ -49,22 +50,18 @@ public class Worker extends Thread {
             Quad quad = new Quad(0, 0, maxLength);
             BHTree tree = new BHTree(quad);
 
-            //create tree
             for (int j = 0; j < gnumBodies; j++) {
                 if (work.points[j].in(quad)) {
                     tree.insert(work.points[j]);
                 }
             }
 
-            //calculate forces for assigned points
             for (int j = id; j < gnumBodies; j += numWorkers) {
                 tree.updateForce(work.points[j]);
             }
 
-            //wait for other workers to finish
             barrier(id);
 
-            //move the points according to the forces
             for (int j = id; j < gnumBodies; j += numWorkers) {
                 work.points[j].movePoint();
             }
@@ -76,7 +73,7 @@ public class Worker extends Thread {
                 System.out.println("body " + i + " at " + work.points[i].posX);
             }
             end = System.nanoTime() - start;
-            System.out.println("total execution time: " + end * Math.pow(10, -9) + " seconds");
+            System.out.println("\ntotal execution time: " + end * Math.pow(10, -9) + " seconds");
         }
     }
 }
