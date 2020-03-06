@@ -11,7 +11,7 @@ public class Worker extends Thread {
     ParallelNbody work;
     CyclicBarrier barrier;
 
-    public Worker(int w, int numSteps, ParallelNbody work, CyclicBarrier barrier) {
+    public Worker(final int w, final int numSteps, final ParallelNbody work, final CyclicBarrier barrier) {
         
         this.id = w;
         this.work = work;
