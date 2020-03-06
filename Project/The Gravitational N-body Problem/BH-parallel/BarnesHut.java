@@ -8,16 +8,11 @@ public class BarnesHut {
     public static int MAX_WORKERS = 20;
     public static int MAX_BODIES = 100;
     public static int MAX_STEPS = 300000;
+    public static double maxlength;
+    public static int gnumBodies;
+
 
     Point[] points;
-    double G = 6.67e-11;
-    double DT = 0.1;
-
-    public static int numWorkers = 3;
-    public static int gnumBodies = 120;
-    public static int numSteps = 275000;
-    double maxlength;
-    double theta = 0.8;
 
     CyclicBarrier barrier;
 
@@ -26,8 +21,6 @@ public class BarnesHut {
         int massOfBodies = 10;
 
         points = new Point[gnumBodies];
-
-        barrier = new CyclicBarrier(numWorkers);
 
         //INITIALIZE POINTS
         Random r = new Random();
@@ -45,16 +38,16 @@ public class BarnesHut {
             System.out.println("Executing with default arguments:\n");
 
         gnumBodies = (args.length > 0) && (Integer.parseInt(args[0]) < MAX_BODIES) ? Integer.parseInt(args[0]) : MAX_BODIES;
-        numSteps = (args.length > 1) && (Integer.parseInt(args[1]) < MAX_STEPS) ? Integer.parseInt(args[1]) : MAX_STEPS;
-        numWorkers = (args.length > 2) && (Integer.parseInt(args[2]) < MAX_WORKERS) ? Integer.parseInt(args[2]) : MAX_WORKERS;
+        int numSteps = (args.length > 1) && (Integer.parseInt(args[1]) < MAX_STEPS) ? Integer.parseInt(args[1]) : MAX_STEPS;
+        int numWorkers = (args.length > 2) && (Integer.parseInt(args[2]) < MAX_WORKERS) ? Integer.parseInt(args[2]) : MAX_WORKERS;
 
         System.out.println("gnumBodies = " + gnumBodies + "\nnumSteps = " + numSteps + "\nnumWorkers = " + numWorkers + "\n");
 
         BarnesHut simulation = new BarnesHut();
         CyclicBarrier barrier = new CyclicBarrier(numWorkers);
 
-        for (int i = 0; i < simulation.numWorkers; i++) {
-            Worker worker = new Worker(i, simulation, barrier);
+        for (int i = 0; i < numWorkers; i++) {
+            Worker worker = new Worker(i, numSteps, gnumBodies, numWorkers, maxlength, simulation, barrier);
             worker.start();
         }
 

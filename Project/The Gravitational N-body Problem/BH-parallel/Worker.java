@@ -8,13 +8,21 @@ import java.util.logging.Logger;
 class Worker extends Thread {
 
         int id;
+        int numSteps;
+        int gnumBodies;
+        int numWorkers;
+        double maxlength;
         BarnesHut work;
         CyclicBarrier barrier;
         AtomicBoolean wasRun = new AtomicBoolean(false);
 
 
-        public Worker(int w, BarnesHut work, CyclicBarrier barrier) {
+        public Worker(int w, int numSteps, int gnumBodies, int numWorkers, double maxlength, BarnesHut work, CyclicBarrier barrier) {
             this.id = w;
+            this.numSteps = numSteps;
+            this.gnumBodies = gnumBodies;
+            this.numWorkers = numWorkers;
+            this.maxlength = maxlength;
             this.work = work;
             this.barrier = barrier;
         }
@@ -41,19 +49,19 @@ class Worker extends Thread {
             startTime = System.currentTimeMillis();
             }
 
-            for (int i = 0; i < work.numSteps; i++) {
-                Quad quad = new Quad(0, 0, work.maxlength);
+            for (int i = 0; i < numSteps; i++) {
+                Quad quad = new Quad(0, 0, maxlength);
                 BHTree tree = new BHTree(quad);
 
                 //create tree
-                for (int j = 0; j < work.gnumBodies; j++) {
+                for (int j = 0; j < gnumBodies; j++) {
                     if (work.points[j].in(quad)) {
                         tree.insert(work.points[j]);
                     }
                 }
 
                 //calculate forces for assigned points
-                for (int j = id; j < work.gnumBodies; j += work.numWorkers) {
+                for (int j = id; j < gnumBodies; j += numWorkers) {
                     tree.updateForce(work.points[j]);
                 }
 
@@ -61,7 +69,7 @@ class Worker extends Thread {
                 barrier(id);
 
                 //move the points according to the forces
-                for (int j = id; j < work.gnumBodies; j += work.numWorkers) {
+                for (int j = id; j < gnumBodies; j += numWorkers) {
                     work.points[j].movePoint();
                 }
 
