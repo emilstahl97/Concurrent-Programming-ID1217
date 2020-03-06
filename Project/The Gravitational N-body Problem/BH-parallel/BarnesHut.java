@@ -1,19 +1,21 @@
 
 import java.util.Random;
-import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.CyclicBarrier;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
 
 public class BarnesHut {
+
+    public static int MAX_WORKERS = 20;
+    public static int MAX_BODIES = 100;
+    public static int MAX_STEPS = 300000;
 
     Point[] points;
     double G = 6.67e-11;
     double DT = 0.1;
 
-    int gnumBodies = 120;
-    int numSteps = 275000;
-    int numWorkers = 3;
+    public static int numWorkers = 3;
+    public static int gnumBodies = 120;
+    public static int numSteps = 275000;
     double maxlength;
     double theta = 0.8;
 
@@ -37,82 +39,22 @@ public class BarnesHut {
         maxlength = points[gnumBodies - 1].posX + 7;
     }
 
-    public void barrier(int w) {
-        try {
-            barrier.await();
-        } catch (InterruptedException ex) {
-        } catch (BrokenBarrierException ex) {
-            Logger.getLogger(BarnesHut.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-    }
-
-    public static class Worker extends Thread {
-
-        int id;
-        BarnesHut work;
-
-        public Worker(int w, BarnesHut work) {
-            this.id = w;
-            this.work = work;
-        }
-
-        @Override
-        public void run() {
-
-            long start = 0, end = 0;
-
-            if (id == 0) {
-                for (int i = 0; i < 5; i++) {
-                    System.out.println("body " + i + " at " + work.points[i].posX);
-                }
-                start = System.nanoTime();
-            }
-
-            for (int i = 0; i < work.numSteps; i++) {
-                Quad q = new Quad(0, 0, work.maxlength);
-                BHTree tree = new BHTree(q);
-
-                //create tree
-                for (int j = 0; j < work.gnumBodies; j++) {
-                    if (work.points[j].in(q)) {
-                        tree.insert(work.points[j]);
-                    }
-                }
-
-                //calculate forces for assigned points
-                for (int j = id; j < work.gnumBodies; j += work.numWorkers) {
-                    tree.updateForce(work.points[j]);
-                }
-
-                //wait for other workers to finish
-                work.barrier(id);
-
-                //move the points according to the forces
-                for (int j = id; j < work.gnumBodies; j += work.numWorkers) {
-                    work.points[j].movePoint();
-                }
-                work.barrier(id);
-
-            }
-            if (id == 0) {
-                for (int i = 0; i < 5; i++) {
-                    System.out.println("body " + i + " at " + work.points[i].posX);
-                }
-                end = System.nanoTime() - start;
-                System.out.println("total execution time: " + end * Math.pow(10, -9) + " seconds");
-            }
-
-        }
-
-    }
-
     public static void main(String[] args) {
 
+        if (args.length != 2)
+            System.out.println("Executing with default arguments:\n");
+
+        gnumBodies = (args.length > 0) && (Integer.parseInt(args[0]) < MAX_BODIES) ? Integer.parseInt(args[0]) : MAX_BODIES;
+        numSteps = (args.length > 1) && (Integer.parseInt(args[1]) < MAX_STEPS) ? Integer.parseInt(args[1]) : MAX_STEPS;
+        numWorkers = (args.length > 2) && (Integer.parseInt(args[2]) < MAX_WORKERS) ? Integer.parseInt(args[2]) : MAX_WORKERS;
+
+        System.out.println("gnumBodies = " + gnumBodies + "\nnumSteps = " + numSteps + "\n numWorkers = " + numWorkers);
+
         BarnesHut simulation = new BarnesHut();
+        CyclicBarrier barrier = new CyclicBarrier(numWorkers);
 
         for (int i = 0; i < simulation.numWorkers; i++) {
-            Worker worker = new Worker(i, simulation);
+            Worker worker = new Worker(i, simulation, barrier);
             worker.start();
         }
 
