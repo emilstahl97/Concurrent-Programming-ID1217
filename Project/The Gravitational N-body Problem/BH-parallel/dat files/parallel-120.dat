@@ -1,0 +1,50 @@
+120
+
+1 thread
+
+Total execution time: 1646 ms
+
+Total execution time: 1872 ms
+
+Total execution time: 1930 ms
+
+Total execution time: 2001 ms
+
+Total execution time: 1980 ms
+
+2 thread
+
+
+Total execution time: 2546 ms
+
+Total execution time: 2871 ms
+
+Total execution time: 2815 ms
+
+Total execution time: 2680 ms
+
+Total execution time: 2770 ms
+
+3 thread
+
+Total execution time: 3427 ms
+
+Total execution time: 3150 ms
+
+Total execution time: 3433 ms
+
+Total execution time: 3459 ms
+
+Total execution time: 3370 ms
+
+4 thread
+
+Total execution time: 3912 ms
+
+Total execution time: 3684 ms
+
+Total execution time: 4439 ms
+
+Total execution time: 4311 ms
+
+Total execution time: 3811 ms
