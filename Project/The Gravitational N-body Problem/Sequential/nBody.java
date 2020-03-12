@@ -6,7 +6,7 @@ class nBody {
     public double DT = 1;  
     double G = 6.67e-11;
     double massOfBodies = 10;
-    public static int MAX_BODIES = 120;
+    public static int MAX_BODIES = 240;
     public static int MAX_STEPS = 300000;
     Point[] points;
    
