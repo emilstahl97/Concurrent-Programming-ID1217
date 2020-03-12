@@ -4,7 +4,7 @@ import java.util.concurrent.CyclicBarrier;
  class ParallelNbody {
 
     public static int MAX_WORKERS = 20;
-    public static int MAX_BODIES = 100;
+    public static int MAX_BODIES = 240;
     public static int MAX_STEPS = 300000;
     public static int gnumBodies;
     public static int numSteps;
@@ -73,8 +73,8 @@ import java.util.concurrent.CyclicBarrier;
 
     public static void main(final String[] args) {
 
-        if (args.length != 2)
-            System.out.println("Executing with default arguments:\n");
+        //if (args.length != 2)
+            //System.out.println("Executing with default arguments:\n");
 
         gnumBodies = (args.length > 0) && (Integer.parseInt(args[0]) < MAX_BODIES) ? Integer.parseInt(args[0])
                 : MAX_BODIES;
@@ -82,7 +82,7 @@ import java.util.concurrent.CyclicBarrier;
         numWorkers = (args.length > 2) && (Integer.parseInt(args[2]) < MAX_WORKERS) ? Integer.parseInt(args[2])
                 : MAX_WORKERS;
 
-        System.out.println("gnumBodies = " + gnumBodies + "\nnumSteps = " + numSteps + "\n numWorkers = " + numWorkers);
+        //System.out.println("gnumBodies = " + gnumBodies + "\nnumSteps = " + numSteps + "\nnumWorkers = " + numWorkers);
 
          ParallelNbody simulation = new ParallelNbody();
          CyclicBarrier barrier = new CyclicBarrier(numWorkers);
