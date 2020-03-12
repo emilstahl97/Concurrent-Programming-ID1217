@@ -1,25 +1,7 @@
-1 thread
-total execution time: 64.340580465 seconds
-total execution time: 64.37782932 seconds
-total execution time: 64.347011644 seconds
-total execution time: 64.341554767 seconds
-total execution time: 64.338600699 seconds
-2 thread
+1 thread 64.341554767 seconds
 
-total execution time: 86.08116922900001 seconds
-total execution time: 89.355111944 seconds
-total execution time: 99.446180212 seconds
-total execution time: 92.71622586500001 seconds
-total execution time: 92.66113427200001 seconds
-3 thread
-total execution time: 50.538376548 seconds
-total execution time: 49.218044954 seconds
-total execution time: 50.425542750000005 seconds
-total execution time: 48.59388001000001 seconds
-total execution time: 50.14053348 seconds
-4 thread
-total execution time: 44.447970241 seconds
-total execution time: 44.324679699 seconds
-total execution time: 44.190347251000006 seconds
-total execution time: 44.18555681 seconds
-total execution time: 43.948653208 seconds
+2 thread 92.66113427200001 seconds
+
+3 thread 50.14053348 seconds
+
+4 thread 44.190347251000006 seconds
