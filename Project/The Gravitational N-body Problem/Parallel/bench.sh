@@ -1,7 +1,7 @@
 javac ParallelNbody.java
 echo "Running parallel with 180 bodies"
 
-1 thread >> parallel-180.data
+"1 thread" >> parallel-180.data
 
 echo "1 thread"
 echo "Running execution 1"
@@ -24,7 +24,7 @@ echo ""
 echo "2 threads"
 echo ""
 
-2 thread >> parallel-180.data
+"2 thread" >> parallel-180.data
 
 echo "Running execution 1"
 java ParallelNbody 180 56500 2 >> parallel-180.dat
@@ -46,7 +46,7 @@ echo ""
 echo "3 threads"
 echo ""
 
-3 thread >> parallel-180.data
+"3 thread" >> parallel-180.data
 
 echo "Running execution 1"
 java ParallelNbody 180 56500 3 >> parallel-180.dat
@@ -68,7 +68,7 @@ echo ""
 echo "4 threads"
 echo ""
 
-4 thread >> parallel-180.data
+"4 thread" >> parallel-180.data
 
 echo "Running execution 1"
 java ParallelNbody 180 56500 4 >> parallel-180.dat
