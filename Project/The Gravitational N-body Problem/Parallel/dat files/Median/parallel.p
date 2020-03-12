@@ -8,8 +8,8 @@ set key right center
 set xlabel "Number of threads"
 set ylabel "Time (ms)"
 
-set xrange [0:4]
-set yrange [0:95]
+set xrange [1:4]
+set yrange [0:100]
 
 set key invert
 
