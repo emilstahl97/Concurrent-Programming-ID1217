@@ -43,9 +43,9 @@ class Worker extends Thread {
 
             if (id == 0) {
                 for (int i = 0; i < 5; i++) {
-                    System.out.println("body " + i + " at " + work.points[i].posX);
+              //      System.out.println("body " + i + " at " + work.points[i].posX);
                 }
-            System.out.println("\nRunning simulation\n");
+            //System.out.println("\nRunning simulation\n");
             startTime = System.currentTimeMillis();
             }
 
@@ -76,7 +76,7 @@ class Worker extends Thread {
             }
             if (id == 0) {
                 for (int i = 0; i < 5; i++) {
-                    System.out.println("body " + i + " at " + work.points[i].posX);
+                //    System.out.println("body " + i + " at " + work.points[i].posX);
                 }
                 long endTime = System.currentTimeMillis();
                 System.out.println("\nTotal execution time: " + (endTime-startTime) + " ms");

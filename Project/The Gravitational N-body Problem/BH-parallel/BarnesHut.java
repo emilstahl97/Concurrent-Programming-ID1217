@@ -41,7 +41,7 @@ public class BarnesHut {
         numSteps = (args.length > 1) && (Integer.parseInt(args[1]) < MAX_STEPS) ? Integer.parseInt(args[1]) : MAX_STEPS;
         numWorkers = (args.length > 2) && (Integer.parseInt(args[2]) < MAX_WORKERS) ? Integer.parseInt(args[2]) : MAX_WORKERS;
 
-        System.out.println("gnumBodies = " + gnumBodies + "\nnumSteps = " + numSteps + "\nnumWorkers = " + numWorkers + "\n");
+//        System.out.println("gnumBodies = " + gnumBodies + "\nnumSteps = " + numSteps + "\nnumWorkers = " + numWorkers + "\n");
 
         BarnesHut simulation = new BarnesHut();
         CyclicBarrier barrier = new CyclicBarrier(numWorkers);
