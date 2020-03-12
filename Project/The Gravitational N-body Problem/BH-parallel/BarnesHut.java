@@ -5,7 +5,7 @@ import java.util.concurrent.CyclicBarrier;
 public class BarnesHut {
 
     public static int MAX_WORKERS = 20;
-    public static int MAX_BODIES = 100;
+    public static int MAX_BODIES = 240;
     public static int MAX_STEPS = 300000;
     public static int gnumBodies;
     public static int numSteps;
