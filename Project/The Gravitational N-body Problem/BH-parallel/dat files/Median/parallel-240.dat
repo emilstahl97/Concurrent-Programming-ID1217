@@ -1,7 +1,6 @@
-1 thread 3633 ms
+#threads time
 
-2 thread 4042 ms
-
-3 thread 4914 ms
-
-4 thread 5078 ms
+1  3.633
+2  4.042
+3  4.914
+4  5.078
