@@ -26,13 +26,36 @@ This section will describe the implementation of each program.
 
 \subsection{Sequential brute-force}
 
-This program starts in main by taking two arguments from stdin, gnumBodies and numSteps. A new object nBody is then created which initialize a new points array where each entry holds the characteristics of each body. The characteristics include position, velocity, force and mass. When the object is created the main method prints the initial positions of the bodies and then iterates numSteps times and calculates the forces on each body by calculating the distance to the other bodies and then move the bodies accordingly. This is done sequentially in one thread. When done the final positions of the bodies are printed to stdout. 
+This program starts in main by taking two arguments from stdin, gnumBodies and numSteps. A new object nBody is then created which initialize a new points array where each entry holds the characteristics of each body. The characteristics include position, velocity, force and mass. When the object is created the main method prints the initial positions of the bodies and then iterates numSteps times and in each iteration invokes the methods \texttt{calculateForces()} that calculates the forces on each body by calculating the distance to the other bodies and \texttt{moveBoodies()} that moves the bodies accordingly. 
+
+\begin{verbatim}
+    public void calculateForces() {
+    double distance, magnitude, directionX, directionY;
+
+    for (int i = 0; i < gnumBodies; i++) {
+        for (int j = i + 1; j < gnumBodies; j++) {
+            distance = distance(points[i], points[j]);
+            magnitude = (G * points[i].mass * points[j].mass) / (distance * distance);
+            directionX = points[j].posX - points[i].posX;
+            directionY = points[j].posY - points[i].posY;
+            points[i].forceX = points[i].forceX + magnitude * directionX / distance;
+            points[j].forceX = points[j].forceX - magnitude * directionX / distance;
+            points[i].forceY = points[i].forceY + magnitude * directionY / distance;
+            points[j].forceY = points[j].forceY - magnitude * directionY / distance;
+        }
+      }
+    }
+\end{verbatim}
+This is done sequentially in one thread. When done the final positions of the bodies are printed to stdout. 
 
 \subsection{Parallel brute-force}
 
 The parallel implementation of the brute force algorithm works in a similar way as the sequential program. However, the main method takes in a number of workers as argument to perform the computation in parallel. A new worker class that extends the thread class was created to handle the workers. In main, a new worker object is created for each worker and takes in an id, numSteps, the nBody object as well as a cyclic barrier to be used later. In the worker class a barrier is used to make the threads wait for each other after they have calculated the forces and before they proceed to move the bodies. The barrier used is a part of the java.util.concurrent package where each thread calls barrier.await() to wait for the other threads to arrive. 
 
-The Java run method is similar to how the sequential implementation works where each thread calculates the forces and move the bodies. These two methods are slightly modified to distribute the work among the workers where the outer loop now looks like: 
+The Java run method is similar to how the sequential implementation works where each thread calculates the forces and move the bodies. These two methods are slightly modified to distribute the work among the workers where the outer loop now looks like: \begin{verbatim}
+    for (int i = w; i < (int) gnumBodies; i += numWorkers) {
+    }
+\end{verbatim}{}
 
 By giving each thread an id it is possible to let specific threads do extra work. The printout of the positions is for example handled by the thread with id 0, preventing every thread to print to stdout. 
 
@@ -88,7 +111,7 @@ A test was performed for each program: Each program was evaluated on a different
 \begin{verbatim}
 120 bodies
 
-#threads    time(s)
+#threads time(s)
 
 1       16.280161247
 2       24.733374348
@@ -97,7 +120,7 @@ A test was performed for each program: Each program was evaluated on a different
 
 180 bodies 
 
-#threads    time(s)
+#threads time(s)
 
 1       36.322307176  
 2       33.985230025  
@@ -106,7 +129,7 @@ A test was performed for each program: Each program was evaluated on a different
 
 240 bodies
 
-#threads    time(s)
+#threads time(s)
 
 1       64.341554767 
 2       92.661134272 
@@ -119,13 +142,14 @@ A test was performed for each program: Each program was evaluated on a different
 \caption{Benchmarking of N-body simulation with 56500 number of steps}
 \end{figure}      
 
+\clearpage
 \subsection{Sequential Barnes-Hut}
 \begin{verbatim}
 #bodies time(s)
 
-120     14,449
-180     14,255
-240     14,534
+120     14.449
+180     14.255
+240     14.534
 \end{verbatim}
 \begin{figure}[h]
 \centering
