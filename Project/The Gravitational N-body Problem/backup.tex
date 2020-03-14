@@ -90,8 +90,7 @@ In the main method of the application it iterates numSteps where it each iterati
 To parallelize the program described in chapter 4.3 the main method takes in a number of workers as argument. As in the parallel version of the brute-force algorithm the workers are handled in a separate class Worker. In the worker class the barrier is once again used to wait for threads for finish.  The Java run method handles what was previously done in main i.e. iterate numSteps, creating the tree and calculate forces for assigned points. The barrier is placed between the calculation of forces and the moving of points. When finished the positions are printed to stdout. 
 
 \section{Evaluation}
-A test was performed for each program: Each program was evaluated on a different number of threads (1, 2, 3, 4) for a number of different workloads (120, 180, 240). For each (numThreads, workload) the median of at least 5 runs was picked. The results are shown in the graphs below. The complete list of all runs are shown in the appendix.
-
+A test was performed for each program: Each parallel program was evaluated on a different number of threads (1, 2, 3, 4) and a number of different workloads (120, 180, 240). For each (numThreads, workload) the median of at least 5 runs was picked. The results are shown in the graphs below. The complete list of all runs are shown in the appendix.
 
 \subsection{Sequential brute-force}
 \begin{verbatim}
@@ -103,8 +102,8 @@ A test was performed for each program: Each program was evaluated on a different
 \end{verbatim}
 \begin{figure}[h]
 \centering
-\includegraphics[scale=0.5]{Matrix - 1k.png}
-\caption{Benchmarking of matrix computation with 1.000 elements}
+\includegraphics[scale=0.7]{sequential.png}
+\caption{Benchmarking of N-body simulation with 56.500 number of steps}
 \end{figure}      
 
 \subsection{Parallel brute-force}
@@ -139,7 +138,7 @@ A test was performed for each program: Each program was evaluated on a different
 \begin{figure}[h]
 \centering
 \includegraphics[scale=0.7]{parallel.png}
-\caption{Benchmarking of N-body simulation with 56500 number of steps}
+\caption{Benchmarking of N-body simulation with 56.500 number of steps}
 \end{figure}      
 
 \clearpage
@@ -153,8 +152,8 @@ A test was performed for each program: Each program was evaluated on a different
 \end{verbatim}
 \begin{figure}[h]
 \centering
-\includegraphics[scale=0.5]{5k.png}
-\caption{Benchmarking of matrix computation with 5.000 elements}
+\includegraphics[scale=0.7]{BH-sequential.png}
+\caption{Benchmarking of N-body simulation with 56.500 number of steps}
 \end{figure}      
 \clearpage
 
@@ -190,7 +189,7 @@ A test was performed for each program: Each program was evaluated on a different
 \begin{figure}[h]
 \centering
 \includegraphics[scale=0.48]{BH-parallel.png}
-\caption{Benchmarking of matrix computation with 10.000 elements}
+\caption{Benchmarking of N-body simulation with 56.500 number of steps}
 \end{figure}
 
 \subsection{Explanation of results}
