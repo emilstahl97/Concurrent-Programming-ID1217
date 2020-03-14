@@ -61,7 +61,7 @@ By giving each thread an id it is possible to let specific threads do extra work
 
 \subsection{Sequential Barnes-Hut}
 
-As the previous two implementations this program starts by initializing a points array holding the characteristics of each body. However, the implementation is extended with two additional classed, Quad and BHTree. The Quad class represents the space of bodies recursively subdivided into quadrants until each subdivision contains 0 or 1 bodies, some regions do not have bodies in all of their quadrants. The class consists of four methods representing one of the four quadrants along with a boolean method consists() that checks if the specified quadrant contains the given point.  
+As the previous two implementations this program starts by initializing a points array holding the characteristics of each body. However, the implementation is extended with two additional classes, Quad and BHTree. The Quad class represents the space of bodies recursively subdivided into quadrants until each subdivision contains 0 or 1 bodies, some regions do not have bodies in all of their quadrants. The class consists of four methods representing one of the four quadrants along with a boolean method consists() that checks if the specified quadrant contains the given point.  
 
 The BHTree class is where the Barnes-Hut tree is implemented. The class consists of four methods and one of these is insert(Point p) that adds the Point p to the invoking Barnes-Hut tree. If this node does not contain a body, the new Point p is put here. If the node is externel, meaning all four children are null, the region is subdivided further by creating four children. The method then recursively inserts Point p into the appropriate quadrant by invoking the method putBody.
 
@@ -81,7 +81,7 @@ public void addForce(Point p) {
     this.forceY += force*delY/distance;     
 }
 \end{verbatim}
-To determine if an internal node is sufficiently far away, the quotient s / d is computed, where s is the width of the region represented by the internal node, and d is the distance between the body and the node’s center-of-mass. Then, this ratio is compared against a threshold value θ. If s / d < θ, then the internal node is sufficiently far away and can be calculated with the addForce described above. Else, recurse on each of current node's children. 
+To determine if an internal node is sufficiently far away, the quotient s / d is computed, where s is the width of the region represented by the internal node, and d is the distance between the body and the node’s center-of-mass. Then, this ratio is compared against a threshold value θ. If \(s / d < \Theta\), then the internal node is sufficiently far away and can be calculated with the addForce described above. Else, recurse on each of current node's children. 
 
 In the main method of the application it iterates numSteps where it each iteration creates a new Quad object and a new tree passing the quad as argument. The gnumBodies is inserted into the tree and then the forces are calculated with the method described above. Lastly, the bodies are moved. When done the final positions are printed to stdout. This is done sequentially in one thread. 
 
