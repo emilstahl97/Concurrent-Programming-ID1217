@@ -1,16 +1,15 @@
-# Gnuplot script for plotting data in file "sequential.dat"
+set term png
 
-set terminal png
-set output "sequential.png"
+ set output "sequential.png"
 
-set title "Execution time to compute particle simulation"
+ set boxwidth 0.5
 
-set key right center
+ set style fill solid
 
-set ylabel "Time (ms)"
-set xlabel "Number of threads"
+set title "Execution time to compute n-body simulation sequentially with O(n^2)
 
-set xrange [0:16]
-set yrange [0:3]
+set xlabel "Number of bodies"
+set ylabel "Time(s)"
+ set yrange [0:100]
 
-plot 'sequential-120.dat' with linespoints title "120", plot 'sequential-180.dat' with linespoints title "180", plot 'sequential-240.dat' with linespoints title "240",
+ plot "sequential.dat" using 1:3:xtic(2) with boxes title ""
