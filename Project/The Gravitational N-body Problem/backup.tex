@@ -14,7 +14,7 @@
 
 \section{Introduction}
 
-This report covers the implementation and evaluation of sequential and parallel programs for a particle computation to solve the gravitational N-body problem. In physics, the n-body problem is the problem of predicting the individual motions of a group of celestial objects interacting with each other gravitationally. Solving this problem has been motivated by the desire to understand the motions of the Sun, Moon, planets, and visible stars. In the 20th century, understanding the dynamics of globular cluster star systems became an important n-body problem. This phenomena can be simulated using different methods, two of which is covered in this work. The first method is generally referred to as the Particle-Particle (PP) method and is using a brute-force technique to simulate the n-body problem. However, due to the O(\(n^2)\) time complexity this method is only suitable for small amounts of particles. But since the method does not approximate the sum its results equals machine precision. 
+This report covers the implementation and evaluation of sequential and parallel programs for a particle computation to solve the gravitational N-body problem. In physics, the n-body problem is the problem of predicting the individual motions of a group of celestial objects interacting with each other gravitationally. Solving this problem has been motivated by the desire to understand the motions of the Sun, Moon, planets, and visible stars. In the 20th century, understanding the dynamics of globular cluster star systems became an important n-body problem. This phenomena can be simulated using different methods, two of which is covered in this work. The first method is generally referred to as the Particle-Particle (PP) method and is using a brute-force technique to simulate the n-body problem. However, due to the O(\(n^2)\) time complexity this method is only suitable for small amounts of particles. But since the method does not approximate the sum its results equals machine precision.\footnote{The Barnes-Hut Algorithm - Tom Ventimiglia and Kevin Wayne} 
 
 To obtain better time complexity some tree methods has been proposed and is widely used in astrophysics. One of which is the Barnes-Hut method that uses an octree to divide the volume into cubic cells and only interactions between particles from nearby cells need to be treated individually; particles in distant cells can be treated collectively as a single large particle centered at the distant cell's center of mass (or as a low-order multipole expansion). This can dramatically reduce the number of particle pair interactions that must be computed. To prevent the simulation from becoming swamped by computing particle-particle interactions, the cells must be refined to smaller cells in denser parts of the simulation which contain many particles per cell. This approximates the result and gives a time complexity of O(n log n) making it feasible for large amounts of particles. 
 
@@ -81,7 +81,7 @@ public void addForce(Point p) {
     this.forceY += force*delY/distance;     
 }
 \end{verbatim}
-To determine if an internal node is sufficiently far away, the quotient s / d is computed, where s is the width of the region represented by the internal node, and d is the distance between the body and the node’s center-of-mass. Then, this ratio is compared against a threshold value θ. If \(s / d < \Theta\), then the internal node is sufficiently far away and can be calculated with the addForce described above. Else, recurse on each of current node's children. 
+To determine if an internal node is sufficiently far away, the quotient s / d is computed, where s is the width of the region represented by the internal node, and d is the distance between the body and the node’s center-of-mass. Then, this ratio is compared against a threshold value θ. If \(s / d < \Theta\), then the internal node is sufficiently far away and can be calculated with the addForce described above. Else, recurse on each of current node's children.\footnote{The Barnes-Hut Algorithm - Tom Ventimiglia and Kevin Wayne} 
 
 In the main method of the application it iterates numSteps where it each iteration creates a new Quad object and a new tree passing the quad as argument. The gnumBodies is inserted into the tree and then the forces are calculated with the method described above. Lastly, the bodies are moved. When done the final positions are printed to stdout. This is done sequentially in one thread. 
 
@@ -89,6 +89,7 @@ In the main method of the application it iterates numSteps where it each iterati
 
 To parallelize the program described in chapter 4.3 the main method takes in a number of workers as argument. As in the parallel version of the brute-force algorithm the workers are handled in a separate class Worker. In the worker class the barrier is once again used to wait for threads for finish.  The Java run method handles what was previously done in main i.e. iterate numSteps, creating the tree and calculate forces for assigned points. The barrier is placed between the calculation of forces and the moving of points. When finished the positions are printed to stdout. 
 
+\clearpage
 \section{Evaluation}
 A test was performed for each program: Each parallel program was evaluated on a different number of threads (1, 2, 3, 4) and a number of different workloads (120, 180, 240). For each (numThreads, workload) the median of at least 5 runs was picked. The results are shown in the graphs below. The complete list of all runs are shown in the appendix.
 
@@ -106,6 +107,7 @@ A test was performed for each program: Each parallel program was evaluated on a 
 \caption{Benchmarking of N-body simulation with 56.500 number of steps}
 \end{figure}      
 
+\clearpage
 \subsection{Parallel brute-force}
 \begin{verbatim}
 120 bodies
