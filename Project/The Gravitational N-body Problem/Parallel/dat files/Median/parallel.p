@@ -1,7 +1,7 @@
 set terminal png
 set output "parallel.png"
 
-set title "Execution time to compute particle simulation in parallel with n^2"
+set title "Execution time to compute n-body simulation in parallel with O(n^2)"
 
 set key right center
 

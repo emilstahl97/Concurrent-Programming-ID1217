@@ -1,7 +1,7 @@
 set terminal png
 set output "BH-parallel.png"
 
-set title "Execution time to compute particle simulation in parallel with Barnes-Hut method"
+set title "Execution time to compute n-body simulation in parallel with O(n log n) Barnes-Hut"
 
 set key right center
 
