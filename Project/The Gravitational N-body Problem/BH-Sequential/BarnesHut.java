@@ -9,28 +9,28 @@ public class BarnesHut {
     public static void main(String[] args) {
  
 
-        if(args.length != 3)
+        if(args.length != 4)
             System.out.println("Executing with default arguments:\n");
 
         int gnumBodies = (args.length > 0) && (Integer.parseInt(args[0]) < MAX_BODIES) ? Integer.parseInt(args[0]) : MAX_BODIES;
         int numSteps = (args.length > 1) && (Integer.parseInt(args[1]) < MAX_STEPS) ? Integer.parseInt(args[1]) : MAX_STEPS;
-        int mass = (args.length > 2) && (Integer.parseInt(args[2]) < MAX_MASS) ? Integer.parseInt(args[2]) : MAX_MASS;
+        int mass = (args.length > 3) && (Integer.parseInt(args[3]) < MAX_MASS) ? Integer.parseInt(args[3]) : MAX_MASS;
+        int printNum = (args.length > 4) ? Integer.parseInt(args[4]) : 5;
 
         System.out.println("\ngnumBodies = " + gnumBodies + "\nnumSteps = " + numSteps + "\nmass = " + mass + "\n");
 
         Point[] points = new Point[gnumBodies];
         Random rand = new Random();
 
-        //INITIALIZE POINTS
         for (int i = 0; i < gnumBodies; i++) {
             points[i] = new Point((10 * (i % (int) Math.sqrt(gnumBodies))) + rand.nextDouble() * 7,
                     10 * (i / (int) Math.sqrt(gnumBodies)) + rand.nextDouble() * 7, 0, 0, 0, 0, mass);
         }
 
-        double maxlength = points[gnumBodies - 1].posX + 7;
+        double far = (args.length > 2) ? Integer.parseInt(args[2]) : points[gnumBodies - 1].posX + 7;
 
         //print five first points to track
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < printNum; i++) {
             System.out.println("body " + i + " at " + points[i].posX);
         }
 
@@ -39,7 +39,7 @@ public class BarnesHut {
         long startTime = System.currentTimeMillis();
 
         for (int i = 0; i < numSteps; i++) {
-            Quad q = new Quad(0, 0, maxlength);
+            Quad q = new Quad(0, 0, far);
             BHTree tree = new BHTree(q);
 
             for (int j = 0; j < gnumBodies; j++) {
@@ -56,7 +56,7 @@ public class BarnesHut {
 
         long endTime = System.currentTimeMillis();
 
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < printNum; i++) {
             System.out.println("body " + i + " at " + points[i].posX);
         }
 
