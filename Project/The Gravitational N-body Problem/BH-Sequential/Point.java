@@ -1,4 +1,3 @@
-
 public class Point {
 
     double G = 6.67e-11;
@@ -12,8 +11,7 @@ public class Point {
     double forceY;
     int mass;
 
-    public Point(double posX, double posY, double velX, double velY,
-            double forceX, double forceY, int mass) {
+    public Point(double posX, double posY, double velX, double velY, double forceX, double forceY, int mass) {
         this.posX = posX;
         this.posY = posY;
         this.velX = velX;

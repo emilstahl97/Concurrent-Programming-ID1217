@@ -1,8 +1,17 @@
+/* N-Body simulation utilizing sequential Barnes-Hut algorithm with O(n log n)
+  
+    Features: Prints initial coordinates of bodies, performs simulation, prints final coordinates of bodies to STDOUT 
+    
+    usage under UNIX:
+            javac BarnesHut.java
+            java BarnesHut <gnumBodies> <numSteps> <far> <printNum>
+*/
+
 import java.util.Random;
 
 public class BarnesHut {
 
-    private static int MAX_BODIES = 100;
+    private static int MAX_BODIES = 240;
     private static int MAX_STEPS = 300000;
     private static int MAX_MASS = 1000;
 
@@ -17,7 +26,7 @@ public class BarnesHut {
         int mass = (args.length > 3) && (Integer.parseInt(args[3]) < MAX_MASS) ? Integer.parseInt(args[3]) : MAX_MASS;
         int printNum = (args.length > 4) ? Integer.parseInt(args[4]) : 5;
 
-        System.out.println("\ngnumBodies = " + gnumBodies + "\nnumSteps = " + numSteps + "\nmass = " + mass + "\n");
+        System.out.println("gnumBodies = " + gnumBodies + "\nnumSteps = " + numSteps + "\nmass = " + mass + "\n\nPrinting initial coordinates of bodies:\n");
 
         Point[] points = new Point[gnumBodies];
         Random rand = new Random();
@@ -34,7 +43,7 @@ public class BarnesHut {
             System.out.println("body " + i + " at " + points[i].posX);
         }
 
-        System.out.println("\nRunning simulation:\n");
+        System.out.println("\nSimulating....");
 
         long startTime = System.currentTimeMillis();
 
@@ -56,11 +65,12 @@ public class BarnesHut {
 
         long endTime = System.currentTimeMillis();
 
+        System.out.println("\nPrinting final coordinates of bodies:\n");
+
         for (int i = 0; i < printNum; i++) {
             System.out.println("body " + i + " at " + points[i].posX);
         }
 
-        System.out.println("\nTotal execution time: " + (endTime-startTime) + " ms");
-
+        System.out.println("\nTotal execution time: " + (endTime-startTime) + " ms\n");
     }
 }
