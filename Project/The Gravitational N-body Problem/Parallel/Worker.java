@@ -3,7 +3,6 @@ import java.util.concurrent.CyclicBarrier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-
 public class Worker extends Thread {
 
     int id;
@@ -31,12 +30,13 @@ public class Worker extends Thread {
     @Override
     public void run() {
 
-        long start = 0, end = 0;
+        long start = 0, time = 0;
 
         if (id == 0) {
             for (int i = 0; i < 5; i++) {
-                //System.out.println("body " + i + " at " + work.points[i].posX);
+                System.out.println("body " + i + " at " + work.points[i].posX);
             }
+            System.out.println("\nSimulating....\n");
             start = System.nanoTime();
         }
 
@@ -46,13 +46,14 @@ public class Worker extends Thread {
             work.moveBodies(id);
             barrier(id);
         }
+
         if (id == 0) {
+            time = System.nanoTime() - start;
+            System.out.println("Printing final coordinates of bodies\n");
             for (int i = 0; i < 5; i++) {
-                //System.out.println("body " + i + " at " + work.points[i].posX);
+                System.out.println("body " + i + " at " + work.points[i].posX);
             }
-            end = System.nanoTime() - start;
-            System.out.println("total execution time: " + end * Math.pow(10, -9) + " seconds");
+            System.out.println("\nTotal execution time: " + time * Math.pow(10, -9) + " seconds\n");
         }
     }
 }
-
