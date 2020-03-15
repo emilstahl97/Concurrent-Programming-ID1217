@@ -4,7 +4,7 @@
     
     usage under UNIX:
             javac nBoody.java
-            ./java nBody <gnumBodies> <numSteps> <massOfBodies>
+            java nBody <gnumBodies> <numSteps> <massOfBodies>
 */
 
 import java.util.Random;
