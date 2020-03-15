@@ -1,6 +1,4 @@
-
 import java.util.concurrent.BrokenBarrierException;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.CyclicBarrier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -14,10 +12,9 @@ class Worker extends Thread {
         double maxlength;
         BarnesHut work;
         CyclicBarrier barrier;
-        AtomicBoolean wasRun = new AtomicBoolean(false);
+        int printNum;
 
-
-        public Worker(int w, int numSteps, int gnumBodies, int numWorkers, double maxlength, BarnesHut work, CyclicBarrier barrier) {
+        public Worker(int w, int numSteps, int gnumBodies, int numWorkers, double maxlength, BarnesHut work, CyclicBarrier barrier, int printNum) {
             this.id = w;
             this.numSteps = numSteps;
             this.gnumBodies = gnumBodies;
@@ -25,6 +22,7 @@ class Worker extends Thread {
             this.maxlength = maxlength;
             this.work = work;
             this.barrier = barrier;
+            this.printNum = printNum;
         }
 
         public void barrier(final int w) {
@@ -42,10 +40,11 @@ class Worker extends Thread {
             long startTime = 0;
 
             if (id == 0) {
-                for (int i = 0; i < 5; i++) {
-              //      System.out.println("body " + i + " at " + work.points[i].posX);
+                System.out.println("Printing initial coordinates of bodies:\n");
+                for (int i = 0; i < printNum; i++) {
+                    System.out.println("body " + i + " at " + work.points[i].posX);
                 }
-            //System.out.println("\nRunning simulation\n");
+            System.out.println("\nSimulating....\n");
             startTime = System.currentTimeMillis();
             }
 
@@ -75,13 +74,12 @@ class Worker extends Thread {
 
             }
             if (id == 0) {
-                for (int i = 0; i < 5; i++) {
-                //    System.out.println("body " + i + " at " + work.points[i].posX);
+                System.out.println("Printing final coordinates of bodies:\n");
+                for (int i = 0; i < printNum; i++) {
+                    System.out.println("body " + i + " at " + work.points[i].posX);
                 }
                 long endTime = System.currentTimeMillis();
                 System.out.println("\nTotal execution time: " + (endTime-startTime) + " ms");
             }
-
         }
-
     }

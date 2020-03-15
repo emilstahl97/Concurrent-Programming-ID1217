@@ -1,4 +1,3 @@
-
 public class Quad {
     
     private double xmid;
@@ -85,25 +84,5 @@ public class Quad {
         double len = this.length / 2.0;
         Quad SE = new Quad(x, y, len);
         return SE;
-    }
-
-
-    /**
-     * Returns a string representation of this quadrant for debugging.
-     *
-     * @return string representation of this quadrant
-     */
-    public String toString() {
-        String ret = "\n";
-        for (int row = 0; row < this.length; row++) {
-            for (int col = 0; col < this.length; col++) {
-                if (row == 0 || col == 0 || row == this.length - 1 || col == this.length - 1)
-                    ret += "*";
-                else
-                    ret += " ";
-            }
-            ret += "\n";
-        }
-        return ret;
     }
 }

@@ -1,4 +1,3 @@
-
 public class Point {
 
     double G = 6.67e-11;

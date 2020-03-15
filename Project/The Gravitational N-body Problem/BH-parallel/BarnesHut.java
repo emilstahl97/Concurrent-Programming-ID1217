@@ -4,7 +4,7 @@
     
     usage under UNIX:
             javac BarnesHut.java
-            java BarnesHut <gnumBodies> <numSteps> <far> <printNum>
+            java BarnesHut <gnumBodies> <numSteps> <far> <numWorkers> <printNum>
 */
 
 import java.util.Random;
@@ -18,6 +18,7 @@ public class BarnesHut {
     public static int gnumBodies;
     public static int numSteps;
     public static int numWorkers;
+    public static int printNum;
     public static double far;
 
     Point[] points;
@@ -44,12 +45,13 @@ public class BarnesHut {
 
     public static void main(String[] args) {
 
-        if (args.length < 4)
+        if (args.length < 5)
             System.out.println("Executing with default arguments:\n");
 
         gnumBodies = (args.length > 0) && (Integer.parseInt(args[0]) < MAX_BODIES) ? Integer.parseInt(args[0]) : MAX_BODIES;
         numSteps = (args.length > 1) && (Integer.parseInt(args[1]) < MAX_STEPS) ? Integer.parseInt(args[1]) : MAX_STEPS;
         numWorkers = (args.length > 3) && (Integer.parseInt(args[3]) < MAX_WORKERS) ? Integer.parseInt(args[3]) : MAX_WORKERS;
+        printNum = (args.length > 4) ? Integer.parseInt(args[4]) : 5;
         
         System.out.println("gnumBodies = " + gnumBodies + "\nnumSteps = " + numSteps + "\nnumWorkers = " + numWorkers + "\n");
 
@@ -57,7 +59,7 @@ public class BarnesHut {
         CyclicBarrier barrier = new CyclicBarrier(numWorkers);
 
         for (int i = 0; i < numWorkers; i++) {
-            Worker worker = new Worker(i, numSteps, gnumBodies, numWorkers, far, simulation, barrier);
+            Worker worker = new Worker(i, numSteps, gnumBodies, numWorkers, far, simulation, barrier, printNum);
             worker.start();
         }
     }

@@ -1,5 +1,3 @@
-import java.awt.Color;
-
 public class BHTree {
 
     // threshold value
@@ -21,14 +19,13 @@ public class BHTree {
         this.SE = null;
     }
  
-
     /**
-     * Adds the Body b to the invoking Barnes-Hut tree.
+     * Adds the Point p to the invoking Barnes-Hut tree.
      */
     public void insert(Point p) {
 
 //        System.out.println("got into insert");
-        // if this node does not contain a body, put the new body b here
+        // if this node does not contain a body, put the new Point p here
         if (point == null) {
             point = p;
             return;
@@ -39,7 +36,7 @@ public class BHTree {
             // update the center-of-mass and total mass
             point = point.plus(p);
         
-            // recursively insert Body b into the appropriate quadrant
+            // recursively insert Point p into the appropriate quadrant
             putBody(p);
         }
 
@@ -51,7 +48,7 @@ public class BHTree {
             SE = new BHTree(quad.SE());
             SW = new BHTree(quad.SW());
 
-            // recursively insert both this body and Body b into the appropriate quadrant
+            // recursively insert both this body and Point p into the appropriate quadrant
             putBody(this.point);
             putBody(p);
 
@@ -59,7 +56,6 @@ public class BHTree {
             point = point.plus(p);
         }
     }
-
 
     /**
      * Inserts a body into the appropriate quadrant.
@@ -75,7 +71,6 @@ public class BHTree {
             SW.insert(p);
     }
 
-
     /**
      * Returns true iff this tree node is external.
      */
@@ -84,17 +79,16 @@ public class BHTree {
         return (NW == null && NE == null && SW == null && SE == null);
     }
 
-
     /**
-     * Approximates the net force acting on Body b from all bodies
-     * in the invoking Barnes-Hut tree, and updates b's force accordingly.
+     * Approximates the net force acting on Point p from all bodies
+     * in the invoking Barnes-Hut tree, and updates p's force accordingly.
      */
     public void updateForce(Point p) {
     
         if (point == null || p.equals(point))
             return;
 
-        // if the current node is external, update net force acting on b
+        // if the current node is external, update net force acting on p
         if (isExternal()) 
             p.addForce(point);
  
@@ -104,12 +98,12 @@ public class BHTree {
             // width of region represented by internal node
             double s = quad.length();
 
-            // distance between Body b and this node's center-of-mass
+            // distance between Point p and this node's center-of-mass
             double d = point.distanceTo(p);
 
             // compare ratio (s / d) to threshold value Theta
             if ((s / d) < Theta)
-                p.addForce(point);   // b is far away
+                p.addForce(point);   // p is far away
             
             // recurse on each of current node's children
             else {
@@ -119,20 +113,5 @@ public class BHTree {
                 SE.updateForce(p);
             }
         }
-    }
-
-
-    /**
-     * Returns a string representation of the Barnes-Hut tree
-     * in which spaces represent external nodes, and asterisks
-     * represent internal nodes.
-     *
-     * @return a string representation of this quadtree
-     */
-    public String toString() {
-        if (isExternal()) 
-            return " " + point + "\n";
-        else
-            return "*" + point + "\n" + NW + NE + SW + SE;
     }
 }
